@@ -13,7 +13,7 @@ pMPL is a three-party learning framework based on vector space secret sharing wi
 ## Running for 3pc
 ### Network Configuration
 
-pMPL/3pc/util/SocketManager.cpp line138
+pMPL/3pc/util/SocketManager.cpp line 138
 
 ```c++
 void SocketManager::pMPL::init()
@@ -71,7 +71,7 @@ If one assist party drops out during the training phase, the intermediate result
 ## Running for 2pc
 ### Network Configuration
 
-pMPL/2pc/util/SocketManager.cpp line138
+pMPL/2pc/util/SocketManager.cpp line 138
 
 ```c++
 void SocketManager::pMPL::init()
