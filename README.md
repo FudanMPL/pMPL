@@ -66,9 +66,7 @@ Start four processes and input the party index, respectively:
 ./pmpl_3pc 3
 ```
 
-If one assist party drops out during the training phase, the intermediate results hold by each party will be stored in "pMPL/3pc/Result". 
-
-
+If one assist party drops out during the training phase, the intermediate results hold by each party will be stored in "pMPL/3pc/Result", which can be used as initialization coefficients for 2PC training.
 
 ## Running for 2pc
 ### Network Configuration
