@@ -34,11 +34,37 @@ void SocketManager::pMPL::init()
 #define ML 0
 ```
 
-* M: the n shares (n-1 parties)
+* M: the 4 shares (3 parties)
 * ML: machine learning models, 0 for linear regression; 1 for logistic regression; 2 for neural networks
 
 
+Compile the executable file
 
+```shell
+cd pMPL/3pc
+cmake .
+make -j
+```
+
+### Run
+
+Start four processes and input the party index, respectively:
+
+```shell
+./pmpl_3pc 0
+```
+
+```shell
+./pmpl_3pc 1
+```
+
+```shell
+./pmpl_3pc 2
+```
+
+```shell
+./pmpl_3pc 3
+```
 
 
 
@@ -66,11 +92,33 @@ void SocketManager::pMPL::init()
 #define ML 0
 ```
 
-* M: the n shares (n-1 parties)
+* M: the 3 shares (2 parties)
 * ML: machine learning models, 0 for linear regression; 1 for logistic regression; 2 for neural networks
 
 
+Compile the executable file
 
+```shell
+cd pMPL/2pc
+cmake .
+make -j
+```
+
+### Run
+
+Start four processes and input the party index, respectively:
+
+```shell
+./pmpl_3pc 0
+```
+
+```shell
+./pmpl_3pc 1
+```
+
+```shell
+./pmpl_3pc 2
+```
 
 
 
