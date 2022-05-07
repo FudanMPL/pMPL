@@ -66,6 +66,8 @@ Start four processes and input the party index, respectively:
 ./pmpl_3pc 3
 ```
 
+If one assist party drops out during the training phase, the intermediate results hold by each party will be stored in "pMPL/3pc/Result". 
+
 
 
 ## Running for 2pc
@@ -106,7 +108,7 @@ make -j
 
 ### Run
 
-Start four processes and input the party index, respectively:
+Start three processes and input the party index, respectively:
 
 ```shell
 ./pmpl_3pc 0
