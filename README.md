@@ -13,6 +13,16 @@ pMPL is a three-party learning framework based on vector space secret sharing wi
 ## Running for 3pc
 ### Network Configuration
 
+> In the default configuration, multiple processes run on a server, which is a **LAN** environment.
+>
+> In order to simulate **WAN** environment,  we can use the following command.
+
+```shell
+# simulate WAN
+sudo tc qdisc add dev lo root netem delay 20ms rate 40Mbps
+# cancle the simulation
+sudo tc qdisc del dev lo root netem delay 20ms rate 40Mbps
+
 pMPL/3pc/util/SocketManager.cpp line 138
 
 ```c++
