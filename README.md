@@ -119,15 +119,15 @@ make -j
 Start three processes and input the party index, respectively:
 
 ```shell
-./pmpl_3pc 0
+./pmpl_2pc 0
 ```
 
 ```shell
-./pmpl_3pc 1
+./pmpl_2pc 1
 ```
 
 ```shell
-./pmpl_3pc 2
+./pmpl_2pc 2
 ```
 
 
