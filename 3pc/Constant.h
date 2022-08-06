@@ -33,8 +33,8 @@
 #define BUFFER_MAX 10000001
 #define HEADER_LEN_OPT 2
 #define HEADER_LEN 4
-#define M 4               // the number of parties
-#define ML 0              // 0 for linear; 1 for logistic; 2 for nn
+#define M 4               // the number of shares
+#define ML 1              // 0 for linear; 1 for logistic; 2 for nn
 #define BIT_LENGTH 64     // the length of bit
 #define DECIMAL_LENGTH 20 // the length of decimal part
 
@@ -49,8 +49,8 @@
 #define R 0.01 // logistic regression learning rate
 
 #define nLayer 3     // the number of layers
-#define hiddenDim 128 // the number of
-
+#define hiddenDim 128 
+#define numClass 10 
 
 #define DEBUG
 #ifdef DEBUG
@@ -62,6 +62,7 @@
 using namespace std;
 using namespace chrono;
 
+typedef uint64_t u64;
 typedef int64_t int64;
 typedef __int128_t int128;
 typedef __uint128_t u128;
@@ -71,10 +72,10 @@ typedef long long ll;
 class Constant
 {
 public:
-    static const int64 UINT64_MASK = (uint)1 << DECIMAL_LENGTH;
+    static const u64 Uint64_MASK = (uint)1 << DECIMAL_LENGTH;
 
-    // static const int64 inv2;    //求逆
-    // static const int64 inv2_m;  //小数部分求逆
+    // static const u64 inv2;    //求逆
+    // static const u64 inv2_m;  //小数部分求逆
 
     static string getDateTime()
     {
@@ -88,7 +89,7 @@ public:
     {
         int id;
         system_clock::time_point start;
-        static int64 global_clock[101];
+        static u64 global_clock[101];
 
     public:
         static double get_clock(int id);
@@ -121,31 +122,31 @@ public:
     {
     public:
         static void int_to_char(char *&p, int u);
-        static void int64_to_char(char *&p, int64 u);
+        static void u64_to_char(char *&p, u64 u);
         static int char_to_int(char *&p);
-        static int64 char_to_int64(char *&p);
+        static u64 char_to_u64(char *&p);
         static void int_to_header(char *p, int u);
         static int header_to_int(char *p);
-        static int64 double_to_int64(double x);
-        static double int64_to_double(int64 u); // unsigned to double, long(signed)
+        static u64 double_to_u64(double x);
+        static double u64_to_double(u64 u); // unsigned to double, long(signed)
         static double char_to_double(char *&p);
         static int getint(char *&p);
-        static int64 getint64(char *&p);
-        static int64 random_int64();
+        static u64 getu64(char *&p);
+        static u64 random_u64();
         static u8 random_u8();
 
-        static u128 int64_to_128(int64 x);
-        // static int64 secrandom_int64();
-        // static int64 randomlong();
+        static u128 u64_to_128(u64 x);
+        // static u64 secrandom_u64();
+        // static u64 randomlong();
 
-        static int64 truncate(int64 u);        // in form of secureML
-        static int64 multiply(int64 a, int64 b); // in form of secureML
-        static int64 divide(int64 a, int b);
-        static vector<int64> edabits();      // default with 64 bits
-        static vector<int64> edabits(int64 r); // default with 64 bits
+        static u64 truncate(u64 u);        // in form of secureML
+        static u64 multiply(u64 a, u64 b); // in form of secureML
+        static u64 divide(u64 a, int b);
+        static vector<u64> edabits();      // default with 64 bits
+        static vector<u64> edabits(u64 r); // default with 64 bits
     };
 };
 // std::ostream&
-// operator<<( std::ostream& dest, int64 value );
+// operator<<( std::ostream& dest, u64 value );
 
 #endif // ACCESSCONTROL_CONSTANT_H

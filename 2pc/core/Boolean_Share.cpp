@@ -8,16 +8,16 @@
 // Matrix8 Boolean_Share::r_add_share = Matrix8(B, 1);
 // Matrix8 Boolean_Share::r_bool_share = Matrix8(B, 1);
 
-Matrixint64 Boolean_Share::secret_share(Matrixint64 &share)
+MatrixXu Boolean_Share::secret_share(MatrixXu &share)
 {
-    vector<Matrixint64> sec_share;
-    Matrixint64 temp = Mat::randomMatrixint64(B, D);
-    Matrixint64 truth = temp;
+    vector<MatrixXu> sec_share;
+    MatrixXu temp = Mat::randomMatrixXu(B, D);
+    MatrixXu truth = temp;
     // cout << "The truth:" << endl
     //      << temp << endl;
     for (int i = 0; i < M - 1; i++)
     {
-        Matrixint64 noise = Mat::randomMatrixint64(B, D);
+        MatrixXu noise = Mat::randomMatrixXu(B, D);
         sec_share.push_back(noise);
         temp = Mat::op_Xor(temp, noise);
     }
@@ -46,48 +46,57 @@ Matrix8 Boolean_Share::secret_share(Matrix8 &share)
     return truth;
 }
 
-Matrixint64 Boolean_Share::reveal(Matrixint64 &share)
+MatrixXu Boolean_Share::reveal(MatrixXu &share)
 {
-    Matrixint64 result = share;
-    // cout <<"share:"<< share << endl;
-    for (int i = 0; i < M; i++)
+    MatrixXu result;
+    if(party == 0)
     {
-        if (i != party)
-        {
-            Matrixint64 recv;
-            tel.send(&share, i);
-            tel.receive(&recv, i);
-            result = Mat::op_Xor(result, recv);
-        }
+        MatrixXu share1,share2;
+        tel.receive(&share1,1);
+        tel.receive(&share2,2);
+        MatrixXu temp = Mat::op_Xor(share,share1);
+        result = Mat::op_Xor(temp,share2);
+        tel.send(&result,1);
+        tel.send(&result,2);
+    }
+    else
+    {
+        tel.send(&share,0);
+        tel.receive(&result,0);
     }
     return result;
 }
 
 Matrix8 Boolean_Share::reveal(Matrix8 &share)
 {
-    Matrix8 result = share;
-    for (int i = 0; i < M; i++)
+    Matrix8 result;
+    if(party == 0)
     {
-        Matrix8 recv;
-        if (i != party)
-        {
-            tel.send(&share, i);
-            tel.receive(&recv, i);
-            result = Mat::op_Xor(result, recv);
-        }
+        Matrix8 share1,share2;
+        tel.receive(&share1,1);
+        tel.receive(&share2,2);
+        Matrix8 temp = Mat::op_Xor(share,share1);
+        result = Mat::op_Xor(temp,share2);
+        tel.send(&result,1);
+        tel.send(&result,2);
+    }
+    else
+    {
+        tel.send(&share,0);
+        tel.receive(&result,0);
     }
     return result;
 }
 
-Matrixint64 Boolean_Share::add_reveal(Matrixint64 &share)
+MatrixXu Boolean_Share::add_reveal(MatrixXu &share)
 {
-    Matrixint64 result = share;
+    MatrixXu result = share;
     // cout <<"share:"<< share << endl;
     for (int i = 0; i < M; i++)
     {
         if (i != party)
         {
-            Matrixint64 recv;
+            MatrixXu recv;
             tel.send(&share, i);
             tel.receive(&recv, i);
             result += recv;
@@ -137,49 +146,49 @@ Matrix8 Boolean_Share::byte_and_byte(Matrix8 &x, Matrix8 &y)
     }
 }
 
-Matrixint64 Boolean_Share::bool_and(Matrixint64 &x, Matrixint64 &y)
+MatrixXu Boolean_Share::bool_and(MatrixXu &x, MatrixXu &y)
 {
     int row = x.rows(), col = x.cols();
-    Matrixint64 a(row, col), b(row, col), c(row, col);
+    MatrixXu a(row, col), b(row, col), c(row, col);
     a.setZero();
     b.setZero();
     c.setZero();
-    Matrixint64 s_share = Mat::op_Xor(x, a);
-    Matrixint64 t_share = Mat::op_Xor(y, b);
-    Matrixint64 s = Boolean_Share::reveal(s_share);
-    Matrixint64 t = Boolean_Share::reveal(t_share);
+    MatrixXu s_share = Mat::op_Xor(x, a);
+    MatrixXu t_share = Mat::op_Xor(y, b);
+    MatrixXu s = Boolean_Share::reveal(s_share);
+    MatrixXu t = Boolean_Share::reveal(t_share);
     if (party == 0)
     {
-        Matrixint64 temp1 = Mat::op_And(s, t);
-        Matrixint64 temp2 = Mat::op_And(s, b);
-        Matrixint64 temp3 = Mat::op_And(t, a);
-        Matrixint64 res1 = Mat::op_Xor(temp1, temp2);
-        Matrixint64 res2 = Mat::op_Xor(temp3, c);
+        MatrixXu temp1 = Mat::op_And(s, t);
+        MatrixXu temp2 = Mat::op_And(s, b);
+        MatrixXu temp3 = Mat::op_And(t, a);
+        MatrixXu res1 = Mat::op_Xor(temp1, temp2);
+        MatrixXu res2 = Mat::op_Xor(temp3, c);
         return Mat::op_Xor(res1, res2);
     }
     else
     {
-        Matrixint64 temp1 = Mat::op_And(s, b);
-        Matrixint64 temp2 = Mat::op_And(t, a);
-        Matrixint64 temp3 = Mat::op_Xor(temp1, temp2);
+        MatrixXu temp1 = Mat::op_And(s, b);
+        MatrixXu temp2 = Mat::op_And(t, a);
+        MatrixXu temp3 = Mat::op_Xor(temp1, temp2);
         return Mat::op_Xor(temp3, c);
     }
 }
 
-Matrixint64 Boolean_Share::add(Matrixint64 &x, Matrixint64 &y)
+MatrixXu Boolean_Share::add(MatrixXu &x, MatrixXu &y)
 {
     int row = x.rows();
     int col = x.cols();
-    Matrixint64 G(row, col), P(row, col), temp(row, col), c_mask(row, col), k_mask(row, col), G1(row, col), P1(row, col), C(row, col);
+    MatrixXu G(row, col), P(row, col), temp(row, col), c_mask(row, col), k_mask(row, col), G1(row, col), P1(row, col), C(row, col);
     temp.setOnes();
-    Matrixint64 keep_masks(6, 1);
+    MatrixXu keep_masks(6, 1);
     keep_masks << 0x5555555555555555,
         0x3333333333333333,
         0x0F0F0F0F0F0F0F0F,
         0x00FF00FF00FF00FF,
         0x0000FFFF0000FFFF,
         0x00000000FFFFFFFF;
-    Matrixint64 copy_masks(6, 1);
+    MatrixXu copy_masks(6, 1);
     copy_masks << 0x5555555555555555,
         0x2222222222222222,
         0x0808080808080808,
@@ -212,7 +221,7 @@ Matrixint64 Boolean_Share::add(Matrixint64 &x, Matrixint64 &y)
 // [x]  = c + [r] + 2 * c * [r]
 //为了减少通信使用int8(只转换符号位)
 
-Matrixint64 Boolean_Share::to_additive_share(Matrixint64 &x)
+MatrixXu Boolean_Share::to_additive_share(MatrixXu &x)
 {
     int row = x.rows();
     int col = x.cols();
@@ -223,7 +232,7 @@ Matrixint64 Boolean_Share::to_additive_share(Matrixint64 &x)
     Matrix8 c = Mat::op_Xor(r_bool_share, x_byte);
     c = Boolean_Share::reveal(c);
     Matrix8 add_val_byte(row, col);
-    Matrixint64 add_val(row, col);
+    MatrixXu add_val(row, col);
     add_val_byte.setZero();
     Matrix8 ci = Mat::op_And(1, c);
     if (party == 0)
@@ -236,24 +245,24 @@ Matrixint64 Boolean_Share::to_additive_share(Matrixint64 &x)
         Matrix8 temp = r_add_share - 2 * ci.cwiseProduct(r_add_share);
         add_val_byte = add_val_byte + temp;
     }
-    add_val = add_val_byte.cast<int64>();
+    add_val = add_val_byte.cast<u64>();
     return add_val;
 }
 
-Matrixint64 Boolean_Share::secret_share_for_test(Matrixint64 &share)
+MatrixXu Boolean_Share::secret_share_for_test(MatrixXu &share)
 {
-    Matrixint64 A_plus_mat = Mat::toMatrix(Mat::A_plus);
-    // Matrixint64 truth = Mat::randomMatrixint64(B, D);
-    Matrixint64 truth(B, D);
+    MatrixXu A_plus_mat = Mat::toMatrix(Mat::A_plus);
+    // MatrixXu truth = Mat::randomMatrixXu(B, D);
+    MatrixXu truth(B, D);
     truth << 524287ull;
-    Matrixint64 temp(B, D);
+    MatrixXu temp(B, D);
     for (int i = 0; i < B; i++)
     {
         for (int j = 0; j < D; j++)
         {
-            Matrixint64 temp_vector(3, 1);
-            temp_vector << truth(i, j), Constant::Util::random_int64(), Constant::Util::random_int64();
-            Matrixint64 temp1 = A_plus_mat.row(party) * temp_vector;
+            MatrixXu temp_vector(3, 1);
+            temp_vector << truth(i, j), Constant::Util::random_u64(), Constant::Util::random_u64();
+            MatrixXu temp1 = A_plus_mat.row(party) * temp_vector;
             temp(i, j) = temp1(0, 0);
         }
     }
@@ -273,16 +282,16 @@ Matrixint64 Boolean_Share::secret_share_for_test(Matrixint64 &share)
     return truth;
 }
 
-Matrixint64 add_secret_share(Matrixint64 &share)
+MatrixXu add_secret_share(MatrixXu &share)
 {
-    vector<Matrixint64> sec_share;
-    Matrixint64 temp = Mat::randomMatrixint64(B, D);
-    Matrixint64 truth = temp;
+    vector<MatrixXu> sec_share;
+    MatrixXu temp = Mat::randomMatrixXu(B, D);
+    MatrixXu truth = temp;
     // cout << "The truth:" << endl
     //      << temp << endl;
     for (int i = 0; i < M - 1; i++)
     {
-        Matrixint64 noise = Mat::randomMatrixint64(B, D);
+        MatrixXu noise = Mat::randomMatrixXu(B, D);
         sec_share.push_back(noise);
         temp -= noise;
     }
@@ -300,17 +309,17 @@ void Boolean_Share::test()
     // Matrix8 share1(B, D), share2(B, D);
     // Matrix8 truth1_u8 = Boolean_Share::secret_share(share1);
     // Matrix8 truth2_u8 = Boolean_Share::secret_share(share2);
-    // Matrixint64 truth1 = truth1_u8.cast<int64>();
-    // Matrixint64 truth2 = truth2_u8.cast<int64>();
+    // MatrixXu truth1 = truth1_u8.cast<u64>();
+    // MatrixXu truth2 = truth2_u8.cast<u64>();
     // cout << "The truth1:" << endl
     //      << truth1 << endl;
     // cout << "The truth2:" << endl
     //      << truth2 << endl;
     // Matrix8 truth_u8 = Mat::op_And(truth1_u8, truth2_u8);
-    // Matrixint64 truth = truth_u8.cast<int64>();
+    // MatrixXu truth = truth_u8.cast<u64>();
     // Matrix8 share = Boolean_Share::byte_and_byte(share1, share2);
     // Matrix8 result_u8 = Boolean_Share::reveal(share);
-    // Matrixint64 result = result_u8.cast<int64>();
+    // MatrixXu result = result_u8.cast<u64>();
     // cout << "The truth result:" << endl
     //      << truth << endl;
     // cout << "The reveal result:" << endl
@@ -325,12 +334,12 @@ void Boolean_Share::test()
     // }
 
     // // test for add
-    // Matrixint64 share1(B, D), share2(B, D);
-    // Matrixint64 truth1 = Boolean_Share::secret_share(share1);
-    // Matrixint64 truth2 = Boolean_Share::secret_share(share2);
-    // Matrixint64 truth = truth1 + truth2;
-    // Matrixint64 share = Boolean_Share::add(share1, share2);
-    // Matrixint64 result = Boolean_Share::reveal(share);
+    // MatrixXu share1(B, D), share2(B, D);
+    // MatrixXu truth1 = Boolean_Share::secret_share(share1);
+    // MatrixXu truth2 = Boolean_Share::secret_share(share2);
+    // MatrixXu truth = truth1 + truth2;
+    // MatrixXu share = Boolean_Share::add(share1, share2);
+    // MatrixXu result = Boolean_Share::reveal(share);
     // cout << "The truth result:" << endl
     //      << truth << endl;
     // cout << "The reveal result:" << endl
@@ -345,13 +354,13 @@ void Boolean_Share::test()
     // }
 
     // // test for B2A(由于只写了bool_share为1bit时的转换 因此秘密分享时真实值只能为0或1)
-    // Matrixint64 bool_share(B, D);
-    // Matrixint64 truth = Boolean_Share::secret_share(bool_share);
+    // MatrixXu bool_share(B, D);
+    // MatrixXu truth = Boolean_Share::secret_share(bool_share);
     // cout << "The truth result:" << endl
     //      << truth << endl;
     // // cout << bool_share <<endl;
-    // Matrixint64 add_share = Boolean_Share::to_additive_share(bool_share);
-    // Matrixint64 result = Boolean_Share::add_reveal(add_share);
+    // MatrixXu add_share = Boolean_Share::to_additive_share(bool_share);
+    // MatrixXu result = Boolean_Share::add_reveal(add_share);
     // cout << "The reveal result:" << endl
     //      << result << endl;
     // if (truth == result)
@@ -364,16 +373,16 @@ void Boolean_Share::test()
     // }
 
     // // test for A2B
-    // Matrixint64 vector_share(B, D);
-    // Matrixint64 truth = Boolean_Share::secret_share_for_test(vector_share);
+    // MatrixXu vector_share(B, D);
+    // MatrixXu truth = Boolean_Share::secret_share_for_test(vector_share);
     // cout << "share:" << vector_share << endl;
-    // // Matrixint64 add_share(B, D);
-    // // Matrixint64 truth = add_secret_share(add_share);
+    // // MatrixXu add_share(B, D);
+    // // MatrixXu truth = add_secret_share(add_share);
     // cout << "The truth result:" << endl
     //      << truth << endl;
-    // Matrixint64 bool_share = Secret_Cmp::to_Boolean_Share(vector_share);
-    // Matrixint64 result = Boolean_Share::reveal(bool_share);
-    // // Matrixint64 result = Secret_Mul::reveal(vector_share);
+    // MatrixXu bool_share = Secret_Cmp::to_Boolean_Share(vector_share);
+    // MatrixXu result = Boolean_Share::reveal(bool_share);
+    // // MatrixXu result = Secret_Mul::reveal(vector_share);
     // cout << "The reveal result:" << endl
     //      << result << endl;
     // if (truth == result)
@@ -386,33 +395,33 @@ void Boolean_Share::test()
     // }
 
     // // test for comparison
-    // Matrixint64 vector_share(B, D);
-    // Matrixint64 truth = Boolean_Share::secret_share_for_test(vector_share);
+    // MatrixXu vector_share(B, D);
+    // MatrixXu truth = Boolean_Share::secret_share_for_test(vector_share);
     // cout << "The truth result:" << endl
     //      << truth << endl;
-    // Matrixint64 sign_share = Secret_Cmp::get_sign(vector_share);
+    // MatrixXu sign_share = Secret_Cmp::get_sign(vector_share);
     // // cout << "sign_share:" << sign_share << endl;
-    // Matrixint64 sign = Secret_Mul::reveal(sign_share);
+    // MatrixXu sign = Secret_Mul::reveal(sign_share);
     // cout << "The reveal result:" << endl
     //      << sign << endl;
 
     // // test for relu
-    // Matrixint64 vector_share(B, D);
-    // Matrixint64 truth = secret_share_for_test(vector_share);
+    // MatrixXu vector_share(B, D);
+    // MatrixXu truth = secret_share_for_test(vector_share);
     // cout << "The truth result:" << endl
     //      << truth << endl;
-    // Matrixint64 relu_share = Secret_Cmp::Relu(vector_share);
-    // Matrixint64 result = Secret_Mul::reveal(relu_share);
+    // MatrixXu relu_share = Secret_Cmp::Relu(vector_share);
+    // MatrixXu result = Secret_Mul::reveal(relu_share);
     // cout << "The reveal result:" << endl
     //      << result << endl;
 
     // test for sigmoid
-    Matrixint64 vector_share(B, D);
-    Matrixint64 truth = secret_share_for_test(vector_share);
-    cout << "The truth result:" << endl
-         << truth << endl;
-    Matrixint64 relu_share = Secret_Cmp::Sigmoid(vector_share);
-    Matrixint64 result = Secret_Mul::reveal(relu_share);
-    cout << "The reveal result:" << endl
-         << result << endl;
+    // MatrixXu vector_share(B, D);
+    // MatrixXu truth = secret_share_for_test(vector_share);
+    // cout << "The truth result:" << endl
+    //      << truth << endl;
+    // MatrixXu relu_share = Secret_Cmp::Sigmoid(vector_share);
+    // MatrixXu result = Secret_Mul::Mul_reveal(relu_share);
+    // cout << "The reveal result:" << endl
+    //      << result << endl;
 }

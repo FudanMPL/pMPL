@@ -1,156 +1,203 @@
 #include "Secret_Mul.h"
-// Multiply_Triplets(for(B, D)X(D, 1))
-Matrixint64 Secret_Mul::b0_1 = Matrixint64(B, D);
-Matrixint64 Secret_Mul::b0_2 = Matrixint64(B, D);
-Matrixint64 Secret_Mul::b0_3 = Matrixint64(B, D);
-Matrixint64 Secret_Mul::c0_1 = Matrixint64(D, 1);
-Matrixint64 Secret_Mul::c0_2 = Matrixint64(D, 1);
-Matrixint64 Secret_Mul::c0_3 = Matrixint64(D, 1);
-Matrixint64 Secret_Mul::d0_1 = Matrixint64(B, 1);
-Matrixint64 Secret_Mul::d0_2 = Matrixint64(B, 1);
-Matrixint64 Secret_Mul::d0_3 = Matrixint64(B, 1);
-Matrixint64 Secret_Mul::r0 = Matrixint64(B, D);
-Matrixint64 Secret_Mul::q0 = Matrixint64(D, 1);
-Matrixint64 Secret_Mul::t0 = Matrixint64(B, 1);
+// Multiply_Triplets(for(B, D)X(D, numClass))
+MatrixXu Secret_Mul::b0_1 = MatrixXu(B, D);
+MatrixXu Secret_Mul::b0_2 = MatrixXu(B, D);
+MatrixXu Secret_Mul::b0_3 = MatrixXu(B, D);
+MatrixXu Secret_Mul::c0_1 = MatrixXu(D, numClass);
+MatrixXu Secret_Mul::c0_2 = MatrixXu(D, numClass);
+MatrixXu Secret_Mul::c0_3 = MatrixXu(D, numClass);
+MatrixXu Secret_Mul::d0_1 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::d0_2 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::d0_3 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::r0 = MatrixXu(B, D);
+MatrixXu Secret_Mul::q0 = MatrixXu(D, numClass);
+MatrixXu Secret_Mul::t0 = MatrixXu(B, numClass);
 
-// Multiply_Triplets(for(D, B)X(B, 1))
-Matrixint64 Secret_Mul::b1_1 = Matrixint64(D, B);
-Matrixint64 Secret_Mul::b1_2 = Matrixint64(D, B);
-Matrixint64 Secret_Mul::b1_3 = Matrixint64(D, B);
-Matrixint64 Secret_Mul::c1_1 = Matrixint64(B, 1);
-Matrixint64 Secret_Mul::c1_2 = Matrixint64(B, 1);
-Matrixint64 Secret_Mul::c1_3 = Matrixint64(B, 1);
-Matrixint64 Secret_Mul::d1_1 = Matrixint64(D, 1);
-Matrixint64 Secret_Mul::d1_2 = Matrixint64(D, 1);
-Matrixint64 Secret_Mul::d1_3 = Matrixint64(D, 1);
-Matrixint64 Secret_Mul::r1 = Matrixint64(D, B);
-Matrixint64 Secret_Mul::q1 = Matrixint64(B, 1);
-Matrixint64 Secret_Mul::t1 = Matrixint64(D, 1);
+// Multiply_Triplets(for(D, B)X(B, numClass))
+MatrixXu Secret_Mul::b1_1 = MatrixXu(D, B);
+MatrixXu Secret_Mul::b1_2 = MatrixXu(D, B);
+MatrixXu Secret_Mul::b1_3 = MatrixXu(D, B);
+MatrixXu Secret_Mul::c1_1 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::c1_2 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::c1_3 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::d1_1 = MatrixXu(D, numClass);
+MatrixXu Secret_Mul::d1_2 = MatrixXu(D, numClass);
+MatrixXu Secret_Mul::d1_3 = MatrixXu(D, numClass);
+MatrixXu Secret_Mul::r1 = MatrixXu(D, B);
+MatrixXu Secret_Mul::q1 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::t1 = MatrixXu(D, numClass);
 
 // Multiply_Triplets(for(B, D)X(D, hiddenDim))
-Matrixint64 Secret_Mul::b2_1 = Matrixint64(B, D);
-Matrixint64 Secret_Mul::b2_2 = Matrixint64(B, D);
-Matrixint64 Secret_Mul::b2_3 = Matrixint64(B, D);
-Matrixint64 Secret_Mul::c2_1 = Matrixint64(D, hiddenDim);
-Matrixint64 Secret_Mul::c2_2 = Matrixint64(D, hiddenDim);
-Matrixint64 Secret_Mul::c2_3 = Matrixint64(D, hiddenDim);
-Matrixint64 Secret_Mul::d2_1 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::d2_2 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::d2_3 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::r2 = Matrixint64(B, D);
-Matrixint64 Secret_Mul::q2 = Matrixint64(D, hiddenDim);
-Matrixint64 Secret_Mul::t2 = Matrixint64(B, hiddenDim);
+MatrixXu Secret_Mul::b2_1 = MatrixXu(B, D);
+MatrixXu Secret_Mul::b2_2 = MatrixXu(B, D);
+MatrixXu Secret_Mul::b2_3 = MatrixXu(B, D);
+MatrixXu Secret_Mul::c2_1 = MatrixXu(D, hiddenDim);
+MatrixXu Secret_Mul::c2_2 = MatrixXu(D, hiddenDim);
+MatrixXu Secret_Mul::c2_3 = MatrixXu(D, hiddenDim);
+MatrixXu Secret_Mul::d2_1 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::d2_2 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::d2_3 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::r2 = MatrixXu(B, D);
+MatrixXu Secret_Mul::q2 = MatrixXu(D, hiddenDim);
+MatrixXu Secret_Mul::t2 = MatrixXu(B, hiddenDim);
 
-// Multiply_Triplets(for(B, hiddenDim)X(hiddenDim, 1))
-Matrixint64 Secret_Mul::b3_1 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::b3_2 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::b3_3 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::c3_1 = Matrixint64(hiddenDim, 1);
-Matrixint64 Secret_Mul::c3_2 = Matrixint64(hiddenDim, 1);
-Matrixint64 Secret_Mul::c3_3 = Matrixint64(hiddenDim, 1);
-Matrixint64 Secret_Mul::d3_1 = Matrixint64(B, 1);
-Matrixint64 Secret_Mul::d3_2 = Matrixint64(B, 1);
-Matrixint64 Secret_Mul::d3_3 = Matrixint64(B, 1);
-Matrixint64 Secret_Mul::r3 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::q3 = Matrixint64(hiddenDim, 1);
-Matrixint64 Secret_Mul::t3 = Matrixint64(B, 1);
+// Multiply_Triplets(for(B, hiddenDim)X(hiddenDim, numClass))
+MatrixXu Secret_Mul::b3_1 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::b3_2 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::b3_3 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::c3_1 = MatrixXu(hiddenDim, numClass);
+MatrixXu Secret_Mul::c3_2 = MatrixXu(hiddenDim, numClass);
+MatrixXu Secret_Mul::c3_3 = MatrixXu(hiddenDim, numClass);
+MatrixXu Secret_Mul::d3_1 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::d3_2 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::d3_3 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::r3 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::q3 = MatrixXu(hiddenDim, numClass);
+MatrixXu Secret_Mul::t3 = MatrixXu(B, numClass);
 
 // Multiply_Triplets(for(B, 1)X(1, hiddenDim))
-Matrixint64 Secret_Mul::b4_1 = Matrixint64(B, 1);
-Matrixint64 Secret_Mul::b4_2 = Matrixint64(B, 1);
-Matrixint64 Secret_Mul::b4_3 = Matrixint64(B, 1);
-Matrixint64 Secret_Mul::c4_1 = Matrixint64(1, hiddenDim);
-Matrixint64 Secret_Mul::c4_2 = Matrixint64(1, hiddenDim);
-Matrixint64 Secret_Mul::c4_3 = Matrixint64(1, hiddenDim);
-Matrixint64 Secret_Mul::d4_1 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::d4_2 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::d4_3 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::r4 = Matrixint64(B, 1);
-Matrixint64 Secret_Mul::q4 = Matrixint64(1, hiddenDim);
-Matrixint64 Secret_Mul::t4 = Matrixint64(B, hiddenDim);
+MatrixXu Secret_Mul::b4_1 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::b4_2 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::b4_3 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::c4_1 = MatrixXu(numClass, hiddenDim);
+MatrixXu Secret_Mul::c4_2 = MatrixXu(numClass, hiddenDim);
+MatrixXu Secret_Mul::c4_3 = MatrixXu(numClass, hiddenDim);
+MatrixXu Secret_Mul::d4_1 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::d4_2 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::d4_3 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::r4 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::q4 = MatrixXu(numClass, hiddenDim);
+MatrixXu Secret_Mul::t4 = MatrixXu(B, hiddenDim);
 
 // Multiply_Triplets(for(B, hiddenDim)X(hiddenDim, hiddenDim))
-Matrixint64 Secret_Mul::b5_1 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::b5_2 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::b5_3 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::c5_1 = Matrixint64(hiddenDim, hiddenDim);
-Matrixint64 Secret_Mul::c5_2 = Matrixint64(hiddenDim, hiddenDim);
-Matrixint64 Secret_Mul::c5_3 = Matrixint64(hiddenDim, hiddenDim);
-Matrixint64 Secret_Mul::d5_1 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::d5_2 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::d5_3 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::r5 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::q5 = Matrixint64(hiddenDim, hiddenDim);
-Matrixint64 Secret_Mul::t5 = Matrixint64(B, hiddenDim);
+MatrixXu Secret_Mul::b5_1 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::b5_2 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::b5_3 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::c5_1 = MatrixXu(hiddenDim, hiddenDim);
+MatrixXu Secret_Mul::c5_2 = MatrixXu(hiddenDim, hiddenDim);
+MatrixXu Secret_Mul::c5_3 = MatrixXu(hiddenDim, hiddenDim);
+MatrixXu Secret_Mul::d5_1 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::d5_2 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::d5_3 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::r5 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::q5 = MatrixXu(hiddenDim, hiddenDim);
+MatrixXu Secret_Mul::t5 = MatrixXu(B, hiddenDim);
 
 // Multiply_Triplets(for(D, B)X(B, hiddenDim))
-Matrixint64 Secret_Mul::b6_1 = Matrixint64(D, B);
-Matrixint64 Secret_Mul::b6_2 = Matrixint64(D, B);
-Matrixint64 Secret_Mul::b6_3 = Matrixint64(D, B);
-Matrixint64 Secret_Mul::c6_1 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::c6_2 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::c6_3 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::d6_1 = Matrixint64(D, hiddenDim);
-Matrixint64 Secret_Mul::d6_2 = Matrixint64(D, hiddenDim);
-Matrixint64 Secret_Mul::d6_3 = Matrixint64(D, hiddenDim);
-Matrixint64 Secret_Mul::r6 = Matrixint64(D, B);
-Matrixint64 Secret_Mul::q6 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::t6 = Matrixint64(D, hiddenDim);
+MatrixXu Secret_Mul::b6_1 = MatrixXu(D, B);
+MatrixXu Secret_Mul::b6_2 = MatrixXu(D, B);
+MatrixXu Secret_Mul::b6_3 = MatrixXu(D, B);
+MatrixXu Secret_Mul::c6_1 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::c6_2 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::c6_3 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::d6_1 = MatrixXu(D, hiddenDim);
+MatrixXu Secret_Mul::d6_2 = MatrixXu(D, hiddenDim);
+MatrixXu Secret_Mul::d6_3 = MatrixXu(D, hiddenDim);
+MatrixXu Secret_Mul::r6 = MatrixXu(D, B);
+MatrixXu Secret_Mul::q6 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::t6 = MatrixXu(D, hiddenDim);
 
-Matrixint64 Secret_Mul::m0_0 = Matrixint64(B, 1);
-Matrixint64 Secret_Mul::m0_1 = Matrixint64(B, 1);
-Matrixint64 Secret_Mul::m0_2 = Matrixint64(B, 1);
-Matrixint64 Secret_Mul::m0_3 = Matrixint64(B, 1);
+// Multiply_Triplets(for(hiddenDim, B)X(B, 1))
+MatrixXu Secret_Mul::b7_1 = MatrixXu(hiddenDim, B);
+MatrixXu Secret_Mul::b7_2 = MatrixXu(hiddenDim, B);
+MatrixXu Secret_Mul::b7_3 = MatrixXu(hiddenDim, B);
+MatrixXu Secret_Mul::c7_1 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::c7_2 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::c7_3 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::d7_1 = MatrixXu(hiddenDim, numClass);
+MatrixXu Secret_Mul::d7_2 = MatrixXu(hiddenDim, numClass);
+MatrixXu Secret_Mul::d7_3 = MatrixXu(hiddenDim, numClass);
+MatrixXu Secret_Mul::r7 = MatrixXu(hiddenDim, B);
+MatrixXu Secret_Mul::q7 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::t7 = MatrixXu(hiddenDim, numClass);
 
-Matrixint64 Secret_Mul::m_00 = Matrixint64(B, 1);
-Matrixint64 Secret_Mul::m_01 = Matrixint64(B, 1);
-Matrixint64 Secret_Mul::m_02 = Matrixint64(B, 1);
-Matrixint64 Secret_Mul::m_03 = Matrixint64(B, 1);
+// Multiply_Triplets(for(hiddenDim, B)X(B, hiddenDim))
+MatrixXu Secret_Mul::b8_1 = MatrixXu(hiddenDim, B);
+MatrixXu Secret_Mul::b8_2 = MatrixXu(hiddenDim, B);
+MatrixXu Secret_Mul::b8_3 = MatrixXu(hiddenDim, B);
+MatrixXu Secret_Mul::c8_1 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::c8_2 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::c8_3 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::d8_1 = MatrixXu(hiddenDim, hiddenDim);
+MatrixXu Secret_Mul::d8_2 = MatrixXu(hiddenDim, hiddenDim);
+MatrixXu Secret_Mul::d8_3 = MatrixXu(hiddenDim, hiddenDim);
+MatrixXu Secret_Mul::r8 = MatrixXu(hiddenDim, B);
+MatrixXu Secret_Mul::q8 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::t8 = MatrixXu(hiddenDim, hiddenDim);
 
-Matrixint64 Secret_Mul::m1_0 = Matrixint64(D, 1);
-Matrixint64 Secret_Mul::m1_1 = Matrixint64(D, 1);
-Matrixint64 Secret_Mul::m1_2 = Matrixint64(D, 1);
-Matrixint64 Secret_Mul::m1_3 = Matrixint64(D, 1);
+MatrixXu Secret_Mul::m0_0 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::m0_1 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::m0_2 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::m0_3 = MatrixXu(B, numClass);
 
-Matrixint64 Secret_Mul::m_10 = Matrixint64(D, 1);
-Matrixint64 Secret_Mul::m_11 = Matrixint64(D, 1);
-Matrixint64 Secret_Mul::m_12 = Matrixint64(D, 1);
-Matrixint64 Secret_Mul::m_13 = Matrixint64(D, 1);
+MatrixXu Secret_Mul::m_00 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::m_01 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::m_02 = MatrixXu(B, numClass);
+MatrixXu Secret_Mul::m_03 = MatrixXu(B, numClass);
 
-Matrixint64 Secret_Mul::m2_0 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::m2_1 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::m2_2 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::m2_3 = Matrixint64(B, hiddenDim);
+MatrixXu Secret_Mul::m1_0 = MatrixXu(D, numClass);
+MatrixXu Secret_Mul::m1_1 = MatrixXu(D, numClass);
+MatrixXu Secret_Mul::m1_2 = MatrixXu(D, numClass);
+MatrixXu Secret_Mul::m1_3 = MatrixXu(D, numClass);
 
-Matrixint64 Secret_Mul::m_20 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::m_21 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::m_22 = Matrixint64(B, hiddenDim);
-Matrixint64 Secret_Mul::m_23 = Matrixint64(B, hiddenDim);
+MatrixXu Secret_Mul::m_10 = MatrixXu(D, numClass);
+MatrixXu Secret_Mul::m_11 = MatrixXu(D, numClass);
+MatrixXu Secret_Mul::m_12 = MatrixXu(D, numClass);
+MatrixXu Secret_Mul::m_13 = MatrixXu(D, numClass);
 
-Matrixint64 Secret_Mul::m3_0 = Matrixint64(D, hiddenDim);
-Matrixint64 Secret_Mul::m3_1 = Matrixint64(D, hiddenDim);
-Matrixint64 Secret_Mul::m3_2 = Matrixint64(D, hiddenDim);
-Matrixint64 Secret_Mul::m3_3 = Matrixint64(D, hiddenDim);
+MatrixXu Secret_Mul::m2_0 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::m2_1 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::m2_2 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::m2_3 = MatrixXu(B, hiddenDim);
 
-Matrixint64 Secret_Mul::m_30 = Matrixint64(D, hiddenDim);
-Matrixint64 Secret_Mul::m_31 = Matrixint64(D, hiddenDim);
-Matrixint64 Secret_Mul::m_32 = Matrixint64(D, hiddenDim);
-Matrixint64 Secret_Mul::m_33 = Matrixint64(D, hiddenDim);
+MatrixXu Secret_Mul::m_20 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::m_21 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::m_22 = MatrixXu(B, hiddenDim);
+MatrixXu Secret_Mul::m_23 = MatrixXu(B, hiddenDim);
+
+MatrixXu Secret_Mul::m3_0 = MatrixXu(D, hiddenDim);
+MatrixXu Secret_Mul::m3_1 = MatrixXu(D, hiddenDim);
+MatrixXu Secret_Mul::m3_2 = MatrixXu(D, hiddenDim);
+MatrixXu Secret_Mul::m3_3 = MatrixXu(D, hiddenDim);
+
+MatrixXu Secret_Mul::m_30 = MatrixXu(D, hiddenDim);
+MatrixXu Secret_Mul::m_31 = MatrixXu(D, hiddenDim);
+MatrixXu Secret_Mul::m_32 = MatrixXu(D, hiddenDim);
+MatrixXu Secret_Mul::m_33 = MatrixXu(D, hiddenDim);
+
+MatrixXu Secret_Mul::m4_0 = MatrixXu(hiddenDim, numClass);
+MatrixXu Secret_Mul::m4_1 = MatrixXu(hiddenDim, numClass);
+MatrixXu Secret_Mul::m4_2 = MatrixXu(hiddenDim, numClass);
+MatrixXu Secret_Mul::m4_3 = MatrixXu(hiddenDim, numClass);
+
+MatrixXu Secret_Mul::m_40 = MatrixXu(hiddenDim, numClass);
+MatrixXu Secret_Mul::m_41 = MatrixXu(hiddenDim, numClass);
+MatrixXu Secret_Mul::m_42 = MatrixXu(hiddenDim, numClass);
+MatrixXu Secret_Mul::m_43 = MatrixXu(hiddenDim, numClass);
+
+MatrixXu Secret_Mul::m5_0 = MatrixXu(hiddenDim, hiddenDim);
+MatrixXu Secret_Mul::m5_1 = MatrixXu(hiddenDim, hiddenDim);
+MatrixXu Secret_Mul::m5_2 = MatrixXu(hiddenDim, hiddenDim);
+MatrixXu Secret_Mul::m5_3 = MatrixXu(hiddenDim, hiddenDim);
+
+MatrixXu Secret_Mul::m_50 = MatrixXu(hiddenDim, hiddenDim);
+MatrixXu Secret_Mul::m_51 = MatrixXu(hiddenDim, hiddenDim);
+MatrixXu Secret_Mul::m_52 = MatrixXu(hiddenDim, hiddenDim);
+MatrixXu Secret_Mul::m_53 = MatrixXu(hiddenDim, hiddenDim);
 
 void Secret_Mul::init()
 {
-    // for (B, D)X(D, 1)
-    b0_1 = Mat::randomMatrixint64(B, D);
-    b0_2 = Mat::randomMatrixint64(B, D);
-    b0_3 = Mat::randomMatrixint64(B, D);
-    c0_1 = Mat::randomMatrixint64(D, 1);
-    c0_2 = Mat::randomMatrixint64(D, 1);
-    c0_3 = Mat::randomMatrixint64(D, 1);
+    // for (B, D)X(D, numClass)
+    b0_1 = Mat::randomMatrixXu(B, D);
+    b0_2 = Mat::randomMatrixXu(B, D);
+    b0_3 = Mat::randomMatrixXu(B, D);
+    c0_1 = Mat::randomMatrixXu(D, numClass);
+    c0_2 = Mat::randomMatrixXu(D, numClass);
+    c0_3 = Mat::randomMatrixXu(D, numClass);
     d0_1 = b0_1 * c0_1;
-
-    d0_2 = Mat::randomMatrixint64(B, 1);
-    d0_3 = Mat::randomMatrixint64(B, 1);
-    Tensor<int64, 3> b0(3, B, D);
+    d0_2 = Mat::randomMatrixXu(B, numClass);
+    d0_3 = Mat::randomMatrixXu(B, numClass);
+    Tensor<u64, 3> b0(3, B, D);
     for (int j = 0; j < D; j++)
     {
         for (int i = 0; i < B; i++)
@@ -160,26 +207,32 @@ void Secret_Mul::init()
             b0(2, i, j) = b0_3(i, j);
         }
     }
-    Tensor<int64, 3> c0(3, D, 1);
+    Tensor<u64, 3> c0(3, D, numClass);
     for (int i = 0; i < D; i++)
     {
-        c0(0, i, 0) = c0_1(i, 0);
-        c0(1, i, 0) = c0_2(i, 0);
-        c0(2, i, 0) = c0_3(i, 0);
+        for (int j = 0; j < numClass; j++)
+        {
+            c0(0, i, j) = c0_1(i, j);
+            c0(1, i, j) = c0_2(i, j);
+            c0(2, i, j) = c0_3(i, j);
+        }
     }
-    Tensor<int64, 3> d0(3, B, 1);
+    Tensor<u64, 3> d0(3, B, numClass);
     for (int i = 0; i < B; i++)
     {
-        d0(0, i, 0) = d0_1(i, 0);
-        d0(1, i, 0) = d0_2(i, 0);
-        d0(2, i, 0) = d0_3(i, 0);
+        for (int j = 0; j < numClass; j++)
+        {
+            d0(0, i, j) = d0_1(i, j);
+            d0(1, i, j) = d0_2(i, j);
+            d0(2, i, j) = d0_3(i, j);
+        }
     }
-    Tensor<int64, 3> r0, q0, t0;
-    Eigen::array<Eigen::IndexPair<int64>, 1> product_dims1 = {Eigen::IndexPair<int64>(1, 0)};
+    Tensor<u64, 3> r0, q0, t0;
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims1 = {Eigen::IndexPair<u64>(1, 0)};
     r0 = Mat::A_plus.contract(b0, product_dims1);
-    Eigen::array<Eigen::IndexPair<int64>, 1> product_dims2 = {Eigen::IndexPair<int64>(1, 0)};
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims2 = {Eigen::IndexPair<u64>(1, 0)};
     q0 = Mat::A_plus.contract(c0, product_dims2);
-    Eigen::array<Eigen::IndexPair<int64>, 1> product_dims3 = {Eigen::IndexPair<int64>(1, 0)};
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims3 = {Eigen::IndexPair<u64>(1, 0)};
     t0 = Mat::A_plus.contract(d0, product_dims3);
 
     ofstream F0_0, F0_1, F0_2, F0_3;
@@ -203,34 +256,48 @@ void Secret_Mul::init()
     }
     for (int i = 0; i < D; i++)
     {
-        F0_0 << q0(0, i, 0) << ',' << endl;
-        F0_1 << q0(1, i, 0) << ',' << endl;
-        F0_2 << q0(2, i, 0) << ',' << endl;
-        F0_3 << q0(3, i, 0) << ',' << endl;
+        for (int j = 0; j < numClass; j++)
+        {
+            F0_0 << q0(0, i, j) << ',';
+            F0_1 << q0(1, i, j) << ',';
+            F0_2 << q0(2, i, j) << ',';
+            F0_3 << q0(3, i, j) << ',';
+        }
+        F0_0 << std::endl;
+        F0_1 << std::endl;
+        F0_2 << std::endl;
+        F0_3 << std::endl;
     }
     for (int i = 0; i < B; i++)
     {
-        F0_0 << t0(0, i, 0) << ',' << endl;
-        F0_1 << t0(1, i, 0) << ',' << endl;
-        F0_2 << t0(2, i, 0) << ',' << endl;
-        F0_3 << t0(3, i, 0) << ',' << endl;
+        for (int j = 0; j < numClass; j++)
+        {
+            F0_0 << t0(0, i, j) << ',';
+            F0_1 << t0(1, i, j) << ',';
+            F0_2 << t0(2, i, j) << ',';
+            F0_3 << t0(3, i, j) << ',';
+        }
+        F0_0 << std::endl;
+        F0_1 << std::endl;
+        F0_2 << std::endl;
+        F0_3 << std::endl;
     }
     F0_0.close();
     F0_1.close();
     F0_2.close();
     F0_3.close();
 
-    // for (D, B)X(B, 1)
-    b1_1 = Mat::randomMatrixint64(D, B);
-    b1_2 = Mat::randomMatrixint64(D, B);
-    b1_3 = Mat::randomMatrixint64(D, B);
-    c1_1 = Mat::randomMatrixint64(B, 1);
-    c1_2 = Mat::randomMatrixint64(B, 1);
-    c1_3 = Mat::randomMatrixint64(B, 1);
+    // for (D, B)X(B, numClass)
+    b1_1 = Mat::randomMatrixXu(D, B);
+    b1_2 = Mat::randomMatrixXu(D, B);
+    b1_3 = Mat::randomMatrixXu(D, B);
+    c1_1 = Mat::randomMatrixXu(B, numClass);
+    c1_2 = Mat::randomMatrixXu(B, numClass);
+    c1_3 = Mat::randomMatrixXu(B, numClass);
     d1_1 = b1_1 * c1_1;
-    d1_2 = Mat::randomMatrixint64(D, 1);
-    d1_3 = Mat::randomMatrixint64(D, 1);
-    Tensor<int64, 3> b1(3, D, B);
+    d1_2 = Mat::randomMatrixXu(D, numClass);
+    d1_3 = Mat::randomMatrixXu(D, numClass);
+    Tensor<u64, 3> b1(3, D, B);
     for (int j = 0; j < B; j++)
     {
         for (int i = 0; i < D; i++)
@@ -240,26 +307,32 @@ void Secret_Mul::init()
             b1(2, i, j) = b1_3(i, j);
         }
     }
-    Tensor<int64, 3> c1(3, B, 1);
+    Tensor<u64, 3> c1(3, B, numClass);
     for (int i = 0; i < B; i++)
     {
-        c1(0, i, 0) = c1_1(i, 0);
-        c1(1, i, 0) = c1_2(i, 0);
-        c1(2, i, 0) = c1_3(i, 0);
+        for (int j = 0; j < numClass; j++)
+        {
+            c1(0, i, j) = c1_1(i, j);
+            c1(1, i, j) = c1_2(i, j);
+            c1(2, i, j) = c1_3(i, j);
+        }
     }
-    Tensor<int64, 3> d1(3, D, 1);
+    Tensor<u64, 3> d1(3, D, numClass);
     for (int i = 0; i < D; i++)
     {
-        d1(0, i, 0) = d1_1(i, 0);
-        d1(1, i, 0) = d1_2(i, 0);
-        d1(2, i, 0) = d1_3(i, 0);
+        for (int j = 0; j < numClass; j++)
+        {
+            d1(0, i, j) = d1_1(i, j);
+            d1(1, i, j) = d1_2(i, j);
+            d1(2, i, j) = d1_3(i, j);
+        }
     }
-    Tensor<int64, 3> r1, q1, t1;
-    Eigen::array<Eigen::IndexPair<int64>, 1> product_dims4 = {Eigen::IndexPair<int64>(1, 0)};
+    Tensor<u64, 3> r1, q1, t1;
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims4 = {Eigen::IndexPair<u64>(1, 0)};
     r1 = Mat::A_plus.contract(b1, product_dims4);
-    Eigen::array<Eigen::IndexPair<int64>, 1> product_dims5 = {Eigen::IndexPair<int64>(1, 0)};
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims5 = {Eigen::IndexPair<u64>(1, 0)};
     q1 = Mat::A_plus.contract(c1, product_dims5);
-    Eigen::array<Eigen::IndexPair<int64>, 1> product_dims6 = {Eigen::IndexPair<int64>(1, 0)};
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims6 = {Eigen::IndexPair<u64>(1, 0)};
     t1 = Mat::A_plus.contract(d1, product_dims6);
     ofstream F1_0, F1_1, F1_2, F1_3;
     F1_0.open("Mul_Triplets/MT1_0.txt");
@@ -282,17 +355,31 @@ void Secret_Mul::init()
     }
     for (int i = 0; i < B; i++)
     {
-        F1_0 << q1(0, i, 0) << ',' << endl;
-        F1_1 << q1(1, i, 0) << ',' << endl;
-        F1_2 << q1(2, i, 0) << ',' << endl;
-        F1_3 << q1(3, i, 0) << ',' << endl;
+        for (int j = 0; j < numClass; j++)
+        {
+            F1_0 << q1(0, i, j) << ',';
+            F1_1 << q1(1, i, j) << ',';
+            F1_2 << q1(2, i, j) << ',';
+            F1_3 << q1(3, i, j) << ',';
+        }
+        F1_0 << std::endl;
+        F1_1 << std::endl;
+        F1_2 << std::endl;
+        F1_3 << std::endl;
     }
     for (int i = 0; i < D; i++)
     {
-        F1_0 << t1(0, i, 0) << ',' << endl;
-        F1_1 << t1(1, i, 0) << ',' << endl;
-        F1_2 << t1(2, i, 0) << ',' << endl;
-        F1_3 << t1(3, i, 0) << ',' << endl;
+        for (int j = 0; j < numClass; j++)
+        {
+            F1_0 << t1(0, i, j) << ',';
+            F1_1 << t1(1, i, j) << ',';
+            F1_2 << t1(2, i, j) << ',';
+            F1_3 << t1(3, i, j) << ',';
+        }
+        F1_0 << std::endl;
+        F1_1 << std::endl;
+        F1_2 << std::endl;
+        F1_3 << std::endl;
     }
     F1_0.close();
     F1_1.close();
@@ -300,16 +387,16 @@ void Secret_Mul::init()
     F1_3.close();
 
     // for(B, D)X(D, hiddenDim)
-    b2_1 = Mat::randomMatrixint64(B, D);
-    b2_2 = Mat::randomMatrixint64(B, D);
-    b2_3 = Mat::randomMatrixint64(B, D);
-    c2_1 = Mat::randomMatrixint64(D, hiddenDim);
-    c2_2 = Mat::randomMatrixint64(D, hiddenDim);
-    c2_3 = Mat::randomMatrixint64(D, hiddenDim);
+    b2_1 = Mat::randomMatrixXu(B, D);
+    b2_2 = Mat::randomMatrixXu(B, D);
+    b2_3 = Mat::randomMatrixXu(B, D);
+    c2_1 = Mat::randomMatrixXu(D, hiddenDim);
+    c2_2 = Mat::randomMatrixXu(D, hiddenDim);
+    c2_3 = Mat::randomMatrixXu(D, hiddenDim);
     d2_1 = b2_1 * c2_1;
-    d2_2 = Mat::randomMatrixint64(B, hiddenDim);
-    d2_3 = Mat::randomMatrixint64(B, hiddenDim);
-    Tensor<int64, 3> b2(3, B, D);
+    d2_2 = Mat::randomMatrixXu(B, hiddenDim);
+    d2_3 = Mat::randomMatrixXu(B, hiddenDim);
+    Tensor<u64, 3> b2(3, B, D);
     for (int j = 0; j < D; j++)
     {
         for (int i = 0; i < B; i++)
@@ -319,7 +406,7 @@ void Secret_Mul::init()
             b2(2, i, j) = b2_3(i, j);
         }
     }
-    Tensor<int64, 3> c2(3, D, hiddenDim);
+    Tensor<u64, 3> c2(3, D, hiddenDim);
     for (int j = 0; j < hiddenDim; j++)
     {
         for (int i = 0; i < D; i++)
@@ -329,7 +416,7 @@ void Secret_Mul::init()
             c2(2, i, j) = c2_3(i, j);
         }
     }
-    Tensor<int64, 3> d2(3, B, hiddenDim);
+    Tensor<u64, 3> d2(3, B, hiddenDim);
     for (int j = 0; j < hiddenDim; j++)
     {
         for (int i = 0; i < B; i++)
@@ -340,12 +427,12 @@ void Secret_Mul::init()
         }
     }
 
-    Tensor<int64, 3> r2, q2, t2;
-    Eigen::array<Eigen::IndexPair<int64>, 1> product_dims7 = {Eigen::IndexPair<int64>(1, 0)};
+    Tensor<u64, 3> r2, q2, t2;
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims7 = {Eigen::IndexPair<u64>(1, 0)};
     r2 = Mat::A_plus.contract(b2, product_dims7);
-    Eigen::array<Eigen::IndexPair<int64>, 1> product_dims8 = {Eigen::IndexPair<int64>(1, 0)};
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims8 = {Eigen::IndexPair<u64>(1, 0)};
     q2 = Mat::A_plus.contract(c2, product_dims8);
-    Eigen::array<Eigen::IndexPair<int64>, 1> product_dims9 = {Eigen::IndexPair<int64>(1, 0)};
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims9 = {Eigen::IndexPair<u64>(1, 0)};
     t2 = Mat::A_plus.contract(d2, product_dims9);
     ofstream F2_0, F2_1, F2_2, F2_3;
     F2_0.open("Mul_Triplets/MT2_0.txt");
@@ -399,26 +486,18 @@ void Secret_Mul::init()
     F2_2.close();
     F2_3.close();
 
-    // for(B, hiddenDim)X(hiddenDim, 1)
-    b3_1 = Mat::randomMatrixint64(B, hiddenDim);
-    b3_2 = Mat::randomMatrixint64(B, hiddenDim);
-    b3_3 = Mat::randomMatrixint64(B, hiddenDim);
-    c3_1 = Mat::randomMatrixint64(hiddenDim, 1);
-    c3_2 = Mat::randomMatrixint64(hiddenDim, 1);
-    c3_3 = Mat::randomMatrixint64(hiddenDim, 1);
+    // for(B, hiddenDim)X(hiddenDim, numClass)
+    b3_1 = Mat::randomMatrixXu(B, hiddenDim);
+    b3_2 = Mat::randomMatrixXu(B, hiddenDim);
+    b3_3 = Mat::randomMatrixXu(B, hiddenDim);
+    c3_1 = Mat::randomMatrixXu(hiddenDim, numClass);
+    c3_2 = Mat::randomMatrixXu(hiddenDim, numClass);
+    c3_3 = Mat::randomMatrixXu(hiddenDim, numClass);
     d3_1 = b3_1 * c3_1;
-    d3_2 = Mat::randomMatrixint64(B, 1);
-    d3_3 = Mat::randomMatrixint64(B, 1);
-    // cout <<"b3_1:"<<b3_1<<endl;
-    // cout <<"b3_2:"<<b3_2<<endl;
-    // cout <<"b3_3:"<<b3_3<<endl;
-    // cout <<"c3_1:"<<c3_1<<endl;
-    // cout <<"c3_2:"<<c3_2<<endl;
-    // cout <<"c3_3:"<<c3_3<<endl;
-    // cout <<"d3_1:"<<d3_1<<endl;
-    // cout <<"d3_2:"<<d3_2<<endl;
-    // cout <<"d3_3:"<<d3_3<<endl;
-    Tensor<int64, 3> b3(3, B, hiddenDim);
+    d3_2 = Mat::randomMatrixXu(B, numClass);
+    d3_3 = Mat::randomMatrixXu(B, numClass);
+
+    Tensor<u64, 3> b3(3, B, hiddenDim);
     for (int j = 0; j < hiddenDim; j++)
     {
         for (int i = 0; i < B; i++)
@@ -428,27 +507,33 @@ void Secret_Mul::init()
             b3(2, i, j) = b3_3(i, j);
         }
     }
-    Tensor<int64, 3> c3(3, hiddenDim, 1);
+    Tensor<u64, 3> c3(3, hiddenDim, numClass);
     for (int i = 0; i < hiddenDim; i++)
     {
-        c3(0, i, 0) = c3_1(i, 0);
-        c3(1, i, 0) = c3_2(i, 0);
-        c3(2, i, 0) = c3_3(i, 0);
+        for (int j = 0; j < numClass; j++)
+        {
+            c3(0, i, j) = c3_1(i, j);
+            c3(1, i, j) = c3_2(i, j);
+            c3(2, i, j) = c3_3(i, j);
+        }
     }
-    Tensor<int64, 3> d3(3, B, 1);
+    Tensor<u64, 3> d3(3, B, numClass);
     for (int i = 0; i < B; i++)
     {
-        d3(0, i, 0) = d3_1(i, 0);
-        d3(1, i, 0) = d3_2(i, 0);
-        d3(2, i, 0) = d3_3(i, 0);
+        for (int j = 0; j < numClass; j++)
+        {
+            d3(0, i, j) = d3_1(i, j);
+            d3(1, i, j) = d3_2(i, j);
+            d3(2, i, j) = d3_3(i, j);
+        }
     }
 
-    Tensor<int64, 3> r3, q3, t3;
-    Eigen::array<Eigen::IndexPair<int64>, 1> product_dims10 = {Eigen::IndexPair<int64>(1, 0)};
+    Tensor<u64, 3> r3, q3, t3;
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims10 = {Eigen::IndexPair<u64>(1, 0)};
     r3 = Mat::A_plus.contract(b3, product_dims10);
-    Eigen::array<Eigen::IndexPair<int64>, 1> product_dims11 = {Eigen::IndexPair<int64>(1, 0)};
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims11 = {Eigen::IndexPair<u64>(1, 0)};
     q3 = Mat::A_plus.contract(c3, product_dims11);
-    Eigen::array<Eigen::IndexPair<int64>, 1> product_dims12 = {Eigen::IndexPair<int64>(1, 0)};
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims12 = {Eigen::IndexPair<u64>(1, 0)};
     t3 = Mat::A_plus.contract(d3, product_dims12);
     ofstream F3_0, F3_1, F3_2, F3_3;
     F3_0.open("Mul_Triplets/MT3_0.txt");
@@ -471,49 +556,68 @@ void Secret_Mul::init()
     }
     for (int i = 0; i < hiddenDim; i++)
     {
-        F3_0 << q3(0, i, 0) << ',' << endl;
-        F3_1 << q3(1, i, 0) << ',' << endl;
-        F3_2 << q3(2, i, 0) << ',' << endl;
-        F3_3 << q3(3, i, 0) << ',' << endl;
+        for (int j = 0; j < numClass; j++)
+        {
+            F3_0 << q3(0, i, j) << ',';
+            F3_1 << q3(1, i, j) << ',';
+            F3_2 << q3(2, i, j) << ',';
+            F3_3 << q3(3, i, j) << ',';
+        }
+        F3_0 << std::endl;
+        F3_1 << std::endl;
+        F3_2 << std::endl;
+        F3_3 << std::endl;
     }
     for (int i = 0; i < B; i++)
     {
-
-        F3_0 << t3(0, i, 0) << ',' << endl;
-        F3_1 << t3(1, i, 0) << ',' << endl;
-        F3_2 << t3(2, i, 0) << ',' << endl;
-        F3_3 << t3(3, i, 0) << ',' << endl;
+        for (int j = 0; j < numClass; j++)
+        {
+            F3_0 << t3(0, i, j) << ',';
+            F3_1 << t3(1, i, j) << ',';
+            F3_2 << t3(2, i, j) << ',';
+            F3_3 << t3(3, i, j) << ',';
+        }
+        F3_0 << std::endl;
+        F3_1 << std::endl;
+        F3_2 << std::endl;
+        F3_3 << std::endl;
     }
     F3_0.close();
     F3_1.close();
     F3_2.close();
     F3_3.close();
 
-    // for(B, 1)X(1, hiddenDim)
-    b4_1 = Mat::randomMatrixint64(B, 1);
-    b4_2 = Mat::randomMatrixint64(B, 1);
-    b4_3 = Mat::randomMatrixint64(B, 1);
-    c4_1 = Mat::randomMatrixint64(1, hiddenDim);
-    c4_2 = Mat::randomMatrixint64(1, hiddenDim);
-    c4_3 = Mat::randomMatrixint64(1, hiddenDim);
+    // for(B, numClass)X(numClass, hiddenDim)
+    b4_1 = Mat::randomMatrixXu(B, numClass);
+    b4_2 = Mat::randomMatrixXu(B, numClass);
+    b4_3 = Mat::randomMatrixXu(B, numClass);
+    c4_1 = Mat::randomMatrixXu(numClass, hiddenDim);
+    c4_2 = Mat::randomMatrixXu(numClass, hiddenDim);
+    c4_3 = Mat::randomMatrixXu(numClass, hiddenDim);
     d4_1 = b4_1 * c4_1;
-    d4_2 = Mat::randomMatrixint64(B, hiddenDim);
-    d4_3 = Mat::randomMatrixint64(B, hiddenDim);
-    Tensor<int64, 3> b4(3, B, 1);
+    d4_2 = Mat::randomMatrixXu(B, hiddenDim);
+    d4_3 = Mat::randomMatrixXu(B, hiddenDim);
+    Tensor<u64, 3> b4(3, B, numClass);
     for (int i = 0; i < B; i++)
     {
-        b4(0, i, 0) = b4_1(i, 0);
-        b4(1, i, 0) = b4_2(i, 0);
-        b4(2, i, 0) = b4_3(i, 0);
+        for (int j = 0; j < numClass; j++)
+        {
+            b4(0, i, j) = b4_1(i, j);
+            b4(1, i, j) = b4_2(i, j);
+            b4(2, i, j) = b4_3(i, j);
+        }
     }
-    Tensor<int64, 3> c4(3, 1, hiddenDim);
+    Tensor<u64, 3> c4(3, numClass, hiddenDim);
     for (int j = 0; j < hiddenDim; j++)
     {
-        c4(0, 0, j) = c4_1(0, j);
-        c4(1, 0, j) = c4_2(0, j);
-        c4(2, 0, j) = c4_3(0, j);
+        for (int i = 0; i < numClass; i++)
+        {
+            c4(0, i, j) = c4_1(i, j);
+            c4(1, i, j) = c4_2(i, j);
+            c4(2, i, j) = c4_3(i, j);
+        }
     }
-    Tensor<int64, 3> d4(3, B, hiddenDim);
+    Tensor<u64, 3> d4(3, B, hiddenDim);
     for (int i = 0; i < B; i++)
     {
         for (int j = 0; j < hiddenDim; j++)
@@ -524,12 +628,12 @@ void Secret_Mul::init()
         }
     }
 
-    Tensor<int64, 3> r4, q4, t4;
-    Eigen::array<Eigen::IndexPair<int64>, 1> product_dims13 = {Eigen::IndexPair<int64>(1, 0)};
+    Tensor<u64, 3> r4, q4, t4;
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims13 = {Eigen::IndexPair<u64>(1, 0)};
     r4 = Mat::A_plus.contract(b4, product_dims13);
-    Eigen::array<Eigen::IndexPair<int64>, 1> product_dims14 = {Eigen::IndexPair<int64>(1, 0)};
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims14 = {Eigen::IndexPair<u64>(1, 0)};
     q4 = Mat::A_plus.contract(c4, product_dims14);
-    Eigen::array<Eigen::IndexPair<int64>, 1> product_dims15 = {Eigen::IndexPair<int64>(1, 0)};
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims15 = {Eigen::IndexPair<u64>(1, 0)};
     t4 = Mat::A_plus.contract(d4, product_dims15);
     ofstream F4_0, F4_1, F4_2, F4_3;
     F4_0.open("Mul_Triplets/MT4_0.txt");
@@ -538,22 +642,32 @@ void Secret_Mul::init()
     F4_3.open("Mul_Triplets/MT4_3.txt");
     for (int i = 0; i < B; i++)
     {
-        F4_0 << r4(0, i, 0) << ',' << endl;
-        F4_1 << r4(1, i, 0) << ',' << endl;
-        F4_2 << r4(2, i, 0) << ',' << endl;
-        F4_3 << r4(3, i, 0) << ',' << endl;
+        for (int j = 0; j < numClass; j++)
+        {
+            F4_0 << r4(0, i, j) << ',';
+            F4_1 << r4(1, i, j) << ',';
+            F4_2 << r4(2, i, j) << ',';
+            F4_3 << r4(3, i, j) << ',';
+        }
+        F4_0 << std::endl;
+        F4_1 << std::endl;
+        F4_2 << std::endl;
+        F4_3 << std::endl;
     }
-    for (int i = 0; i < hiddenDim; i++)
+    for (int i = 0; i < numClass; i++)
     {
-        F4_0 << q4(0, 0, i) << ',';
-        F4_1 << q4(1, 0, i) << ',';
-        F4_2 << q4(2, 0, i) << ',';
-        F4_3 << q4(3, 0, i) << ',';
+        for (int j = 0; j < hiddenDim; j++)
+        {
+            F4_0 << q4(0, i, j) << ',';
+            F4_1 << q4(1, i, j) << ',';
+            F4_2 << q4(2, i, j) << ',';
+            F4_3 << q4(3, i, j) << ',';
+        }
+        F4_0 << std::endl;
+        F4_1 << std::endl;
+        F4_2 << std::endl;
+        F4_3 << std::endl;
     }
-    F4_0 << std::endl;
-    F4_1 << std::endl;
-    F4_2 << std::endl;
-    F4_3 << std::endl;
     for (int i = 0; i < B; i++)
     {
         for (int j = 0; j < hiddenDim; j++)
@@ -574,16 +688,16 @@ void Secret_Mul::init()
     F4_3.close();
 
     // for(B, hiddenDim)X(hiddenDim, hiddenDim)
-    b5_1 = Mat::randomMatrixint64(B, hiddenDim);
-    b5_2 = Mat::randomMatrixint64(B, hiddenDim);
-    b5_3 = Mat::randomMatrixint64(B, hiddenDim);
-    c5_1 = Mat::randomMatrixint64(hiddenDim, hiddenDim);
-    c5_2 = Mat::randomMatrixint64(hiddenDim, hiddenDim);
-    c5_3 = Mat::randomMatrixint64(hiddenDim, hiddenDim);
+    b5_1 = Mat::randomMatrixXu(B, hiddenDim);
+    b5_2 = Mat::randomMatrixXu(B, hiddenDim);
+    b5_3 = Mat::randomMatrixXu(B, hiddenDim);
+    c5_1 = Mat::randomMatrixXu(hiddenDim, hiddenDim);
+    c5_2 = Mat::randomMatrixXu(hiddenDim, hiddenDim);
+    c5_3 = Mat::randomMatrixXu(hiddenDim, hiddenDim);
     d5_1 = b5_1 * c5_1;
-    d5_2 = Mat::randomMatrixint64(B, hiddenDim);
-    d5_3 = Mat::randomMatrixint64(B, hiddenDim);
-    Tensor<int64, 3> b5(3, B, hiddenDim);
+    d5_2 = Mat::randomMatrixXu(B, hiddenDim);
+    d5_3 = Mat::randomMatrixXu(B, hiddenDim);
+    Tensor<u64, 3> b5(3, B, hiddenDim);
     for (int j = 0; j < hiddenDim; j++)
     {
         for (int i = 0; i < B; i++)
@@ -593,7 +707,7 @@ void Secret_Mul::init()
             b5(2, i, j) = b5_3(i, j);
         }
     }
-    Tensor<int64, 3> c5(3, hiddenDim, hiddenDim);
+    Tensor<u64, 3> c5(3, hiddenDim, hiddenDim);
     for (int j = 0; j < hiddenDim; j++)
     {
         for (int i = 0; i < hiddenDim; i++)
@@ -603,7 +717,7 @@ void Secret_Mul::init()
             c5(2, i, j) = c5_3(i, j);
         }
     }
-    Tensor<int64, 3> d5(3, B, hiddenDim);
+    Tensor<u64, 3> d5(3, B, hiddenDim);
     for (int j = 0; j < hiddenDim; j++)
     {
         for (int i = 0; i < B; i++)
@@ -614,12 +728,12 @@ void Secret_Mul::init()
         }
     }
 
-    Tensor<int64, 3> r5, q5, t5;
-    Eigen::array<Eigen::IndexPair<int64>, 1> product_dims16 = {Eigen::IndexPair<int64>(1, 0)};
+    Tensor<u64, 3> r5, q5, t5;
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims16 = {Eigen::IndexPair<u64>(1, 0)};
     r5 = Mat::A_plus.contract(b5, product_dims16);
-    Eigen::array<Eigen::IndexPair<int64>, 1> product_dims17 = {Eigen::IndexPair<int64>(1, 0)};
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims17 = {Eigen::IndexPair<u64>(1, 0)};
     q5 = Mat::A_plus.contract(c5, product_dims17);
-    Eigen::array<Eigen::IndexPair<int64>, 1> product_dims18 = {Eigen::IndexPair<int64>(1, 0)};
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims18 = {Eigen::IndexPair<u64>(1, 0)};
     t5 = Mat::A_plus.contract(d5, product_dims18);
     ofstream F5_0, F5_1, F5_2, F5_3;
     F5_0.open("Mul_Triplets/MT5_0.txt");
@@ -674,16 +788,16 @@ void Secret_Mul::init()
     F5_3.close();
 
     // for(D, B)X(B, hiddenDim)
-    b6_1 = Mat::randomMatrixint64(D, B);
-    b6_2 = Mat::randomMatrixint64(D, B);
-    b6_3 = Mat::randomMatrixint64(D, B);
-    c6_1 = Mat::randomMatrixint64(B, hiddenDim);
-    c6_2 = Mat::randomMatrixint64(B, hiddenDim);
-    c6_3 = Mat::randomMatrixint64(B, hiddenDim);
+    b6_1 = Mat::randomMatrixXu(D, B);
+    b6_2 = Mat::randomMatrixXu(D, B);
+    b6_3 = Mat::randomMatrixXu(D, B);
+    c6_1 = Mat::randomMatrixXu(B, hiddenDim);
+    c6_2 = Mat::randomMatrixXu(B, hiddenDim);
+    c6_3 = Mat::randomMatrixXu(B, hiddenDim);
     d6_1 = b6_1 * c6_1;
-    d6_2 = Mat::randomMatrixint64(D, hiddenDim);
-    d6_3 = Mat::randomMatrixint64(D, hiddenDim);
-    Tensor<int64, 3> b6(3, D, B);
+    d6_2 = Mat::randomMatrixXu(D, hiddenDim);
+    d6_3 = Mat::randomMatrixXu(D, hiddenDim);
+    Tensor<u64, 3> b6(3, D, B);
     for (int j = 0; j < B; j++)
     {
         for (int i = 0; i < D; i++)
@@ -693,7 +807,7 @@ void Secret_Mul::init()
             b6(2, i, j) = b6_3(i, j);
         }
     }
-    Tensor<int64, 3> c6(3, B, hiddenDim);
+    Tensor<u64, 3> c6(3, B, hiddenDim);
     for (int j = 0; j < hiddenDim; j++)
     {
         for (int i = 0; i < B; i++)
@@ -703,7 +817,7 @@ void Secret_Mul::init()
             c6(2, i, j) = c6_3(i, j);
         }
     }
-    Tensor<int64, 3> d6(3, D, hiddenDim);
+    Tensor<u64, 3> d6(3, D, hiddenDim);
     for (int j = 0; j < hiddenDim; j++)
     {
         for (int i = 0; i < D; i++)
@@ -714,12 +828,12 @@ void Secret_Mul::init()
         }
     }
 
-    Tensor<int64, 3> r6, q6, t6;
-    Eigen::array<Eigen::IndexPair<int64>, 1> product_dims19 = {Eigen::IndexPair<int64>(1, 0)};
+    Tensor<u64, 3> r6, q6, t6;
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims19 = {Eigen::IndexPair<u64>(1, 0)};
     r6 = Mat::A_plus.contract(b6, product_dims19);
-    Eigen::array<Eigen::IndexPair<int64>, 1> product_dims20 = {Eigen::IndexPair<int64>(1, 0)};
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims20 = {Eigen::IndexPair<u64>(1, 0)};
     q6 = Mat::A_plus.contract(c6, product_dims20);
-    Eigen::array<Eigen::IndexPair<int64>, 1> product_dims21 = {Eigen::IndexPair<int64>(1, 0)};
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims21 = {Eigen::IndexPair<u64>(1, 0)};
     t6 = Mat::A_plus.contract(d6, product_dims21);
     ofstream F6_0, F6_1, F6_2, F6_3;
     F6_0.open("Mul_Triplets/MT6_0.txt");
@@ -773,15 +887,215 @@ void Secret_Mul::init()
     F6_2.close();
     F6_3.close();
 
-    Matrixint64 m0 = Mat::randomMatrixint64(B, 1);
-    Matrixint64 temp_vec(3, 1);
-    Matrixint64 A_plus_mat = Mat::toMatrix(Mat::A_plus);
+    // for(hiddenDim，B)X(B, numClass)
+    b7_1 = Mat::randomMatrixXu(hiddenDim, B);
+    b7_2 = Mat::randomMatrixXu(hiddenDim, B);
+    b7_3 = Mat::randomMatrixXu(hiddenDim, B);
+    c7_1 = Mat::randomMatrixXu(B, numClass);
+    c7_2 = Mat::randomMatrixXu(B, numClass);
+    c7_3 = Mat::randomMatrixXu(B, numClass);
+    d7_1 = b7_1 * c7_1;
+    d7_2 = Mat::randomMatrixXu(hiddenDim, numClass);
+    d7_3 = Mat::randomMatrixXu(hiddenDim, numClass);
+    Tensor<u64, 3> b7(3, hiddenDim, B);
+    for (int j = 0; j < B; j++)
+    {
+        for (int i = 0; i < hiddenDim; i++)
+        {
+            b7(0, i, j) = b7_1(i, j);
+            b7(1, i, j) = b7_2(i, j);
+            b7(2, i, j) = b7_3(i, j);
+        }
+    }
+    Tensor<u64, 3> c7(3, B, numClass);
     for (int i = 0; i < B; i++)
     {
-        for (int j = 0; j < 1; j++)
+        for (int j = 0; j < numClass; j++)
         {
-            temp_vec << m0(i, j), Constant::Util::random_int64(), Constant::Util::random_int64();
-            Matrixint64 temp = A_plus_mat * temp_vec;
+            c7(0, i, j) = c7_1(i, j);
+            c7(1, i, j) = c7_2(i, j);
+            c7(2, i, j) = c7_3(i, j);
+        }
+    }
+    Tensor<u64, 3> d7(3, hiddenDim, numClass);
+    for (int i = 0; i < hiddenDim; i++)
+    {
+        for (int j = 0; j < numClass; j++)
+        {
+            d7(0, i, j) = d7_1(i, j);
+            d7(1, i, j) = d7_2(i, j);
+            d7(2, i, j) = d7_3(i, j);
+        }
+    }
+
+    Tensor<u64, 3> r7, q7, t7;
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims22 = {Eigen::IndexPair<u64>(1, 0)};
+    r7 = Mat::A_plus.contract(b7, product_dims22);
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims23 = {Eigen::IndexPair<u64>(1, 0)};
+    q7 = Mat::A_plus.contract(c7, product_dims23);
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims24 = {Eigen::IndexPair<u64>(1, 0)};
+    t7 = Mat::A_plus.contract(d7, product_dims24);
+    ofstream F7_0, F7_1, F7_2, F7_3;
+    F7_0.open("Mul_Triplets/MT7_0.txt");
+    F7_1.open("Mul_Triplets/MT7_1.txt");
+    F7_2.open("Mul_Triplets/MT7_2.txt");
+    F7_3.open("Mul_Triplets/MT7_3.txt");
+    for (int i = 0; i < hiddenDim; i++)
+    {
+        for (int j = 0; j < B; j++)
+        {
+            F7_0 << r7(0, i, j) << ',';
+            F7_1 << r7(1, i, j) << ',';
+            F7_2 << r7(2, i, j) << ',';
+            F7_3 << r7(3, i, j) << ',';
+        }
+        F7_0 << std::endl;
+        F7_1 << std::endl;
+        F7_2 << std::endl;
+        F7_3 << std::endl;
+    }
+    for (int i = 0; i < B; i++)
+    {
+        for (int j = 0; j < numClass; j++)
+        {
+            F7_0 << q7(0, i, j) << ',';
+            F7_1 << q7(1, i, j) << ',';
+            F7_2 << q7(2, i, j) << ',';
+            F7_3 << q7(3, i, j) << ',';
+        }
+        F7_0 << std::endl;
+        F7_1 << std::endl;
+        F7_2 << std::endl;
+        F7_3 << std::endl;
+    }
+    for (int i = 0; i < hiddenDim; i++)
+    {
+        for (int j = 0; j < numClass; j++)
+        {
+            F7_0 << t7(0, i, j) << ',';
+            F7_1 << t7(1, i, j) << ',';
+            F7_2 << t7(2, i, j) << ',';
+            F7_3 << t7(3, i, j) << ',';
+        }
+        F7_0 << std::endl;
+        F7_1 << std::endl;
+        F7_2 << std::endl;
+        F7_3 << std::endl;
+    }
+    F7_0.close();
+    F7_1.close();
+    F7_2.close();
+    F7_3.close();
+
+    // for(hiddenDim, B)X(B, hiddenDim)
+    b8_1 = Mat::randomMatrixXu(hiddenDim, B);
+    b8_2 = Mat::randomMatrixXu(hiddenDim, B);
+    b8_3 = Mat::randomMatrixXu(hiddenDim, B);
+    c8_1 = Mat::randomMatrixXu(B, hiddenDim);
+    c8_2 = Mat::randomMatrixXu(B, hiddenDim);
+    c8_3 = Mat::randomMatrixXu(B, hiddenDim);
+    d8_1 = b8_1 * c8_1;
+    d8_2 = Mat::randomMatrixXu(hiddenDim, hiddenDim);
+    d8_3 = Mat::randomMatrixXu(hiddenDim, hiddenDim);
+    Tensor<u64, 3> b8(3, hiddenDim, B);
+    for (int j = 0; j < B; j++)
+    {
+        for (int i = 0; i < hiddenDim; i++)
+        {
+            b8(0, i, j) = b8_1(i, j);
+            b8(1, i, j) = b8_2(i, j);
+            b8(2, i, j) = b8_3(i, j);
+        }
+    }
+    Tensor<u64, 3> c8(3, B, hiddenDim);
+    for (int j = 0; j < hiddenDim; j++)
+    {
+        for (int i = 0; i < B; i++)
+        {
+            c8(0, i, j) = c8_1(i, j);
+            c8(1, i, j) = c8_2(i, j);
+            c8(2, i, j) = c8_3(i, j);
+        }
+    }
+    Tensor<u64, 3> d8(3, hiddenDim, hiddenDim);
+    for (int j = 0; j < hiddenDim; j++)
+    {
+        for (int i = 0; i < hiddenDim; i++)
+        {
+            d8(0, i, j) = d8_1(i, j);
+            d8(1, i, j) = d8_2(i, j);
+            d8(2, i, j) = d8_3(i, j);
+        }
+    }
+
+    Tensor<u64, 3> r8, q8, t8;
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims25 = {Eigen::IndexPair<u64>(1, 0)};
+    r8 = Mat::A_plus.contract(b8, product_dims25);
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims26 = {Eigen::IndexPair<u64>(1, 0)};
+    q8 = Mat::A_plus.contract(c8, product_dims26);
+    Eigen::array<Eigen::IndexPair<u64>, 1> product_dims27 = {Eigen::IndexPair<u64>(1, 0)};
+    t8 = Mat::A_plus.contract(d8, product_dims27);
+    ofstream F8_0, F8_1, F8_2, F8_3;
+    F8_0.open("Mul_Triplets/MT8_0.txt");
+    F8_1.open("Mul_Triplets/MT8_1.txt");
+    F8_2.open("Mul_Triplets/MT8_2.txt");
+    F8_3.open("Mul_Triplets/MT8_3.txt");
+    for (int i = 0; i < hiddenDim; i++)
+    {
+        for (int j = 0; j < B; j++)
+        {
+            F8_0 << r8(0, i, j) << ',';
+            F8_1 << r8(1, i, j) << ',';
+            F8_2 << r8(2, i, j) << ',';
+            F8_3 << r8(3, i, j) << ',';
+        }
+        F8_0 << std::endl;
+        F8_1 << std::endl;
+        F8_2 << std::endl;
+        F8_3 << std::endl;
+    }
+    for (int i = 0; i < B; i++)
+    {
+        for (int j = 0; j < hiddenDim; j++)
+        {
+            F8_0 << q8(0, i, j) << ',';
+            F8_1 << q8(1, i, j) << ',';
+            F8_2 << q8(2, i, j) << ',';
+            F8_3 << q8(3, i, j) << ',';
+        }
+        F8_0 << std::endl;
+        F8_1 << std::endl;
+        F8_2 << std::endl;
+        F8_3 << std::endl;
+    }
+    for (int i = 0; i < hiddenDim; i++)
+    {
+        for (int j = 0; j < hiddenDim; j++)
+        {
+            F8_0 << t8(0, i, j) << ',';
+            F8_1 << t8(1, i, j) << ',';
+            F8_2 << t8(2, i, j) << ',';
+            F8_3 << t8(3, i, j) << ',';
+        }
+        F8_0 << std::endl;
+        F8_1 << std::endl;
+        F8_2 << std::endl;
+        F8_3 << std::endl;
+    }
+    F8_0.close();
+    F8_1.close();
+    F8_2.close();
+    F8_3.close();
+
+    MatrixXu m0 = Mat::randomMatrixXu(B, numClass);
+    MatrixXu temp_vec(3, 1);
+    MatrixXu A_plus_mat = Mat::toMatrix(Mat::A_plus);
+    for (int i = 0; i < B; i++)
+    {
+        for (int j = 0; j < numClass; j++)
+        {
+            temp_vec << m0(i, j), Constant::Util::random_u64(), Constant::Util::random_u64();
+            MatrixXu temp = A_plus_mat * temp_vec;
             m0_0(i, j) = temp(0, 0);
             m0_1(i, j) = temp(1, 0);
             m0_2(i, j) = temp(2, 0);
@@ -789,13 +1103,13 @@ void Secret_Mul::init()
         }
     }
 
-    Mat::truncateMatrixint64(m0);
+    Mat::truncateMatrixXu(m0);
     for (int i = 0; i < B; i++)
     {
-        for (int j = 0; j < 1; j++)
+        for (int j = 0; j < numClass; j++)
         {
-            temp_vec << m0(i, j), Constant::Util::random_int64(), Constant::Util::random_int64();
-            Matrixint64 temp = A_plus_mat * temp_vec;
+            temp_vec << m0(i, j), Constant::Util::random_u64(), Constant::Util::random_u64();
+            MatrixXu temp = A_plus_mat * temp_vec;
             m_00(i, j) = temp(0, 0);
             m_01(i, j) = temp(1, 0);
             m_02(i, j) = temp(2, 0);
@@ -803,13 +1117,13 @@ void Secret_Mul::init()
         }
     }
 
-    Matrixint64 m1 = Mat::randomMatrixint64(D, 1);
+    MatrixXu m1 = Mat::randomMatrixXu(D, numClass);
     for (int i = 0; i < D; i++)
     {
-        for (int j = 0; j < 1; j++)
+        for (int j = 0; j < numClass; j++)
         {
-            temp_vec << m1(i, j), Constant::Util::random_int64(), Constant::Util::random_int64();
-            Matrixint64 temp = A_plus_mat * temp_vec;
+            temp_vec << m1(i, j), Constant::Util::random_u64(), Constant::Util::random_u64();
+            MatrixXu temp = A_plus_mat * temp_vec;
             m1_0(i, j) = temp(0, 0);
             m1_1(i, j) = temp(1, 0);
             m1_2(i, j) = temp(2, 0);
@@ -817,13 +1131,13 @@ void Secret_Mul::init()
         }
     }
 
-    Mat::truncateMatrixint64(m1);
+    Mat::truncateMatrixXu(m1);
     for (int i = 0; i < D; i++)
     {
-        for (int j = 0; j < 1; j++)
+        for (int j = 0; j < numClass; j++)
         {
-            temp_vec << m1(i, j), Constant::Util::random_int64(), Constant::Util::random_int64();
-            Matrixint64 temp = A_plus_mat * temp_vec;
+            temp_vec << m1(i, j), Constant::Util::random_u64(), Constant::Util::random_u64();
+            MatrixXu temp = A_plus_mat * temp_vec;
             m_10(i, j) = temp(0, 0);
             m_11(i, j) = temp(1, 0);
             m_12(i, j) = temp(2, 0);
@@ -831,13 +1145,13 @@ void Secret_Mul::init()
         }
     }
 
-    Matrixint64 m2 = Mat::randomMatrixint64(B, hiddenDim);
+    MatrixXu m2 = Mat::randomMatrixXu(B, hiddenDim);
     for (int i = 0; i < B; i++)
     {
         for (int j = 0; j < hiddenDim; j++)
         {
-            temp_vec << m2(i, j), Constant::Util::random_int64(), Constant::Util::random_int64();
-            Matrixint64 temp = A_plus_mat * temp_vec;
+            temp_vec << m2(i, j), Constant::Util::random_u64(), Constant::Util::random_u64();
+            MatrixXu temp = A_plus_mat * temp_vec;
             m2_0(i, j) = temp(0, 0);
             m2_1(i, j) = temp(1, 0);
             m2_2(i, j) = temp(2, 0);
@@ -845,13 +1159,13 @@ void Secret_Mul::init()
         }
     }
 
-    Mat::truncateMatrixint64(m2);
+    Mat::truncateMatrixXu(m2);
     for (int i = 0; i < B; i++)
     {
         for (int j = 0; j < hiddenDim; j++)
         {
-            temp_vec << m2(i, j), Constant::Util::random_int64(), Constant::Util::random_int64();
-            Matrixint64 temp = A_plus_mat * temp_vec;
+            temp_vec << m2(i, j), Constant::Util::random_u64(), Constant::Util::random_u64();
+            MatrixXu temp = A_plus_mat * temp_vec;
             m_20(i, j) = temp(0, 0);
             m_21(i, j) = temp(1, 0);
             m_22(i, j) = temp(2, 0);
@@ -859,13 +1173,13 @@ void Secret_Mul::init()
         }
     }
 
-    Matrixint64 m3 = Mat::randomMatrixint64(D, hiddenDim);
+    MatrixXu m3 = Mat::randomMatrixXu(D, hiddenDim);
     for (int i = 0; i < D; i++)
     {
         for (int j = 0; j < hiddenDim; j++)
         {
-            temp_vec << m3(i, j), Constant::Util::random_int64(), Constant::Util::random_int64();
-            Matrixint64 temp = A_plus_mat * temp_vec;
+            temp_vec << m3(i, j), Constant::Util::random_u64(), Constant::Util::random_u64();
+            MatrixXu temp = A_plus_mat * temp_vec;
             m3_0(i, j) = temp(0, 0);
             m3_1(i, j) = temp(1, 0);
             m3_2(i, j) = temp(2, 0);
@@ -873,17 +1187,73 @@ void Secret_Mul::init()
         }
     }
 
-    Mat::truncateMatrixint64(m3);
+    Mat::truncateMatrixXu(m3);
     for (int i = 0; i < D; i++)
     {
         for (int j = 0; j < hiddenDim; j++)
         {
-            temp_vec << m3(i, j), Constant::Util::random_int64(), Constant::Util::random_int64();
-            Matrixint64 temp = A_plus_mat * temp_vec;
+            temp_vec << m3(i, j), Constant::Util::random_u64(), Constant::Util::random_u64();
+            MatrixXu temp = A_plus_mat * temp_vec;
             m_30(i, j) = temp(0, 0);
             m_31(i, j) = temp(1, 0);
             m_32(i, j) = temp(2, 0);
             m_33(i, j) = temp(3, 0);
+        }
+    }
+
+    MatrixXu m4 = Mat::randomMatrixXu(hiddenDim, numClass);
+    for (int i = 0; i < hiddenDim; i++)
+    {
+        for (int j = 0; j < numClass; j++)
+        {
+            temp_vec << m4(i, j), Constant::Util::random_u64(), Constant::Util::random_u64();
+            MatrixXu temp = A_plus_mat * temp_vec;
+            m4_0(i, j) = temp(0, 0);
+            m4_1(i, j) = temp(1, 0);
+            m4_2(i, j) = temp(2, 0);
+            m4_3(i, j) = temp(3, 0);
+        }
+    }
+
+    Mat::truncateMatrixXu(m4);
+    for (int i = 0; i < hiddenDim; i++)
+    {
+        for (int j = 0; j < numClass; j++)
+        {
+            temp_vec << m4(i, j), Constant::Util::random_u64(), Constant::Util::random_u64();
+            MatrixXu temp = A_plus_mat * temp_vec;
+            m_40(i, j) = temp(0, 0);
+            m_41(i, j) = temp(1, 0);
+            m_42(i, j) = temp(2, 0);
+            m_43(i, j) = temp(3, 0);
+        }
+    }
+
+    MatrixXu m5 = Mat::randomMatrixXu(hiddenDim, hiddenDim);
+    for (int i = 0; i < hiddenDim; i++)
+    {
+        for (int j = 0; j < hiddenDim; j++)
+        {
+            temp_vec << m5(i, j), Constant::Util::random_u64(), Constant::Util::random_u64();
+            MatrixXu temp = A_plus_mat * temp_vec;
+            m5_0(i, j) = temp(0, 0);
+            m5_1(i, j) = temp(1, 0);
+            m5_2(i, j) = temp(2, 0);
+            m5_3(i, j) = temp(3, 0);
+        }
+    }
+
+    Mat::truncateMatrixXu(m5);
+    for (int i = 0; i < hiddenDim; i++)
+    {
+        for (int j = 0; j < hiddenDim; j++)
+        {
+            temp_vec << m5(i, j), Constant::Util::random_u64(), Constant::Util::random_u64();
+            MatrixXu temp = A_plus_mat * temp_vec;
+            m_50(i, j) = temp(0, 0);
+            m_51(i, j) = temp(1, 0);
+            m_52(i, j) = temp(2, 0);
+            m_53(i, j) = temp(3, 0);
         }
     }
 }
@@ -899,7 +1269,7 @@ void Secret_Mul::get_Triplets() //  0:(128,785)X(785,1)  1:(785,128)X(128,1)
         ch = const_cast<char *>(s.c_str());
         for (int j = 0; j < D; j++)
         {
-            r0(i, j) = Constant::Util::getint64(ch);
+            r0(i, j) = Constant::Util::getu64(ch);
         }
     }
     for (int i = 0; i < D; i++)
@@ -908,7 +1278,10 @@ void Secret_Mul::get_Triplets() //  0:(128,785)X(785,1)  1:(785,128)X(128,1)
         getline(infile0, s);
         char *ch;
         ch = const_cast<char *>(s.c_str());
-        q0(i, 0) = Constant::Util::getint64(ch);
+        for (int j = 0; j < numClass; j++)
+        {
+            q0(i, j) = Constant::Util::getu64(ch);
+        }
     }
     for (int i = 0; i < B; i++)
     {
@@ -916,7 +1289,10 @@ void Secret_Mul::get_Triplets() //  0:(128,785)X(785,1)  1:(785,128)X(128,1)
         getline(infile0, s);
         char *ch;
         ch = const_cast<char *>(s.c_str());
-        t0(i, 0) = Constant::Util::getint64(ch);
+        for (int j = 0; j < numClass; j++)
+        {
+            t0(i, j) = Constant::Util::getu64(ch);
+        }
     }
 
     ifstream infile1("Mul_Triplets/MT1_" + to_string(party) + ".txt");
@@ -928,7 +1304,7 @@ void Secret_Mul::get_Triplets() //  0:(128,785)X(785,1)  1:(785,128)X(128,1)
         ch = const_cast<char *>(s.c_str());
         for (int j = 0; j < B; j++)
         {
-            r1(i, j) = Constant::Util::getint64(ch);
+            r1(i, j) = Constant::Util::getu64(ch);
         }
     }
     for (int i = 0; i < B; i++)
@@ -937,7 +1313,10 @@ void Secret_Mul::get_Triplets() //  0:(128,785)X(785,1)  1:(785,128)X(128,1)
         getline(infile1, s);
         char *ch;
         ch = const_cast<char *>(s.c_str());
-        q1(i, 0) = Constant::Util::getint64(ch);
+        for (int j = 0; j < numClass; j++)
+        {
+            q1(i, j) = Constant::Util::getu64(ch);
+        }
     }
     for (int i = 0; i < D; i++)
     {
@@ -945,7 +1324,10 @@ void Secret_Mul::get_Triplets() //  0:(128,785)X(785,1)  1:(785,128)X(128,1)
         getline(infile1, s);
         char *ch;
         ch = const_cast<char *>(s.c_str());
-        t1(i, 0) = Constant::Util::getint64(ch);
+        for (int j = 0; j < numClass; j++)
+        {
+            t1(i, j) = Constant::Util::getu64(ch);
+        }
     }
     ifstream infile2("Mul_Triplets/MT2_" + to_string(party) + ".txt");
     for (int i = 0; i < B; i++)
@@ -956,7 +1338,7 @@ void Secret_Mul::get_Triplets() //  0:(128,785)X(785,1)  1:(785,128)X(128,1)
         ch = const_cast<char *>(s.c_str());
         for (int j = 0; j < D; j++)
         {
-            r2(i, j) = Constant::Util::getint64(ch);
+            r2(i, j) = Constant::Util::getu64(ch);
         }
     }
     for (int i = 0; i < D; i++)
@@ -967,7 +1349,7 @@ void Secret_Mul::get_Triplets() //  0:(128,785)X(785,1)  1:(785,128)X(128,1)
         ch = const_cast<char *>(s.c_str());
         for (int j = 0; j < hiddenDim; j++)
         {
-            q2(i, j) = Constant::Util::getint64(ch);
+            q2(i, j) = Constant::Util::getu64(ch);
         }
     }
     for (int i = 0; i < B; i++)
@@ -978,7 +1360,7 @@ void Secret_Mul::get_Triplets() //  0:(128,785)X(785,1)  1:(785,128)X(128,1)
         ch = const_cast<char *>(s.c_str());
         for (int j = 0; j < hiddenDim; j++)
         {
-            t2(i, j) = Constant::Util::getint64(ch);
+            t2(i, j) = Constant::Util::getu64(ch);
         }
     }
     ifstream infile3("Mul_Triplets/MT3_" + to_string(party) + ".txt");
@@ -990,7 +1372,7 @@ void Secret_Mul::get_Triplets() //  0:(128,785)X(785,1)  1:(785,128)X(128,1)
         ch = const_cast<char *>(s.c_str());
         for (int j = 0; j < hiddenDim; j++)
         {
-            r3(i, j) = Constant::Util::getint64(ch);
+            r3(i, j) = Constant::Util::getu64(ch);
         }
     }
     for (int i = 0; i < hiddenDim; i++)
@@ -999,7 +1381,10 @@ void Secret_Mul::get_Triplets() //  0:(128,785)X(785,1)  1:(785,128)X(128,1)
         getline(infile3, s);
         char *ch;
         ch = const_cast<char *>(s.c_str());
-        q3(i, 0) = Constant::Util::getint64(ch);
+        for (int j = 0; j < numClass; j++)
+        {
+            q3(i, j) = Constant::Util::getu64(ch);
+        }
     }
     for (int i = 0; i < B; i++)
     {
@@ -1007,7 +1392,10 @@ void Secret_Mul::get_Triplets() //  0:(128,785)X(785,1)  1:(785,128)X(128,1)
         getline(infile3, s);
         char *ch;
         ch = const_cast<char *>(s.c_str());
-        t3(i, 0) = Constant::Util::getint64(ch);
+        for (int j = 0; j < numClass; j++)
+        {
+            t3(i, j) = Constant::Util::getu64(ch);
+        }
     }
     ifstream infile4("Mul_Triplets/MT4_" + to_string(party) + ".txt");
     for (int i = 0; i < B; i++)
@@ -1016,9 +1404,12 @@ void Secret_Mul::get_Triplets() //  0:(128,785)X(785,1)  1:(785,128)X(128,1)
         getline(infile4, s);
         char *ch;
         ch = const_cast<char *>(s.c_str());
-        r4(i, 0) = Constant::Util::getint64(ch);
+        for (int j = 0; j < numClass; j++)
+        {
+            r4(i, j) = Constant::Util::getu64(ch);
+        }
     }
-    for (int i = 0; i < 1; i++)
+    for (int i = 0; i < numClass; i++)
     {
         string s;
         getline(infile4, s);
@@ -1026,7 +1417,7 @@ void Secret_Mul::get_Triplets() //  0:(128,785)X(785,1)  1:(785,128)X(128,1)
         ch = const_cast<char *>(s.c_str());
         for (int j = 0; j < hiddenDim; j++)
         {
-            q4(i, j) = Constant::Util::getint64(ch);
+            q4(i, j) = Constant::Util::getu64(ch);
         }
     }
     for (int i = 0; i < B; i++)
@@ -1037,7 +1428,7 @@ void Secret_Mul::get_Triplets() //  0:(128,785)X(785,1)  1:(785,128)X(128,1)
         ch = const_cast<char *>(s.c_str());
         for (int j = 0; j < hiddenDim; j++)
         {
-            t4(i, j) = Constant::Util::getint64(ch);
+            t4(i, j) = Constant::Util::getu64(ch);
         }
     }
     ifstream infile5("Mul_Triplets/MT5_" + to_string(party) + ".txt");
@@ -1049,7 +1440,7 @@ void Secret_Mul::get_Triplets() //  0:(128,785)X(785,1)  1:(785,128)X(128,1)
         ch = const_cast<char *>(s.c_str());
         for (int j = 0; j < hiddenDim; j++)
         {
-            r5(i, j) = Constant::Util::getint64(ch);
+            r5(i, j) = Constant::Util::getu64(ch);
         }
     }
     for (int i = 0; i < hiddenDim; i++)
@@ -1060,7 +1451,7 @@ void Secret_Mul::get_Triplets() //  0:(128,785)X(785,1)  1:(785,128)X(128,1)
         ch = const_cast<char *>(s.c_str());
         for (int j = 0; j < hiddenDim; j++)
         {
-            q5(i, j) = Constant::Util::getint64(ch);
+            q5(i, j) = Constant::Util::getu64(ch);
         }
     }
     for (int i = 0; i < B; i++)
@@ -1071,7 +1462,7 @@ void Secret_Mul::get_Triplets() //  0:(128,785)X(785,1)  1:(785,128)X(128,1)
         ch = const_cast<char *>(s.c_str());
         for (int j = 0; j < hiddenDim; j++)
         {
-            t5(i, j) = Constant::Util::getint64(ch);
+            t5(i, j) = Constant::Util::getu64(ch);
         }
     }
     ifstream infile6("Mul_Triplets/MT6_" + to_string(party) + ".txt");
@@ -1083,7 +1474,7 @@ void Secret_Mul::get_Triplets() //  0:(128,785)X(785,1)  1:(785,128)X(128,1)
         ch = const_cast<char *>(s.c_str());
         for (int j = 0; j < B; j++)
         {
-            r6(i, j) = Constant::Util::getint64(ch);
+            r6(i, j) = Constant::Util::getu64(ch);
         }
     }
     for (int i = 0; i < B; i++)
@@ -1094,7 +1485,7 @@ void Secret_Mul::get_Triplets() //  0:(128,785)X(785,1)  1:(785,128)X(128,1)
         ch = const_cast<char *>(s.c_str());
         for (int j = 0; j < hiddenDim; j++)
         {
-            q6(i, j) = Constant::Util::getint64(ch);
+            q6(i, j) = Constant::Util::getu64(ch);
         }
     }
     for (int i = 0; i < D; i++)
@@ -1105,20 +1496,90 @@ void Secret_Mul::get_Triplets() //  0:(128,785)X(785,1)  1:(785,128)X(128,1)
         ch = const_cast<char *>(s.c_str());
         for (int j = 0; j < hiddenDim; j++)
         {
-            t6(i, j) = Constant::Util::getint64(ch);
+            t6(i, j) = Constant::Util::getu64(ch);
         }
     }
+    ifstream infile7("Mul_Triplets/MT7_" + to_string(party) + ".txt");
+    for (int i = 0; i < hiddenDim; i++)
+    {
+        string s;
+        getline(infile7, s);
+        char *ch;
+        ch = const_cast<char *>(s.c_str());
+        for (int j = 0; j < B; j++)
+        {
+            r7(i, j) = Constant::Util::getu64(ch);
+        }
+    }
+    for (int i = 0; i < B; i++)
+    {
+        string s;
+        getline(infile7, s);
+        char *ch;
+        ch = const_cast<char *>(s.c_str());
+        for (int j = 0; j < numClass; j++)
+        {
+            q7(i, j) = Constant::Util::getu64(ch);
+        }
+    }
+    for (int i = 0; i < hiddenDim; i++)
+    {
+        string s;
+        getline(infile7, s);
+        char *ch;
+        ch = const_cast<char *>(s.c_str());
+        for (int j = 0; j < numClass; j++)
+        {
+            t7(i, j) = Constant::Util::getu64(ch);
+        }
+    }
+
+    ifstream infile8("Mul_Triplets/MT8_" + to_string(party) + ".txt");
+    for (int i = 0; i < hiddenDim; i++)
+    {
+        string s;
+        getline(infile8, s);
+        char *ch;
+        ch = const_cast<char *>(s.c_str());
+        for (int j = 0; j < B; j++)
+        {
+            r8(i, j) = Constant::Util::getu64(ch);
+        }
+    }
+    for (int i = 0; i < B; i++)
+    {
+        string s;
+        getline(infile8, s);
+        char *ch;
+        ch = const_cast<char *>(s.c_str());
+        for (int j = 0; j < hiddenDim; j++)
+        {
+            q8(i, j) = Constant::Util::getu64(ch);
+        }
+    }
+    for (int i = 0; i < hiddenDim; i++)
+    {
+        string s;
+        getline(infile8, s);
+        char *ch;
+        ch = const_cast<char *>(s.c_str());
+        for (int j = 0; j < hiddenDim; j++)
+        {
+            t8(i, j) = Constant::Util::getu64(ch);
+        }
+    }
+
     cout << "get triplets" << endl;
 }
 
-void Secret_Mul::Mul_truncation(Matrixint64 &z)
+void Secret_Mul::Mul_truncation(MatrixXu &z)
 {
     int row = z.rows();
     int col = z.cols();
-    Matrixint64 r0(row, col), r1(row, col), r2(row, col);
-    Matrixint64 r_0(row, col), r_1(row, col), r_2(row, col);
+    MatrixXu r0(row, col), r1(row, col), r2(row, col);
+    MatrixXu r_0(row, col), r_1(row, col), r_2(row, col);
 
-    if (row == B && col == 1)
+    if (row == B && col == numClass)
     {
 
         r0 = Secret_Mul::m0_0;
@@ -1128,7 +1589,7 @@ void Secret_Mul::Mul_truncation(Matrixint64 &z)
         r_1 = Secret_Mul::m_01;
         r_2 = Secret_Mul::m_02;
     }
-    else if (row == D && col == 1)
+    else if (row == D && col == numClass)
     {
 
         r0 = Secret_Mul::m1_0;
@@ -1156,211 +1617,107 @@ void Secret_Mul::Mul_truncation(Matrixint64 &z)
         r_1 = Secret_Mul::m_31;
         r_2 = Secret_Mul::m_32;
     }
+    else if (row == hiddenDim && col == numClass)
+    {
+        r0 = Secret_Mul::m4_0;
+        r1 = Secret_Mul::m4_1;
+        r2 = Secret_Mul::m4_2;
+        r_0 = Secret_Mul::m_40;
+        r_1 = Secret_Mul::m_41;
+        r_2 = Secret_Mul::m_42;
+    }
+    else if (row == hiddenDim && col == hiddenDim)
+    {
+        r0 = Secret_Mul::m5_0;
+        r1 = Secret_Mul::m5_1;
+        r2 = Secret_Mul::m5_2;
+        r_0 = Secret_Mul::m_50;
+        r_1 = Secret_Mul::m_51;
+        r_2 = Secret_Mul::m_52;
+    }
     if (party == 0)
     {
-        Matrixint64 z0_sub_r0 = z - r0;
-        Matrixint64 reveal = Secret_Mul::reveal(z0_sub_r0);
-        Matrixint64 z_sub_r = reveal * (-2);
-        Mat::truncateMatrixint64(z_sub_r);
+        MatrixXu z0_sub_r0 = z - r0;
+        MatrixXu reveal = Secret_Mul::Mul_reveal(z0_sub_r0);
+        MatrixXu z_sub_r = reveal;
+        Mat::truncateMatrixXu(z_sub_r);
         z = z_sub_r + r_0;
     }
     else if (party == 1)
     {
-        Matrixint64 z1_sub_r1 = z - r1;
-        Secret_Mul::reveal(z1_sub_r1);
+        MatrixXu z1_sub_r1 = z - r1;
+        Secret_Mul::Mul_reveal(z1_sub_r1);
         z = r_1;
     }
     else if (party == 2)
     {
-        Matrixint64 z2_sub_r2 = z - r2;
-        Secret_Mul::reveal(z2_sub_r2);
+        MatrixXu z2_sub_r2 = z - r2;
+        Secret_Mul::Mul_reveal(z2_sub_r2);
         z = r_2;
     }
 }
 
-Matrixint64 Secret_Mul::Multiply(Matrixint64 &x, Matrixint64 &y, Matrixint64 &r, Matrixint64 &q, Matrixint64 &t)
+MatrixXu Secret_Mul::Multiply(MatrixXu &x, MatrixXu &y, MatrixXu &r, MatrixXu &q, MatrixXu &t)
 {
-    Matrixint64 result;
-    Matrixint64 y_plus_q = y + q;
-    Matrixint64 x_plus_r = x + r;
+    MatrixXu result;
+    MatrixXu y_plus_q = y + q;
+    MatrixXu x_plus_r = x + r;
 
-    Matrixint64 Y_plus_Q, X_plus_R, combination, rev_combine;
-    // (B, D)*(D, 1)
-    if (x.rows() == B && x.cols() == D && y.rows() == D && y.cols() == 1)
+    MatrixXu Y_plus_Q, X_plus_R, combination, rev_combine;
+    // (B, D)*(D, numClass)
+    if (x.rows() == B && x.cols() == D && y.rows() == D && y.cols() == numClass)
     {
-        combination.resize(B + 1, D);
-        Matrixint64 y_plus_q_trans = y_plus_q.transpose();
-        combination << x_plus_r,
-                y_plus_q_trans;
-        Matrixint64 rev_combine = Secret_Mul::Mul_reveal(combination);
-        Y_plus_Q = rev_combine.bottomRows(1).transpose();
-        X_plus_R = rev_combine.topRows(B);
-    }
-        // (D, B)*(B, 1)
-    else if (x.rows() == D && x.cols() == B && y.rows() == B && y.cols() == 1)
-    {
-        combination.resize(D + 1, B);
-        Matrixint64 y_plus_q_trans = y_plus_q.transpose();
-        combination << x_plus_r,
-                y_plus_q_trans;
-        Matrixint64 rev_combine = Secret_Mul::Mul_reveal(combination);
-        Y_plus_Q = rev_combine.bottomRows(1).transpose();
-        X_plus_R = rev_combine.topRows(D);
-    }
-        // (B, D)*(D, hiddenDim)
-    else if (x.rows() == B && x.cols() == D && y.rows() == D && y.cols() == hiddenDim)
-    {
-        combination.resize(B + hiddenDim, D);
-        Matrixint64 y_plus_q_trans = y_plus_q.transpose();
-        combination << x_plus_r,
-                y_plus_q_trans;
-        Matrixint64 rev_combine = Secret_Mul::Mul_reveal(combination);
-        Y_plus_Q = rev_combine.bottomRows(hiddenDim).transpose();
-        X_plus_R = rev_combine.topRows(B);
-    }
-        // (B, hiddenDim)*(hiddenDim, 1)
-    else if (x.rows() == B && x.cols() == hiddenDim && y.rows() == hiddenDim && y.cols() == 1)
-    {
-        combination.resize(B + 1, hiddenDim);
-        Matrixint64 y_plus_q_trans = y_plus_q.transpose();
-        combination << x_plus_r,
-                y_plus_q_trans;
-        Matrixint64 rev_combine = Secret_Mul::Mul_reveal(combination);
-        Y_plus_Q = rev_combine.bottomRows(1).transpose();
-        X_plus_R = rev_combine.topRows(B);
-    }
-        // (B, 1)*(1, hiddenDim)
-    else if (x.rows() == B && x.cols() == 1 && y.rows() == 1 && y.cols() == hiddenDim)
-    {
-        combination.resize(B + hiddenDim, 1);
-        Matrixint64 y_plus_q_trans = y_plus_q.transpose();
-        combination << x_plus_r,
-                y_plus_q_trans;
-        Matrixint64 rev_combine = Secret_Mul::Mul_reveal(combination);
-        Y_plus_Q = rev_combine.bottomRows(hiddenDim).transpose();
-        X_plus_R = rev_combine.topRows(B);
-    }
-        // (B, hiddenDim)*(hiddenDim, hiddenDim)
-    else if (x.rows() == B && x.cols() == hiddenDim && y.rows() == hiddenDim && y.cols() == hiddenDim)
-    {
-        combination.resize(B + hiddenDim, hiddenDim);
-        combination << x_plus_r,
-                y_plus_q;
-        Matrixint64 rev_combine = Secret_Mul::Mul_reveal(combination);
-        Y_plus_Q = rev_combine.bottomRows(hiddenDim);
-        X_plus_R = rev_combine.topRows(B);
-    }
-        // (hiddenDim, B)*(B, 1)
-    else if (x.rows() == hiddenDim && x.cols() == B && y.rows() == B && y.cols() == 1)
-    {
-        combination.resize(hiddenDim + 1, B);
-        Matrixint64 y_plus_q_trans = y_plus_q.transpose();
-        combination << x_plus_r,
-                y_plus_q_trans;
-        Matrixint64 rev_combine = Secret_Mul::Mul_reveal(combination);
-        Y_plus_Q = rev_combine.bottomRows(1).transpose();
-        X_plus_R = rev_combine.topRows(hiddenDim);
-    }
-        // (D, B)*(B, hiddenDim)
-    else if (x.rows() == D && x.cols() == B && y.rows() == B && y.cols() == hiddenDim)
-    {
-        combination.resize(D + hiddenDim, B);
-        Matrixint64 y_plus_q_trans = y_plus_q.transpose();
-        combination << x_plus_r,
-                y_plus_q_trans;
-        Matrixint64 rev_combine = Secret_Mul::Mul_reveal(combination);
-        Y_plus_Q = rev_combine.bottomRows(hiddenDim).transpose();
-        X_plus_R = rev_combine.topRows(D);
-    }
-        // (hiddenDim, B)*(B, hiddenDim)
-    else if (x.rows() == hiddenDim && x.cols() == B && y.rows() == B && y.cols() == hiddenDim)
-    {
-        combination.resize(hiddenDim + hiddenDim, B);
-        Matrixint64 y_plus_q_trans = y_plus_q.transpose();
-        combination << x_plus_r,
-                y_plus_q_trans;
-        Matrixint64 rev_combine = Secret_Mul::Mul_reveal(combination);
-        Y_plus_Q = rev_combine.bottomRows(hiddenDim).transpose();
-        X_plus_R = rev_combine.topRows(hiddenDim);
-    }else{
-        cout << "no multiply for " << x.rows() << "*" << x.cols() <<"  " << y.rows() << " " <<  y.cols() << endl;
-    }
-    result = x * Y_plus_Q - X_plus_R * q + t;
-    Secret_Mul::Mul_truncation(result);
-    return result;
-}
-
-Matrixint64 Secret_Mul::Multiply_nn(Matrixint64 &x, Matrixint64 &y, Matrixint64 &r, Matrixint64 &q, Matrixint64 &t)
-{
-    Matrixint64 result;
-    Matrixint64 y_plus_q = y + q;
-
-    Matrixint64 x_plus_r = x + r;
-    Matrixint64 Y_plus_Q, X_plus_R, Y_plus_Q_mod, X_plus_R_mod, combination, rev_combine;
-    // (B, D)*(D, 1)
-    if (x.rows() == B && x.cols() == D && y.rows() == D && y.cols() == 1)
-    {
-        combination.resize(B + 1, D);
-        Matrixint64 y_plus_q_trans = y_plus_q.transpose();
+        combination.resize(B + numClass, D);
+        MatrixXu y_plus_q_trans = y_plus_q.transpose();
         combination << x_plus_r,
             y_plus_q_trans;
-        Matrixint64 rev_combine = Secret_Mul::Mul_reveal_nn(combination);
-        Y_plus_Q = rev_combine.middleRows(B, 1).transpose();
-        Y_plus_Q_mod = rev_combine.bottomRows(1).transpose();
+        MatrixXu rev_combine = Secret_Mul::Mul_reveal(combination);
+        Y_plus_Q = rev_combine.bottomRows(numClass).transpose();
         X_plus_R = rev_combine.topRows(B);
-        X_plus_R_mod = rev_combine.middleRows(B + 1, B);
     }
-    // (D, B)*(B, 1)
-    else if (x.rows() == D && x.cols() == B && y.rows() == B && y.cols() == 1)
+    // (D, B)*(B, numClass)
+    else if (x.rows() == D && x.cols() == B && y.rows() == B && y.cols() == numClass)
     {
-        combination.resize(D + 1, B);
-        Matrixint64 y_plus_q_trans = y_plus_q.transpose();
+        combination.resize(D + numClass, B);
+        MatrixXu y_plus_q_trans = y_plus_q.transpose();
         combination << x_plus_r,
             y_plus_q_trans;
-        Matrixint64 rev_combine = Secret_Mul::Mul_reveal_nn(combination);
-        Y_plus_Q = rev_combine.middleRows(D, 1).transpose();
-        Y_plus_Q_mod = rev_combine.bottomRows(1).transpose();
+        MatrixXu rev_combine = Secret_Mul::Mul_reveal(combination);
+        Y_plus_Q = rev_combine.bottomRows(numClass).transpose();
         X_plus_R = rev_combine.topRows(D);
-        X_plus_R_mod = rev_combine.middleRows(D + 1, D);
     }
     // (B, D)*(D, hiddenDim)
     else if (x.rows() == B && x.cols() == D && y.rows() == D && y.cols() == hiddenDim)
     {
         combination.resize(B + hiddenDim, D);
-        Matrixint64 y_plus_q_trans = y_plus_q.transpose();
+        MatrixXu y_plus_q_trans = y_plus_q.transpose();
         combination << x_plus_r,
             y_plus_q_trans;
-        Matrixint64 rev_combine = Secret_Mul::Mul_reveal_nn(combination);
-        Y_plus_Q = rev_combine.middleRows(B, hiddenDim).transpose();
-        Y_plus_Q_mod = rev_combine.bottomRows(hiddenDim).transpose();
+        MatrixXu rev_combine = Secret_Mul::Mul_reveal(combination);
+        Y_plus_Q = rev_combine.bottomRows(hiddenDim).transpose();
         X_plus_R = rev_combine.topRows(B);
-        X_plus_R_mod = rev_combine.middleRows(B + hiddenDim, B);
     }
-    // (B, hiddenDim)*(hiddenDim, 1)
-    else if (x.rows() == B && x.cols() == hiddenDim && y.rows() == hiddenDim && y.cols() == 1)
+    // (B, hiddenDim)*(hiddenDim, numClass)
+    else if (x.rows() == B && x.cols() == hiddenDim && y.rows() == hiddenDim && y.cols() == numClass)
     {
-        combination.resize(B + 1, hiddenDim);
-        Matrixint64 y_plus_q_trans = y_plus_q.transpose();
+        combination.resize(B + numClass, hiddenDim);
+        MatrixXu y_plus_q_trans = y_plus_q.transpose();
         combination << x_plus_r,
             y_plus_q_trans;
-        Matrixint64 rev_combine = Secret_Mul::Mul_reveal_nn(combination);
-        Y_plus_Q = rev_combine.middleRows(B, 1).transpose();
-        Y_plus_Q_mod = rev_combine.bottomRows(1).transpose();
+        MatrixXu rev_combine = Secret_Mul::Mul_reveal(combination);
+        Y_plus_Q = rev_combine.bottomRows(numClass).transpose();
         X_plus_R = rev_combine.topRows(B);
-        X_plus_R_mod = rev_combine.middleRows(B + 1, B);
     }
-    // (B, 1)*(1, hiddenDim)
-    else if (x.rows() == B && x.cols() == 1 && y.rows() == 1 && y.cols() == hiddenDim)
+    // (B, numClass)*(numClass, hiddenDim)
+    else if (x.rows() == B && x.cols() == numClass && y.rows() == numClass && y.cols() == hiddenDim)
     {
-        combination.resize(B + hiddenDim, 1);
-        Matrixint64 y_plus_q_trans = y_plus_q.transpose();
+        combination.resize(B + hiddenDim, numClass);
+        MatrixXu y_plus_q_trans = y_plus_q.transpose();
         combination << x_plus_r,
             y_plus_q_trans;
-        Matrixint64 rev_combine = Secret_Mul::Mul_reveal_nn(combination);
-        Y_plus_Q = rev_combine.middleRows(B, hiddenDim).transpose();
-        Y_plus_Q_mod = rev_combine.bottomRows(hiddenDim).transpose();
+        MatrixXu rev_combine = Secret_Mul::Mul_reveal(combination);
+        Y_plus_Q = rev_combine.bottomRows(hiddenDim).transpose();
         X_plus_R = rev_combine.topRows(B);
-        X_plus_R_mod = rev_combine.middleRows(B + hiddenDim, B);
     }
     // (B, hiddenDim)*(hiddenDim, hiddenDim)
     else if (x.rows() == B && x.cols() == hiddenDim && y.rows() == hiddenDim && y.cols() == hiddenDim)
@@ -1368,96 +1725,220 @@ Matrixint64 Secret_Mul::Multiply_nn(Matrixint64 &x, Matrixint64 &y, Matrixint64 
         combination.resize(B + hiddenDim, hiddenDim);
         combination << x_plus_r,
             y_plus_q;
-        Matrixint64 rev_combine = Secret_Mul::Mul_reveal_nn(combination);
-        Y_plus_Q = rev_combine.middleRows(B, hiddenDim);
-        Y_plus_Q_mod = rev_combine.bottomRows(hiddenDim);
+        MatrixXu rev_combine = Secret_Mul::Mul_reveal(combination);
+        Y_plus_Q = rev_combine.bottomRows(hiddenDim);
         X_plus_R = rev_combine.topRows(B);
-        X_plus_R_mod = rev_combine.middleRows(B + hiddenDim, B);
     }
-    // (hiddenDim, B)*(B, 1)
-    else if (x.rows() == hiddenDim && x.cols() == B && y.rows() == B && y.cols() == 1)
+    // (hiddenDim, B)*(B, numClass)
+    else if (x.rows() == hiddenDim && x.cols() == B && y.rows() == B && y.cols() == numClass)
     {
-        combination.resize(hiddenDim + 1, B);
-        Matrixint64 y_plus_q_trans = y_plus_q.transpose();
+        combination.resize(hiddenDim + numClass, B);
+        MatrixXu y_plus_q_trans = y_plus_q.transpose();
         combination << x_plus_r,
             y_plus_q_trans;
-        Matrixint64 rev_combine = Secret_Mul::Mul_reveal_nn(combination);
-        Y_plus_Q = rev_combine.middleRows(hiddenDim, 1).transpose();
-        Y_plus_Q_mod = rev_combine.bottomRows(1).transpose();
+        MatrixXu rev_combine = Secret_Mul::Mul_reveal(combination);
+        Y_plus_Q = rev_combine.bottomRows(numClass).transpose();
         X_plus_R = rev_combine.topRows(hiddenDim);
-        X_plus_R_mod = rev_combine.middleRows(hiddenDim + 1, hiddenDim);
     }
     // (D, B)*(B, hiddenDim)
     else if (x.rows() == D && x.cols() == B && y.rows() == B && y.cols() == hiddenDim)
     {
         combination.resize(D + hiddenDim, B);
-        Matrixint64 y_plus_q_trans = y_plus_q.transpose();
+        MatrixXu y_plus_q_trans = y_plus_q.transpose();
         combination << x_plus_r,
             y_plus_q_trans;
-        Matrixint64 rev_combine = Secret_Mul::Mul_reveal_nn(combination);
-        Y_plus_Q = rev_combine.middleRows(D, hiddenDim).transpose();
-        Y_plus_Q_mod = rev_combine.bottomRows(hiddenDim).transpose();
+        MatrixXu rev_combine = Secret_Mul::Mul_reveal(combination);
+        Y_plus_Q = rev_combine.bottomRows(hiddenDim).transpose();
         X_plus_R = rev_combine.topRows(D);
-        X_plus_R_mod = rev_combine.middleRows(D + hiddenDim, D);
     }
     // (hiddenDim, B)*(B, hiddenDim)
     else if (x.rows() == hiddenDim && x.cols() == B && y.rows() == B && y.cols() == hiddenDim)
     {
         combination.resize(hiddenDim + hiddenDim, B);
-        Matrixint64 y_plus_q_trans = y_plus_q.transpose();
+        MatrixXu y_plus_q_trans = y_plus_q.transpose();
         combination << x_plus_r,
             y_plus_q_trans;
-        Matrixint64 rev_combine = Secret_Mul::Mul_reveal_nn(combination);
-        Y_plus_Q = rev_combine.middleRows(hiddenDim, hiddenDim).transpose();
-        Y_plus_Q_mod = rev_combine.bottomRows(hiddenDim).transpose();
+        MatrixXu rev_combine = Secret_Mul::Mul_reveal(combination);
+        Y_plus_Q = rev_combine.bottomRows(hiddenDim).transpose();
         X_plus_R = rev_combine.topRows(hiddenDim);
-        X_plus_R_mod = rev_combine.middleRows(hiddenDim + hiddenDim, hiddenDim);
     }
     else
     {
-        cout << "no mul" << endl;
-        exit(0);
+        cout << "no multiply for " << x.rows() << "*" << x.cols() << "  " << y.rows() << " " << y.cols() << endl;
     }
-    Matrixint128 a = X_plus_R_mod.cast<int128>(), b = q.cast<int128>();
-    Matrixint128 d = x.cast<int128>(), e = Y_plus_Q_mod.cast<int128>();
-    Matrixint128 c = a * b;
-    Matrixint128 f = d * e;
-    for (int i = 0; i < c.size(); i++)
-    {
-        c(i) = c(i) / 2;
-        f(i) = f(i) / 2;
-    }
-    Matrixint64 mod1 = f.cast<int64>();
-    Matrixint64 mod2 = c.cast<int64>();
-    result = (x * Y_plus_Q + mod1) - (X_plus_R * q + mod2) + t;
+    result = x * Y_plus_Q - X_plus_R * q + t;
     Secret_Mul::Mul_truncation(result);
     return result;
 }
 
+// MatrixXu Secret_Mul::Multiply_nn(MatrixXu &x, MatrixXu &y, MatrixXu &r, MatrixXu &q, MatrixXu &t)
+// {
+//     MatrixXu result;
+//     MatrixXu y_plus_q = y + q;
+
+//     MatrixXu x_plus_r = x + r;
+//     MatrixXu Y_plus_Q, X_plus_R, Y_plus_Q_mod, X_plus_R_mod, combination, rev_combine;
+//     // (B, D)*(D, numClass)
+//     if (x.rows() == B && x.cols() == D && y.rows() == D && y.cols() == numClass)
+//     {
+//         combination.resize(B + numClass, D);
+//         MatrixXu y_plus_q_trans = y_plus_q.transpose();
+//         combination << x_plus_r,
+//             y_plus_q_trans;
+//         MatrixXu rev_combine = Secret_Mul::Mul_reveal_nn(combination);
+//         Y_plus_Q = rev_combine.middleRows(B, numClass).transpose();
+//         Y_plus_Q_mod = rev_combine.bottomRows(numClass).transpose();
+//         X_plus_R = rev_combine.topRows(B);
+//         X_plus_R_mod = rev_combine.middleRows(B + numClass, B);
+//     }
+//     // (D, B)*(B, numClass)
+//     else if (x.rows() == D && x.cols() == B && y.rows() == B && y.cols() == numClass)
+//     {
+//         combination.resize(D + numClass, B);
+//         MatrixXu y_plus_q_trans = y_plus_q.transpose();
+//         combination << x_plus_r,
+//             y_plus_q_trans;
+//         MatrixXu rev_combine = Secret_Mul::Mul_reveal_nn(combination);
+//         Y_plus_Q = rev_combine.middleRows(D, numClass).transpose();
+//         Y_plus_Q_mod = rev_combine.bottomRows(numClass).transpose();
+//         X_plus_R = rev_combine.topRows(D);
+//         X_plus_R_mod = rev_combine.middleRows(D + numClass, D);
+//     }
+//     // (B, D)*(D, hiddenDim)
+//     else if (x.rows() == B && x.cols() == D && y.rows() == D && y.cols() == hiddenDim)
+//     {
+//         combination.resize(B + hiddenDim, D);
+//         MatrixXu y_plus_q_trans = y_plus_q.transpose();
+//         combination << x_plus_r,
+//             y_plus_q_trans;
+//         MatrixXu rev_combine = Secret_Mul::Mul_reveal_nn(combination);
+//         Y_plus_Q = rev_combine.middleRows(B, hiddenDim).transpose();
+//         Y_plus_Q_mod = rev_combine.bottomRows(hiddenDim).transpose();
+//         X_plus_R = rev_combine.topRows(B);
+//         X_plus_R_mod = rev_combine.middleRows(B + hiddenDim, B);
+//     }
+//     // (B, hiddenDim)*(hiddenDim, numClass)
+//     else if (x.rows() == B && x.cols() == hiddenDim && y.rows() == hiddenDim && y.cols() == numClass)
+//     {
+//         combination.resize(B + numClass, hiddenDim);
+//         MatrixXu y_plus_q_trans = y_plus_q.transpose();
+//         combination << x_plus_r,
+//             y_plus_q_trans;
+//         MatrixXu rev_combine = Secret_Mul::Mul_reveal_nn(combination);
+//         Y_plus_Q = rev_combine.middleRows(B, numClass).transpose();
+//         Y_plus_Q_mod = rev_combine.bottomRows(numClass).transpose();
+//         X_plus_R = rev_combine.topRows(B);
+//         X_plus_R_mod = rev_combine.middleRows(B + numClass, B);
+//     }
+//     // (B, numClass)*(numClass, hiddenDim)
+//     else if (x.rows() == B && x.cols() == numClass && y.rows() == numClass && y.cols() == hiddenDim)
+//     {
+//         combination.resize(B + hiddenDim, numClass);
+//         MatrixXu y_plus_q_trans = y_plus_q.transpose();
+//         combination << x_plus_r,
+//             y_plus_q_trans;
+//         MatrixXu rev_combine = Secret_Mul::Mul_reveal_nn(combination);
+//         Y_plus_Q = rev_combine.middleRows(B, hiddenDim).transpose();
+//         Y_plus_Q_mod = rev_combine.bottomRows(hiddenDim).transpose();
+//         X_plus_R = rev_combine.topRows(B);
+//         X_plus_R_mod = rev_combine.middleRows(B + hiddenDim, B);
+//     }
+//     // (B, hiddenDim)*(hiddenDim, hiddenDim)
+//     else if (x.rows() == B && x.cols() == hiddenDim && y.rows() == hiddenDim && y.cols() == hiddenDim)
+//     {
+//         combination.resize(B + hiddenDim, hiddenDim);
+//         combination << x_plus_r,
+//             y_plus_q;
+//         MatrixXu rev_combine = Secret_Mul::Mul_reveal_nn(combination);
+//         Y_plus_Q = rev_combine.middleRows(B, hiddenDim);
+//         Y_plus_Q_mod = rev_combine.bottomRows(hiddenDim);
+//         X_plus_R = rev_combine.topRows(B);
+//         X_plus_R_mod = rev_combine.middleRows(B + hiddenDim, B);
+//     }
+//     // (hiddenDim, B)*(B, numClass)
+//     else if (x.rows() == hiddenDim && x.cols() == B && y.rows() == B && y.cols() == numClass)
+//     {
+//         combination.resize(hiddenDim + numClass, B);
+//         MatrixXu y_plus_q_trans = y_plus_q.transpose();
+//         combination << x_plus_r,
+//             y_plus_q_trans;
+//         MatrixXu rev_combine = Secret_Mul::Mul_reveal_nn(combination);
+//         Y_plus_Q = rev_combine.middleRows(hiddenDim, numClass).transpose();
+//         Y_plus_Q_mod = rev_combine.bottomRows(numClass).transpose();
+//         X_plus_R = rev_combine.topRows(hiddenDim);
+//         X_plus_R_mod = rev_combine.middleRows(hiddenDim + numClass, hiddenDim);
+//     }
+//     // (D, B)*(B, hiddenDim)
+//     else if (x.rows() == D && x.cols() == B && y.rows() == B && y.cols() == hiddenDim)
+//     {
+//         combination.resize(D + hiddenDim, B);
+//         MatrixXu y_plus_q_trans = y_plus_q.transpose();
+//         combination << x_plus_r,
+//             y_plus_q_trans;
+//         MatrixXu rev_combine = Secret_Mul::Mul_reveal_nn(combination);
+//         Y_plus_Q = rev_combine.middleRows(D, hiddenDim).transpose();
+//         Y_plus_Q_mod = rev_combine.bottomRows(hiddenDim).transpose();
+//         X_plus_R = rev_combine.topRows(D);
+//         X_plus_R_mod = rev_combine.middleRows(D + hiddenDim, D);
+//     }
+//     // (hiddenDim, B)*(B, hiddenDim)
+//     else if (x.rows() == hiddenDim && x.cols() == B && y.rows() == B && y.cols() == hiddenDim)
+//     {
+//         combination.resize(hiddenDim + hiddenDim, B);
+//         MatrixXu y_plus_q_trans = y_plus_q.transpose();
+//         combination << x_plus_r,
+//             y_plus_q_trans;
+//         MatrixXu rev_combine = Secret_Mul::Mul_reveal_nn(combination);
+//         Y_plus_Q = rev_combine.middleRows(hiddenDim, hiddenDim).transpose();
+//         Y_plus_Q_mod = rev_combine.bottomRows(hiddenDim).transpose();
+//         X_plus_R = rev_combine.topRows(hiddenDim);
+//         X_plus_R_mod = rev_combine.middleRows(hiddenDim + hiddenDim, hiddenDim);
+//     }
+//     else
+//     {
+//         cout << "no mul" << endl;
+//         exit(0);
+//     }
+//     Matrixint128 a = X_plus_R_mod.cast<int128>(), b = q.cast<int128>();
+//     Matrixint128 d = x.cast<int128>(), e = Y_plus_Q_mod.cast<int128>();
+//     Matrixint128 c = a * b;
+//     Matrixint128 f = d * e;
+//     for (int i = 0; i < c.size(); i++)
+//     {
+//         c(i) = c(i) / 2;
+//         f(i) = f(i) / 2;
+//     }
+//     MatrixXu mod1 = f.cast<u64>();
+//     MatrixXu mod2 = c.cast<u64>();
+//     result = (x * Y_plus_Q + mod1) - (X_plus_R * q + mod2) + t;
+//     Secret_Mul::Mul_truncation(result);
+//     return result;
+// }
+
 // todo:三元组的生成 目前全部设置为0
-Matrixint64 Secret_Mul::CwiseProduct(Matrixint64 &x, Matrixint64 &y, Matrixint64 &r, Matrixint64 &q, Matrixint64 &t)
+MatrixXu Secret_Mul::CwiseProduct(MatrixXu &x, MatrixXu &y, MatrixXu &r, MatrixXu &q, MatrixXu &t)
 {
     r.setZero();
     q.setZero();
     t.setZero();
-    Matrixint64 result;
-    Matrixint64 y_plus_q = y + q;
-    Matrixint64 x_plus_r = x + r;
+    MatrixXu result;
+    MatrixXu y_plus_q = y + q;
+    MatrixXu x_plus_r = x + r;
 
-    Matrixint64 Y_plus_Q, X_plus_R, combination, rev_combine;
-    if (x.rows() == B && x.cols() == 1)
+    MatrixXu Y_plus_Q, X_plus_R, combination, rev_combine;
+    if (x.rows() == B && x.cols() == numClass)
     {
-        combination.resize(B, 2);
+        combination.resize(B, numClass * 2);
         combination << y_plus_q, x_plus_r;
-        Matrixint64 rev_combine = Secret_Mul::reveal(combination);
-        Y_plus_Q = rev_combine.leftCols(1);
-        X_plus_R = rev_combine.rightCols(1);
+        MatrixXu rev_combine = Secret_Mul::Mul_reveal(combination);
+        Y_plus_Q = rev_combine.leftCols(numClass);
+        X_plus_R = rev_combine.rightCols(numClass);
     }
     else if (x.rows() == B && x.cols() == hiddenDim)
     {
         combination.resize(B, hiddenDim + hiddenDim);
         combination << y_plus_q, x_plus_r;
-        Matrixint64 rev_combine = Secret_Mul::reveal(combination);
+        MatrixXu rev_combine = Secret_Mul::Mul_reveal(combination);
         Y_plus_Q = rev_combine.leftCols(hiddenDim);
         X_plus_R = rev_combine.rightCols(hiddenDim);
     }
@@ -1466,25 +1947,25 @@ Matrixint64 Secret_Mul::CwiseProduct(Matrixint64 &x, Matrixint64 &y, Matrixint64
     return result;
 }
 
-Matrixint64 Secret_Mul::constant_Mul(Matrixint64 &x, double d)
+MatrixXu Secret_Mul::constant_Mul(MatrixXu &x, double d)
 {
-    Matrixint64 result = x * (Constant::Util::double_to_int64(d));
+    MatrixXu result = x * (Constant::Util::double_to_u64(d));
     Secret_Mul::Mul_truncation(result);
     return result;
 }
 
-Matrixint64 Secret_Mul::Mul_reveal(Matrixint64 &data)
+MatrixXu Secret_Mul::Mul_reveal(MatrixXu &data)
 {
     int row = data.rows();
     int col = data.cols();
-    Matrixint64 res;
+    MatrixXu res;
     if (party == 0)
     {
-        Matrixint64 data1, data2;
+        MatrixXu data1, data2;
         tel.receive(&data1, 1);
         tel.receive(&data2, 2);
 
-        res = (-data + data1 - data2) / 2;
+        res = (data + data1 * 3 + data2 * (UINT64_MAX - 1));
         tel.send(&res, 1);
         tel.send(&res, 2);
     }
@@ -1496,83 +1977,22 @@ Matrixint64 Secret_Mul::Mul_reveal(Matrixint64 &data)
     return res;
 }
 
-Matrixint64 Secret_Mul::Mul_reveal_nn(Matrixint64 &data)
-{
-    int row = data.rows();
-    int col = data.cols();
-    Matrixint64 res(row * 2, col);
-    if (party == 0)
-    {
-        Matrixint64 data1, data2;
-        tel.receive(&data1, 1);
-        tel.receive(&data2, 2);
-        Matrixint64 res1, res2(row, col);
-        for (int i = 0; i < row; i++)
-        {
-            for (int j = 0; j < col; j++)
-            {
-                if ((-data(i, j) + data1(i, j) - data2(i, j)) % 2 != 0)
-                {
-                    res2(i, j) = (-data(i, j) + data1(i, j) - data2(i, j)) % 2;
-                }
-                else
-                {
-                    res2(i, j) = 0;
-                }
-            }
-        }
-        res1 = (-data + data1 - data2) / 2;
-        res << res1,
-            res2;
-        tel.send(&res, 1);
-        tel.send(&res, 2);
-    }
-    else
-    {
-        tel.send(&data, 0);
-        tel.receive(&res, 0);
-    }
-    return res;
-}
 
-Matrixint64 Secret_Mul::reveal(Matrixint64 &data)
+u64 Secret_Mul::Generate_triplets_Bob(MatrixXu &mul_mat, int length, int party, int i, bool is_ui, bool send_first)
 {
-    int row = data.rows();
-    int col = data.cols();
-    Matrixint64 res;
-    if (party == 0)
-    {
-        Matrixint64 data1, data2;
-        tel.receive(&data1, 1);
-        tel.receive(&data2, 2);
-
-        res = (-data + data1 - data2) / 2;
-        tel.send(&res, 1);
-        tel.send(&res, 2);
-    }
-    else
-    {
-        tel.send(&data, 0);
-        tel.receive(&res, 0);
-    }
-    return res;
-}
-
-int64 Secret_Mul::Generate_triplets_Bob(Matrixint64 &mul_mat, int length, int party, int i, bool is_ui, bool send_first)
-{
-    Matrixint64 message_send(3, 1), message_recv(3, 1);
+    MatrixXu message_send(3, 1), message_recv(3, 1);
     if (length % 2 != 0)
     {
         std::cout << "D+1 should be an even number!" << std::endl;
     }
-    int64 temp = 0;
-    int64 b_j = Constant::Util::random_int64();
-    int64 d_j = Constant::Util::random_int64();
+    u64 temp = 0;
+    u64 b_j = Constant::Util::random_u64();
+    u64 d_j = Constant::Util::random_u64();
 
     // make sure that a_i + c_i != 0
     while (b_j - d_j == 0)
     {
-        b_j = Constant::Util::random_int64();
+        b_j = Constant::Util::random_u64();
     }
 
     // std::cout<<"b_j is :" << b_j << "d_j is :" << d_j << std::endl;
@@ -1629,21 +2049,21 @@ int64 Secret_Mul::Generate_triplets_Bob(Matrixint64 &mul_mat, int length, int pa
     return temp;
 }
 
-int64 Secret_Mul::Generate_triplets_Alice(Matrixint64 &mul_mat, int length, int party, int i, bool is_ui, bool send_first)
+u64 Secret_Mul::Generate_triplets_Alice(MatrixXu &mul_mat, int length, int party, int i, bool is_ui, bool send_first)
 {
-    Matrixint64 message_send(3, 1), message_recv(3, 1);
+    MatrixXu message_send(3, 1), message_recv(3, 1);
     if (length % 2 != 0)
     {
         std::cout << "D+1 should be an even number!" << std::endl;
     }
-    int64 temp = 0;
-    int64 a_i = Constant::Util::random_int64();
-    int64 c_i = Constant::Util::random_int64();
+    u64 temp = 0;
+    u64 a_i = Constant::Util::random_u64();
+    u64 c_i = Constant::Util::random_u64();
 
     // make sure that a_i + c_i != 0
     while (a_i + c_i == 0)
     {
-        a_i = Constant::Util::random_int64();
+        a_i = Constant::Util::random_u64();
     }
 
     // std::cout<<"a_i is :" << a_i << "c_i is :" << c_i << std::endl;
@@ -1699,21 +2119,21 @@ int64 Secret_Mul::Generate_triplets_Alice(Matrixint64 &mul_mat, int length, int 
     return temp;
 }
 
-int64 Secret_Mul::Generate_triplets_Bob_improve(Matrixint64 &mul_mat, int length, int party, int i, bool is_ui, bool send_first)
+u64 Secret_Mul::Generate_triplets_Bob_improve(MatrixXu &mul_mat, int length, int party, int i, bool is_ui, bool send_first)
 {
-    Matrixint64 message_send(1 + length, 1), message_recv(1 + length, 1);
+    MatrixXu message_send(1 + length, 1), message_recv(1 + length, 1);
     if (length % 2 != 0)
     {
         std::cout << "D+1 should be an even number!" << std::endl;
     }
-    int64 temp = 0;
-    int64 b_j = Constant::Util::random_int64();
-    int64 d_j = Constant::Util::random_int64();
+    u64 temp = 0;
+    u64 b_j = Constant::Util::random_u64();
+    u64 d_j = Constant::Util::random_u64();
 
     // make sure that a_i + c_i != 0
     while (b_j - d_j == 0)
     {
-        b_j = Constant::Util::random_int64();
+        b_j = Constant::Util::random_u64();
     }
 
     message_send(0, 0) = b_j - d_j;
@@ -1765,21 +2185,21 @@ int64 Secret_Mul::Generate_triplets_Bob_improve(Matrixint64 &mul_mat, int length
     return temp;
 }
 
-int64 Secret_Mul::Generate_triplets_Alice_improve(Matrixint64 &mul_mat, int length, int party, int i, bool is_ui, bool send_first)
+u64 Secret_Mul::Generate_triplets_Alice_improve(MatrixXu &mul_mat, int length, int party, int i, bool is_ui, bool send_first)
 {
-    Matrixint64 message_send(1 + length, 1), message_recv(1 + length, 1);
+    MatrixXu message_send(1 + length, 1), message_recv(1 + length, 1);
     if (length % 2 != 0)
     {
         std::cout << "D+1 should be an even number!" << std::endl;
     }
-    int64 temp = 0;
-    int64 a_i = Constant::Util::random_int64();
-    int64 c_i = Constant::Util::random_int64();
+    u64 temp = 0;
+    u64 a_i = Constant::Util::random_u64();
+    u64 c_i = Constant::Util::random_u64();
 
     // make sure that a_i + c_i != 0
     while (a_i + c_i == 0)
     {
-        a_i = Constant::Util::random_int64();
+        a_i = Constant::Util::random_u64();
     }
 
     message_send(0, 0) = a_i + c_i;

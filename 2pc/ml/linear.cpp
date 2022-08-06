@@ -1,9 +1,9 @@
 #include "linear.h"
 
-Matrixint64 Linear::w = Matrixint64(D, 1);
-Matrixint64 Linear::y_inf = Matrixint64(testN, 1);
+MatrixXu Linear::w = MatrixXu(D, numClass);
+MatrixXu Linear::y_inf = MatrixXu(testN, numClass);
 
-// vector<int> read_VT(Matrixint64 &a, Matrixint64 &b_1, Matrixint64 &c_1, Matrixint64 &b_2, Matrixint64 &c_2, int party)
+// vector<int> read_VT(MatrixXu &a, MatrixXu &b_1, MatrixXu &c_1, MatrixXu &b_2, MatrixXu &c_2, int party)
 // {
 
 // }
@@ -25,7 +25,7 @@ vector<int> Linear::random_perm()
     return perm;
 }
 
-void Linear::next_batch(Matrixint64 &batch, int start, vector<int> &perm, Matrixint64 &data)
+void Linear::next_batch(MatrixXu &batch, int start, vector<int> &perm, MatrixXu &data)
 {
     // Constant::Clock *clock_train;
     // clock_train = new Constant::Clock(2);
@@ -36,97 +36,130 @@ void Linear::next_batch(Matrixint64 &batch, int start, vector<int> &perm, Matrix
     // cout << clock_train->get() << endl;
 }
 
+MatrixXu Linear::argmax(MatrixXu &x)
+{
+    int row = x.rows(), col = x.cols();
+    MatrixXu res(row, 1);
+    Matrixint64 temp = x.cast<int64>();
+    for (int i = 0; i < row; i++)
+    {
+        int index = 0;
+        int64 max = temp(i, 0);
+        for (int j = 1; j < col; j++)
+        {
+            if (temp(i, j) > max)
+            {
+                max = temp(i, j);
+                index = j;
+            }
+        }
+        res(i, 0) = index;
+    }
+    return res;
+}
+
 void Linear::train_model()
 {
 
-    Matrixint64 x_batch(B, D), y_batch(B, 1);
-    Matrixint64 train_data = IOManager::train_data;
-    Matrixint64 train_label = IOManager::train_label;
+    MatrixXu x_batch(B, D), y_batch(B, numClass);
+    MatrixXu train_data = IOManager::train_data;
+    MatrixXu train_label = IOManager::train_label;
 
     w.setZero();
-    ifstream F;
-    F.open("../3pc/Result/Linear" + to_string(party) + ".txt");
-    string s;
-    getline(F, s);
-    if (s != "Finish")
-    {
-        char *ch;
-        ch = const_cast<char *>(s.c_str());
-        w(0, 0) = Constant::Util::getint64(ch);
-        for (int i = 1; i < D; i++)
-        {
-            string s;
-            getline(F, s);
-            char *ch;
-            ch = const_cast<char *>(s.c_str());
-            w(i, 0) = Constant::Util::getint64(ch);
-        }
-    }
-    cout << w <<endl;
-    // static default_random_engine e(time(0));
-    // static normal_distribution<double> n(0, 0.05);
-    // MatrixXd m = MatrixXd::Zero(D, 1).unaryExpr([](double dummy)
-    //                                                 { return n(e); });
-    // for (int i = 0; i < D; i++)
+    // ifstream F;
+    // F.open("../3pc/Result/Linear" + to_string(party) + ".txt");
+    // string s;
+    // getline(F, s);
+    // if (s != "Finish")
     // {
-    //     w(i, 0) = Constant::Util::double_to_int64(m(i, 0));
+    //     char *ch;
+    //     ch = const_cast<char *>(s.c_str());
+    //     w(0, 0) = Constant::Util::getu64(ch);
+    //     for (int i = 1; i < D; i++)
+    //     {
+    //         string s;
+    //         getline(F, s);
+    //         char *ch;
+    //         ch = const_cast<char *>(s.c_str());
+    //         w(i, 0) = Constant::Util::getu64(ch);
+    //     }
     // }
+    static default_random_engine e(time(0));
+    static normal_distribution<double> n(0, 0.05);
+    MatrixXd m = MatrixXd::Zero(D, 1).unaryExpr([](double dummy)
+                                                { return n(e); });
+    for (int i = 0; i < D; i++)
+    {
+        w(i, 0) = Constant::Util::double_to_u64(m(i, 0));
+    }
     cout << "weights initialized" << endl;
     vector<int> perm = random_perm();
 
     int start = 0;
-    Matrixint64 r0(B, D), q0(D, 1), t0(B, 1), r1(D, B), q1(B, 1), t1(D, 1);
-    Matrixint64 wx(B, 1), wx_y(B, 1);
+    MatrixXu r0(B, D), q0(D, numClass), t0(B, numClass), r1(D, B), q1(B, numClass), t1(D, numClass);
+    MatrixXu wx(B, numClass), wx_y(B, numClass);
 
     Constant::Clock *clock_train;
     clock_train = new Constant::Clock(2);
 
-    for (int j = 0; j < Ep; j++)
+    // for (int j = 0; j < Ep; j++)
+    // {
+    // double error = 0;
+    // cout << "第" << j << "个epoch" << endl;
+    for (int i = 0; i < 1000; i++)
     {
-        // cout << "第" << j << "个epoch" << endl;
-        for (int i = 0; i < N / B; i++)
-        {
 
-            next_batch(x_batch, start, perm, train_data);
-            next_batch(y_batch, start, perm, train_label); //选出mini batch
+        next_batch(x_batch, start, perm, train_data);
+        next_batch(y_batch, start, perm, train_label); //选出mini batch
 
-            start += B;
-            r0 = Secret_Mul::r0;
-            r1 = Secret_Mul::r1;
-            q0 = Secret_Mul::q0;
-            q1 = Secret_Mul::q1;
-            t0 = Secret_Mul::t0;
-            t1 = Secret_Mul::t1;
+        start += B;
+        r0 = Secret_Mul::r0;
+        r1 = Secret_Mul::r1;
+        q0 = Secret_Mul::q0;
+        q1 = Secret_Mul::q1;
+        t0 = Secret_Mul::t0;
+        t1 = Secret_Mul::t1;
 
-            wx = Secret_Mul::Multiply(x_batch, w, r0, q0, t0);
+        wx = Secret_Mul::Multiply(x_batch, w, r0, q0, t0);
 
-            wx_y = wx - y_batch;
-            Matrixint64 x_batch_trans = x_batch.transpose();
+        wx_y = wx - y_batch;
 
-            Matrixint64 delta;
-            delta = Secret_Mul::Multiply(x_batch_trans, wx_y, r1, q1, t1);
-            w = w - Mat::constant_multiply(delta, 0.04 / B);
-        }
+        // MatrixXd temp = Mat::u642Double(Secret_Mul::Mul_reveal(wx_y));
+        // error = error + (temp.array() * temp.array()).sum();
+
+        MatrixXu x_batch_trans = x_batch.transpose();
+
+        MatrixXu delta;
+        delta = Secret_Mul::Multiply(x_batch_trans, wx_y, r1, q1, t1);
+        w = w - Secret_Mul::constant_Mul(delta, 0.01 / B);
+        // w = w - Mat::constant_multiply(delta, 0.01 / B);
     }
+    // cout << "square error" << endl;
+    // cout << error / N << endl;
+    // test_model();
+    // }
     cout << "online time:" << clock_train->get() << endl;
-    inference();
+    cout << "it/s:" << 1000 / clock_train->get() << endl;
+    // inference();
     // test_model();
 }
 
 void Linear::test_model()
 {
     double count = 0;
-    Matrixint64 w_(D, 1);
-    Matrixint64 test_data = IOManager::test_data;
-    Matrixint64 test_label = IOManager::test_label;
+    MatrixXu w_(D, numClass);
+    MatrixXu test_data = IOManager::test_data;
+    MatrixXu test_label = IOManager::test_label;
     if (party == 0)
     {
-        w_ = Secret_Mul::reveal(w);
-        Matrixint64 y_ = test_data * w_;
-        Mat::truncateMatrixint64(y_);
+        w_ = Secret_Mul::Mul_reveal(w);
+        MatrixXu y_ = test_data * w_;
+        Mat::truncateMatrixXu(y_);
+        // MatrixXu res = argmax(y_);
+        // MatrixXu label = argmax(test_label);
         for (int i = 0; i < testN; i++)
         {
-            double yyy = Constant::Util::int64_to_double(y_(i, 0));
+            double yyy = Constant::Util::u64_to_double(y_(i, 0));
             if (yyy > 0.5 && test_label(i, 0) == 1048576)
             {
                 count++;
@@ -135,24 +168,28 @@ void Linear::test_model()
             {
                 count++;
             }
+            // if (res(i, 0) == label(i, 0))
+            // {
+            //     count++;
+            // }
         }
         cout << "acurracy:" << count / testN << endl;
     }
     else if (party == 1 || party == 2)
     {
-        Secret_Mul::reveal(w);
+        Secret_Mul::Mul_reveal(w);
     }
 }
 
 void Linear::inference()
 {
-    Matrixint64 test_data = IOManager::test_data;
-    Matrixint64 test_label = IOManager::test_label;
+    MatrixXu test_data = IOManager::test_data;
+    MatrixXu test_label = IOManager::test_label;
     double count = 0;
     int it = ceil(testN / B);
-    Matrixint64 x_batch, y_batch, y_infer;
+    MatrixXu x_batch, y_batch, y_infer;
 
-    Matrixint64 r0(B, D), q0(D, 1), t0(B, 1);
+    MatrixXu r0(B, D), q0(D, numClass), t0(B, numClass);
     r0 = Secret_Mul::r0;
     q0 = Secret_Mul::q0;
     t0 = Secret_Mul::t0;
@@ -162,16 +199,22 @@ void Linear::inference()
         x_batch = test_data.middleRows(i * B, temp);
         y_batch = test_label.middleRows(i * B, temp);
         y_infer = Secret_Mul::Multiply(x_batch, w, r0, q0, t0);
-        Matrixint64 y_predict = Secret_Mul::reveal(y_infer);
-        Matrixint64 y_plaintext = Secret_Mul::reveal(y_batch);
+        MatrixXu y_predict = Secret_Mul::Mul_reveal(y_infer);
+        MatrixXu y_plaintext = Secret_Mul::Mul_reveal(y_batch);
+        // MatrixXu res = argmax(y_predict);
+        // MatrixXu label = argmax(y_plaintext);
         for (int j = 0; j < temp; j++)
         {
-            double yyy = Constant::Util::int64_to_double(y_predict(j));
+            double yyy = Constant::Util::u64_to_double(y_predict(j));
             if (yyy > 0.5)
                 y_predict(j) = IE;
-            else 
+            else
                 y_predict(j) = 0;
             count = count + (y_predict(j) == y_plaintext(j));
+            // if (res(i, 0) == label(i, 0))
+            // {
+            //     count++;
+            // }
         }
     }
     cout << "accuracy of inference:" << count * 1.0 / testN << endl;

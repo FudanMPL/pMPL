@@ -215,12 +215,12 @@ void SocketManager::pMPL::exit_all()
     client_exit();
 }
 
-void SocketManager::pMPL::send(Matrixint64 *a, int target)
+void SocketManager::pMPL::send(MatrixXu *a, int target)
 {
     socket_io[party][target]->send_message(a);
 }
 
-// void SocketManager::pMPL::send(Matrixint64 *a, int target)
+// void SocketManager::pMPL::send(MatrixXu *a, int target)
 // {
 //     socket_io[party][target]->send_message(a);
 // }
@@ -235,7 +235,7 @@ void SocketManager::pMPL::send(Matrixint128 *a, int target)
     socket_io[party][target]->send_message(a);
 }
 
-void SocketManager::pMPL::receive(Matrixint64 *a, int from)
+void SocketManager::pMPL::receive(MatrixXu *a, int from)
 {
     socket_io[party][from]->recv_message(*a);
 }

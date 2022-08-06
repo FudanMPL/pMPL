@@ -1,12 +1,13 @@
 #include "logistic.h"
 
-Matrixint64 Logistic::w = Matrixint64(D, 1);
-Matrixint64 Logistic::y_inf = Matrixint64(testN, 1);
+MatrixXu Logistic::w = MatrixXu(D, numClass);
+MatrixXu Logistic::y_inf = MatrixXu(testN, numClass);
 
-// vector<int> read_VT(Matrixint64 &a, Matrixint64 &b_1, Matrixint64 &c_1, Matrixint64 &b_2, Matrixint64 &c_2, int party)
+// vector<int> read_VT(MatrixXu &a, MatrixXu &b_1, MatrixXu &c_1, MatrixXu &b_2, MatrixXu &c_2, int party)
 // {
 
 // }
+
 
 int Logistic::myrandom(int i) { return rand() % i; }
 
@@ -25,7 +26,7 @@ vector<int> Logistic::random_perm()
     return perm;
 }
 
-void Logistic::next_batch(Matrixint64 &batch, int start, vector<int> &perm, Matrixint64 &data)
+void Logistic::next_batch(MatrixXu &batch, int start, vector<int> &perm, MatrixXu &data)
 {
     // Constant::Clock *clock_train;
     // clock_train = new Constant::Clock(2);
@@ -36,25 +37,52 @@ void Logistic::next_batch(Matrixint64 &batch, int start, vector<int> &perm, Matr
     // cout << clock_train->get() << endl;
 }
 
-void Logistic::sigmoid(Matrixint64 &x)
+void Logistic::sigmoid(MatrixXu &x)
 {
     for (int i = 0; i < x.size(); i++)
     {
         if (x(i) >= 9223372036854775808 && x(i) <= 18446744073709027328)
             x(i) = 0;
-        else if (x(i) >= 1048576 && x(i) < 9223372036854775808)
+        else if (x(i) >= 524288 && x(i) < 9223372036854775808)
             x(i) = 1048576;
         else
             x(i) = x(i) + 524288;
     }
 }
 
+MatrixXu Logistic::argmax(MatrixXu &x)
+{
+    int row = x.rows(), col = x.cols();
+    MatrixXu res(row, 1);
+    Matrixint64 temp = x.cast<int64>();
+    for (int i = 0; i < row; i++)
+    {
+        int index = 0;
+        int64 max = temp(i, 0);
+        for (int j = 1; j < col; j++)
+        {
+            if (temp(i, j) > max)
+            {
+                max = temp(i, j);
+                index = j;
+            }
+        }
+
+        // SVHN
+        //  res(i, 0) = index % 10;
+
+        // mnist and fashion_mnist
+        res(i, 0) = index;
+    }
+    return res;
+}
+
 void Logistic::train_model()
 {
 
-    Matrixint64 x_batch(B, D), y_batch(B, 1);
-    Matrixint64 train_data = IOManager::train_data;
-    Matrixint64 train_label = IOManager::train_label;
+    MatrixXu x_batch(B, D), y_batch(B, numClass);
+    MatrixXu train_data = IOManager::train_data;
+    MatrixXu train_label = IOManager::train_label;
 
     // static default_random_engine e(time(0));
     // static normal_distribution<double> n(0, 0.05);
@@ -62,7 +90,7 @@ void Logistic::train_model()
     //                                                 { return n(e); });
     // for (int i = 0; i < D; i++)
     // {
-    //     w(i, 0) = Constant::Util::double_to_int64(m(i, 0));
+    //     w(i, 0) = Constant::Util::double_to_u64(m(i, 0));
     // }
     w.setZero();
     cout << "weights initialized" << endl;
@@ -70,13 +98,14 @@ void Logistic::train_model()
     vector<int> perm = random_perm();
 
     int start = 0;
-    Matrixint64 r0(B, D), q0(D, 1), t0(B, 1), r1(D, B), q1(B, 1), t1(D, 1);
-    Matrixint64 wx(B, 1), wx_y(B, 1);
+    MatrixXu r0(B, D), q0(D, numClass), t0(B, numClass), r1(D, B), q1(B, numClass), t1(D, numClass);
+    MatrixXu wx(B, numClass), wx_y(B, numClass);
     Constant::Clock *clock_train;
     clock_train = new Constant::Clock(2);
     ofstream F;
     for (int j = 0; j < Ep; j++)
     {
+        double error2 = 0;
         for (int i = 0; i < N / B; i++)
         {
             // cout << "第" << i << "个batch" << endl;
@@ -95,18 +124,25 @@ void Logistic::train_model()
             wx = Secret_Cmp::Sigmoid(wx); // 加入一层sigmoid函数即可
             wx_y = wx - y_batch;
 
-            Matrixint64 x_batch_trans = x_batch.transpose();
-            Matrixint64 delta = Secret_Mul::Multiply(x_batch_trans, wx_y, r1, q1, t1);
+            MatrixXd temp = Mat::u642Double(Secret_Mul::Mul_reveal(wx_y));
+            error2 = error2 + (temp.array() * temp.array()).sum();
+            MatrixXu x_batch_trans = x_batch.transpose();
+            MatrixXu delta = Secret_Mul::Multiply(x_batch_trans, wx_y, r1, q1, t1);
 
-            w = w - Mat::constant_multiply(delta, R / B);
+            w = w - Secret_Mul::constant_Mul(delta, R / B);
             F.open("Result/Logistic" + to_string(party) + ".txt", ios::out);
             F << w << endl;
             F.close();
         }
+        if (party == 0 || party == 2 || party == 3)
+        {
+            cout << "square error" << endl;
+            cout << error2 / N << endl;
+        }
+        test_model();
     }
     cout << "online time:" << clock_train->get() << endl;
-    // test_model();
-    inference();
+    // inference();
     F.open("Result/Logistic" + to_string(party) + ".txt", ios::out);
     F << "Finish" << endl
       << w << endl;
@@ -116,27 +152,32 @@ void Logistic::train_model()
 void Logistic::test_model()
 {
     double count = 0;
-    Matrixint64 w_(D, 1);
-    Matrixint64 test_data = IOManager::test_data;
-    Matrixint64 test_label = IOManager::test_label;
+    MatrixXu w_(D, numClass);
+    MatrixXu test_data = IOManager::test_data;
+    MatrixXu test_label = IOManager::test_label;
 
     if (party == 0)
     {
-        w_ = Secret_Mul::reveal(w);
+        w_ = Secret_Mul::Mul_reveal(w);
 
-        Matrixint64 y_ = test_data * w_;
+        MatrixXu y_ = test_data * w_;
 
-        Mat::truncateMatrixint64(y_);
+        Mat::truncateMatrixXu(y_);
         Logistic::sigmoid(y_);
-
+        MatrixXu res = argmax(y_);
+        MatrixXu label = argmax(test_label);
         for (int i = 0; i < testN; i++)
         {
-            double yyy = Constant::Util::int64_to_double(y_(i, 0));
-            if (yyy > 0.5 && test_label(i, 0) == 1048576)
-            {
-                count++;
-            }
-            else if (yyy < 0.5 && test_label(i, 0) == 0)
+            // double yyy = Constant::Util::u64_to_double(y_(i, 0));
+            // if (yyy > 0.5 && test_label(i, 0) == 1048576)
+            // {
+            //     count++;
+            // }
+            // else if (yyy < 0.5 && test_label(i, 0) == 0)
+            // {
+            //     count++;
+            // }
+            if (res(i, 0) == label(i, 0))
             {
                 count++;
             }
@@ -145,20 +186,20 @@ void Logistic::test_model()
     }
     else if (party == 2 || party == 3)
     {
-        Secret_Mul::reveal(w);
+        Secret_Mul::Mul_reveal(w);
     }
 }
 
 void Logistic::inference()
 {
-    Matrixint64 test_data = IOManager::test_data;
-    Matrixint64 test_label = IOManager::test_label;
-    Matrixint64 wx;
+    MatrixXu test_data = IOManager::test_data;
+    MatrixXu test_label = IOManager::test_label;
+    MatrixXu wx;
     double count = 0;
     int it = ceil(testN / B);
-    Matrixint64 x_batch, y_batch, y_infer;
+    MatrixXu x_batch, y_batch, y_infer;
 
-    Matrixint64 r0(B, D), q0(D, 1), t0(B, 1);
+    MatrixXu r0(B, D), q0(D, numClass), t0(B, numClass);
     r0 = Secret_Mul::r0;
     q0 = Secret_Mul::q0;
     t0 = Secret_Mul::t0;
@@ -171,16 +212,22 @@ void Logistic::inference()
         y_infer = Secret_Cmp::Sigmoid(wx);
         if (party == 0 || party == 2 || party == 3)
         {
-            Matrixint64 y_predict = Secret_Mul::reveal(y_infer);
-            Matrixint64 y_plaintext = Secret_Mul::reveal(y_batch);
+            MatrixXu y_predict = Secret_Mul::Mul_reveal(y_infer);
+            MatrixXu y_plaintext = Secret_Mul::Mul_reveal(y_batch);
+            // MatrixXu res = argmax(y_predict);
+            // MatrixXu label = argmax(y_plaintext);
             for (int j = 0; j < temp; j++)
             {
-                double yyy = Constant::Util::int64_to_double(y_predict(j));
+                double yyy = Constant::Util::u64_to_double(y_predict(j));
                 if (yyy > 0.5)
                     y_predict(j) = IE;
                 else
                     y_predict(j) = 0;
                 count = count + (y_predict(j) == y_plaintext(j));
+                // if (res(i, 0) == label(i, 0))
+                // {
+                //     count++;
+                // }
             }
         }
     }

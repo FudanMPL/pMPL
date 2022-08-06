@@ -9,11 +9,11 @@ extern int party;
 class Secret_Cmp
 {
 public:
-    static Matrixint64 to_Boolean_Share(Matrixint64 &x);
-    static Matrixint64 get_sign(Matrixint64 &x);
-    static Matrixint64 get_sign_xor_1(Matrixint64 &x);
-    static Matrixint64 Relu(Matrixint64 x);
-    static Matrixint64 Sigmoid(Matrixint64 x);
+    static MatrixXu to_Boolean_Share(MatrixXu &x);
+    static MatrixXu get_sign(MatrixXu &x);
+    static MatrixXu get_sign_xor_1(MatrixXu &x);
+    static MatrixXu Relu(MatrixXu x);
+    static MatrixXu Sigmoid(MatrixXu x);
 };
 
 #endif
