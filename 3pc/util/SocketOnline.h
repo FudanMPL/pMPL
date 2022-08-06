@@ -31,19 +31,19 @@ public:
     int send_message_n(SOCK sock, char *p, int l);
     int recv_message(SOCK sock, char *p, int l);
     int recv_message_n(SOCK sock, char *p, int l);
-    void send_message(Matrixint64 &a);
+    void send_message(MatrixXu &a);
     void send_message(Matrix8 &a);
     void send_message(Matrixint128 &a);
-    void send_message(Matrixint64 *a);
+    void send_message(MatrixXu *a);
     void send_message(Matrix8 *a);
     void send_message(Matrixint128 *a);
     void send_message(int b);
-    Matrixint64 recv_message();
-    void recv_message(Matrixint64 &a);
+    MatrixXu recv_message();
+    void recv_message(MatrixXu &a);
     void recv_message(Matrix8 &a);
     void recv_message(Matrixint128 &a);
     int recv_message_int();
-    void push(const Matrixint64 &a);
+    void push(const MatrixXu &a);
     void print();
 };
 

@@ -6,3 +6,5 @@ set(SOURCE_FILES_BASE Constant.h Constant.cpp util/Mat.h util/Mat.cpp util/IOMan
 set(Machine_Learning_FILES ml/linear.h ml/linear.cpp ml/logistic.h ml/logistic.cpp ml/nn.h ml/nn.cpp)
 
 add_executable(pmpl_2pc main.cpp ${SOURCE_FILES_BASE} ${Machine_Learning_FILES})
+add_executable(one ml/one_logistic.cpp Constant.h Constant.cpp util/Mat.h util/Mat.cpp util/IOManager.h util/IOManager.cpp util/SocketOnline.h util/SocketOnline.cpp util/SocketManager.h util/SocketManager.cpp)
+

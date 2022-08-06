@@ -6,7 +6,7 @@ TensorRu Mat::A_inv_123 = TensorRu(3, 3);
 TensorRu Mat::A_inv_124 = TensorRu(3, 3);
 TensorRu Mat::A_inv_134 = TensorRu(3, 3);
 
-TensorRu Mat::getInverse(const Matrixint64 &origin)
+TensorRu Mat::getInverse(const MatrixXu &origin)
 {
     TensorRu inv(3, 3);
     // int row = inv.rows(), col = inv.cols();
@@ -17,7 +17,7 @@ TensorRu Mat::getInverse(const Matrixint64 &origin)
     //  {
     //      for (int j = 0; j < origin.cols(); j++)
     //      {
-    //          temp(i, j) = Constant::Util::int64_to_double(origin(i, j));
+    //          temp(i, j) = Constant::Util::u64_to_double(origin(i, j));
     //      }
     //  }
     temp = temp.inverse();
@@ -25,7 +25,7 @@ TensorRu Mat::getInverse(const Matrixint64 &origin)
     {
         for (int j = 0; j < col; j++)
         {
-            inv(i, j) = Constant::Util::double_to_int64(temp(i, j));
+            inv(i, j) = Constant::Util::double_to_u64(temp(i, j));
         }
     }
     return inv;
@@ -33,29 +33,49 @@ TensorRu Mat::getInverse(const Matrixint64 &origin)
 
 void Mat::init_public_vector()
 {
-    Matrixint64 A_plus_temp(4, 3);
-    A_plus_temp << 0, 1, 1,
-        3, 2, 1,
-        1, 1, 0,
-        1, 0, 1;
-    A_plus.setValues({{0, 1, 1}, {3, 2, 1}, {1, 1, 0}, {1, 0, 1}});
-    Matrixint64 temp(3, 3);
-    A_inv_123 = Mat::getInverse(A_plus_temp.topRows(3));
-    temp << A_plus_temp.row(0), A_plus_temp.row(1), A_plus_temp.row(3);
-    A_inv_124 = Mat::getInverse(temp);
-    temp << A_plus_temp.row(0), A_plus_temp.row(2), A_plus_temp.row(3);
-    A_inv_134 = Mat::getInverse(temp);
-    return;
+    MatrixXu A_plus_temp(4, 3);
+    // A_plus_temp << 0, 1, 1,
+    //     3, 2, 1,
+    //     1, 1, 0,
+    //     1, 0, 1;
+    // A_plus.setValues({{0, 1, 1}, {3, 2, 1}, {1, 1, 0}, {1, 0, 1}});
+    A_plus_temp << 1, 0, 1,
+        2, 2, UINT64_MAX - 2,
+        3, 3, UINT64_MAX - 3,
+        1, 1, UINT64_MAX;
+    A_plus.setValues({{1, 0, 1}, {2, 2, UINT64_MAX - 2}, {3, 3, UINT64_MAX - 3}, {1, 1, UINT64_MAX}});
+    // MatrixXu temp(3, 3);
+    // A_inv_123 = Mat::getInverse(A_plus_temp.topRows(3));
+    // temp << A_plus_temp.row(0), A_plus_temp.row(1), A_plus_temp.row(3);
+    // A_inv_124 = Mat::getInverse(temp);
+    // temp << A_plus_temp.row(0), A_plus_temp.row(2), A_plus_temp.row(3);
+    // A_inv_134 = Mat::getInverse(temp);
+}
+
+MatrixXd Mat::u642Double(const MatrixXu &a)
+{
+    MatrixXu temp(a.rows(), a.cols());
+    MatrixXd res(a.rows(), a.cols());
+    int l = a.rows() * a.cols();
+    for (int i = 0; i < l; i++)
+    {
+        temp(i) = (u64)a(i);
+    }
+    for (int i = 0; i < l; i++)
+    {
+        res(i) = (long)temp(i) / (double)IE;
+    }
+    return res;
 }
 
 TensorRu Mat::randomTensorRu(int rows, int cols)
 {
     TensorRu res(rows, cols);
     res.setZero();
-    int64 *data = res.data();
+    u64 *data = res.data();
     for (int i = 0; i < res.size(); i++)
     {
-        *(data + i) = Constant::Util::random_int64();
+        *(data + i) = Constant::Util::random_u64();
     }
     return res;
 }
@@ -64,22 +84,22 @@ TensorRu3 Mat::randomTensorRu3(int rows, int cols)
 {
     TensorRu3 res(3, rows, cols);
     // res.setZero();
-    int64 *data = res.data();
+    u64 *data = res.data();
     for (int i = 0; i < res.size(); i++)
     {
-        *(data + i) = Constant::Util::random_int64();
+        *(data + i) = Constant::Util::random_u64();
     }
     return res;
 }
 
-Matrixint64 Mat::randomMatrixint64(int rows, int cols)
+MatrixXu Mat::randomMatrixXu(int rows, int cols)
 {
-    Matrixint64 res(rows, cols);
+    MatrixXu res(rows, cols);
     res.setZero();
-    int64 *data = res.data();
+    u64 *data = res.data();
     for (int i = 0; i < res.size(); i++)
     {
-        *(data + i) = Constant::Util::random_int64();
+        *(data + i) = Constant::Util::random_u64();
     }
     return res;
 }
@@ -96,12 +116,12 @@ Matrix8 Mat::randomMatrix8(int rows, int cols)
     return res;
 }
 
-TensorRu Mat::initFromVector(vector<int64> &data, long rows, long cols)
+TensorRu Mat::initFromVector(vector<u64> &data, long rows, long cols)
 {
     assert(data.size() == (ulong)(rows * cols));
     TensorRu res(rows, cols);
     res.setZero();
-    int64 *pt = res.data();
+    u64 *pt = res.data();
     for (long i = 0; i < res.size(); i++)
     {
         *(pt + i) = data[i];
@@ -117,7 +137,7 @@ void Mat::truncateTensorRu(TensorRu &x)
     }
 }
 
-void Mat::truncateMatrixint64(Matrixint64 &x)
+void Mat::truncateMatrixXu(MatrixXu &x)
 {
     for (long i = 0; i < x.size(); i++)
     {
@@ -135,14 +155,14 @@ void Mat::reshape(TensorRu &x, long nrows, long ncols)
     }
     else if (row > nrows && col > ncols)
     {
-        Matrixint64 temp = toMatrix(x);
+        MatrixXu temp = toMatrix(x);
         temp = temp.topLeftCorner(nrows, ncols);
         x = toTensor(temp);
     }
     else
     {
-        Matrixint64 nx = Matrixint64::Zero(nrows, ncols);
-        Matrixint64 temp = toMatrix(x);
+        MatrixXu nx = MatrixXu::Zero(nrows, ncols);
+        MatrixXu temp = toMatrix(x);
         nx.topLeftCorner(row, col) = temp;
         TensorRu temp1 = toTensor(nx);
         x = temp1;
@@ -153,17 +173,18 @@ void Mat::randomFill(TensorRu &x)
 {
     for (long i = 0; i < x.size(); i++)
     {
-        x.data()[i] = Constant::Util::random_int64();
+        x.data()[i] = Constant::Util::random_u64();
     }
 }
 
-Matrixint64 Mat::constant_multiply(Matrixint64 &x, double d)
+MatrixXu Mat::constant_multiply(MatrixXu &x, double d)
 {
-    Matrixint64 res(x.rows(), x.cols());
+    MatrixXu res(x.rows(), x.cols());
     for (int i = 0; i < x.size(); i++)
     {
-        res.data()[i] = (int64)(d * x.data()[i]);
+        res.data()[i] = (u64)(d * x.data()[i]);
     }
+    // Mat::truncateMatrixXu(res);
     return res;
 }
 
@@ -183,36 +204,36 @@ TensorRu Mat::cwiseProduct(TensorRu &a, TensorRu &b)
     return res;
 }
 
-Matrixint64 Mat::getFrom_pos(char *&p)
+MatrixXu Mat::getFrom_pos(char *&p)
 {
-    vector<int64> val;
+    vector<u64> val;
     int r = Constant::Util::char_to_int(p);
     int c = Constant::Util::char_to_int(p);
     val.resize(r * c);
     int l = r * c;
     for (int i = 0; i < l; i++)
     {
-        val[i] = Constant::Util::char_to_int64(p);
+        val[i] = Constant::Util::char_to_u64(p);
     }
     return Mat::fromVector(val, r, c);
 }
 
-int Mat::toString_pos(char *p, int r, int c, vector<int64> val)
+int Mat::toString_pos(char *p, int r, int c, vector<u64> val)
 {
     Constant::Util::int_to_char(p, r);
     Constant::Util::int_to_char(p, c);
     int l = r * c;
     for (int i = 0; i < l; i++)
     {
-        Constant::Util::int64_to_char(p, val[i]);
+        Constant::Util::u64_to_char(p, val[i]);
     }
     *p = 0;
     return 2 * 4 + r * c * 8;
 }
 
-vector<int64> Mat::toVector(Matrixint64 &a)
+vector<u64> Mat::toVector(MatrixXu &a)
 {
-    vector<int64> val;
+    vector<u64> val;
     int r = a.rows();
     int c = a.cols();
     int l = r * c;
@@ -228,9 +249,9 @@ vector<int64> Mat::toVector(Matrixint64 &a)
     return val;
 }
 
-Matrixint64 Mat::fromVector(vector<int64> val, int r, int c)
+MatrixXu Mat::fromVector(vector<u64> val, int r, int c)
 {
-    Matrixint64 a(r, c);
+    MatrixXu a(r, c);
     int l = r * c;
     // cout<<"fromVector:"<<endl;
     for (int i = 0; i < c; i++)
@@ -243,11 +264,11 @@ Matrixint64 Mat::fromVector(vector<int64> val, int r, int c)
     return a;
 }
 
-Matrixint64 Mat::toMatrix(const TensorRu &a)
+MatrixXu Mat::toMatrix(const TensorRu &a)
 {
     int row = a.dimension(0);
     int col = a.dimension(1);
-    Matrixint64 res(row, col);
+    MatrixXu res(row, col);
     for (int i = 0; i < row; i++)
     {
         for (int j = 0; j < col; j++)
@@ -258,7 +279,7 @@ Matrixint64 Mat::toMatrix(const TensorRu &a)
     return res;
 }
 
-TensorRu Mat::toTensor(const Matrixint64 &a)
+TensorRu Mat::toTensor(const MatrixXu &a)
 {
     int row = a.rows();
     int col = a.cols();
@@ -273,13 +294,13 @@ TensorRu Mat::toTensor(const Matrixint64 &a)
     return res;
 }
 
-Matrixint64 Mat::op_Xor(const Matrixint64 &a, const Matrixint64 &b)
+MatrixXu Mat::op_Xor(const MatrixXu &a, const MatrixXu &b)
 {
     if (a.rows() == b.rows() && a.cols() == b.cols())
     {
         int row = a.rows();
         int col = a.cols();
-        Matrixint64 c(row, col);
+        MatrixXu c(row, col);
         for (int i = 0; i < a.size(); i++)
         {
             c(i) = a(i) ^ b(i);
@@ -311,11 +332,11 @@ Matrix8 Mat::op_Xor(const Matrix8 &a, const Matrix8 &b)
     }
 }
 
-Matrixint64 Mat::op_Xor(const int64 &a, const Matrixint64 &b)
+MatrixXu Mat::op_Xor(const u64 &a, const MatrixXu &b)
 {
     int row = b.rows();
     int col = b.cols();
-    Matrixint64 c(row, col);
+    MatrixXu c(row, col);
     for (int i = 0; i < b.size(); i++)
     {
         c(i) = a ^ b(i);
@@ -323,7 +344,7 @@ Matrixint64 Mat::op_Xor(const int64 &a, const Matrixint64 &b)
     return c;
 }
 
-Matrix8 Mat::op_Xor(const int64 &a, const Matrix8 &b)
+Matrix8 Mat::op_Xor(const u64 &a, const Matrix8 &b)
 {
     int row = b.rows();
     int col = b.cols();
@@ -335,13 +356,13 @@ Matrix8 Mat::op_Xor(const int64 &a, const Matrix8 &b)
     return c;
 }
 
-Matrixint64 Mat::op_And(const Matrixint64 &a, const Matrixint64 &b)
+MatrixXu Mat::op_And(const MatrixXu &a, const MatrixXu &b)
 {
     if (a.rows() == b.rows() && a.cols() == b.cols())
     {
         int row = a.rows();
         int col = a.cols();
-        Matrixint64 c(row, col);
+        MatrixXu c(row, col);
         for (int i = 0; i < a.size(); i++)
         {
             c(i) = a(i) & b(i);
@@ -373,11 +394,11 @@ Matrix8 Mat::op_And(const Matrix8 &a, const Matrix8 &b)
     }
 }
 
-Matrixint64 Mat::op_And(const int64 &a, const Matrixint64 &b)
+MatrixXu Mat::op_And(const u64 &a, const MatrixXu &b)
 {
     int row = b.rows();
     int col = b.cols();
-    Matrixint64 c(row, col);
+    MatrixXu c(row, col);
     for (int i = 0; i < b.size(); i++)
     {
         c(i) = a & b(i);
@@ -385,7 +406,7 @@ Matrixint64 Mat::op_And(const int64 &a, const Matrixint64 &b)
     return c;
 }
 
-Matrix8 Mat::op_And(const int64 &a, const Matrix8 &b)
+Matrix8 Mat::op_And(const u64 &a, const Matrix8 &b)
 {
     int row = b.rows();
     int col = b.cols();
@@ -397,13 +418,13 @@ Matrix8 Mat::op_And(const int64 &a, const Matrix8 &b)
     return c;
 }
 
-Matrixint64 Mat::op_Or(const Matrixint64 &a, const Matrixint64 &b)
+MatrixXu Mat::op_Or(const MatrixXu &a, const MatrixXu &b)
 {
     if (a.rows() == b.rows() && a.cols() == b.cols())
     {
         int row = a.rows();
         int col = a.cols();
-        Matrixint64 c(row, col);
+        MatrixXu c(row, col);
         for (int i = 0; i < a.size(); i++)
         {
             c(i) = a(i) | b(i);
@@ -435,11 +456,11 @@ Matrix8 Mat::op_Or(const Matrix8 &a, const Matrix8 &b)
     }
 }
 
-Matrixint64 Mat::op_Or(const int64 &a, const Matrixint64 &b)
+MatrixXu Mat::op_Or(const u64 &a, const MatrixXu &b)
 {
     int row = b.rows();
     int col = b.cols();
-    Matrixint64 c(row, col);
+    MatrixXu c(row, col);
     for (int i = 0; i < b.size(); i++)
     {
         c(i) = a | b(i);
@@ -447,7 +468,7 @@ Matrixint64 Mat::op_Or(const int64 &a, const Matrixint64 &b)
     return c;
 }
 
-Matrix8 Mat::op_Or(const int64 &a, const Matrix8 &b)
+Matrix8 Mat::op_Or(const u64 &a, const Matrix8 &b)
 {
     int row = b.rows();
     int col = b.cols();
@@ -459,11 +480,11 @@ Matrix8 Mat::op_Or(const int64 &a, const Matrix8 &b)
     return c;
 }
 
-Matrixint64 Mat::op_shift_left(const Matrixint64 &b, const int &a)
+MatrixXu Mat::op_shift_left(const MatrixXu &b, const int &a)
 {
     int row = b.rows();
     int col = b.cols();
-    Matrixint64 c(row, col);
+    MatrixXu c(row, col);
     for (int i = 0; i < b.size(); i++)
     {
         c(i) = b(i) << a;
@@ -483,11 +504,11 @@ Matrix8 Mat::op_shift_left(const Matrix8 &b, const int &a)
     return c;
 }
 
-Matrixint64 Mat::op_shift_right(const Matrixint64 &b, const int &a)
+MatrixXu Mat::op_shift_right(const MatrixXu &b, const int &a)
 {
     int row = b.rows();
     int col = b.cols();
-    Matrixint64 c(row, col);
+    MatrixXu c(row, col);
     for (int i = 0; i < b.size(); i++)
     {
         c(i) = b(i) >> a;

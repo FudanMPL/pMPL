@@ -35,10 +35,10 @@ public:
         void server_exit();
         void client_exit();
         void exit_all();
-        void send(Matrixint64 *a, int target);
+        void send(MatrixXu *a, int target);
         void send(Matrix8 *a, int target);
         void send(Matrixint128 *a, int target);
-        void receive(Matrixint64 *a, int from);
+        void receive(MatrixXu *a, int from);
         void receive(Matrix8 *a, int from);
         void receive(Matrixint128 *a, int from);
     };

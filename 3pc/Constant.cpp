@@ -1,7 +1,7 @@
 
 #include "Constant.h"
 
-int64 Constant::Clock::global_clock[101] = {0};
+u64 Constant::Clock::global_clock[101] = {0};
 
 void Constant::Clock::print_clock(int id)
 {
@@ -21,7 +21,7 @@ void Constant::Util::int_to_char(char *&p, int u)
     *p++ = u >> 24 & 0xff;
 }
 
-void Constant::Util::int64_to_char(char *&p, int64 u)
+void Constant::Util::u64_to_char(char *&p, u64 u)
 {
     *p++ = u & 0xff;
     *p++ = u >> 8 & 0xff;
@@ -43,17 +43,17 @@ int Constant::Util::char_to_int(char *&p)
     return ret;
 }
 
-int64 Constant::Util::char_to_int64(char *&p)
+u64 Constant::Util::char_to_u64(char *&p)
 {
-    int64 ret = 0;
-    ret = (int64)(*p++ & 0xff);
-    ret |= (int64)(*p++ & 0xff) << 8;
-    ret |= (int64)(*p++ & 0xff) << 16;
-    ret |= (int64)(*p++ & 0xff) << 24;
-    ret |= (int64)(*p++ & 0xff) << 32;
-    ret |= (int64)(*p++ & 0xff) << 40;
-    ret |= (int64)(*p++ & 0xff) << 48;
-    ret |= (int64)(*p++ & 0xff) << 56;
+    u64 ret = 0;
+    ret = (u64)(*p++ & 0xff);
+    ret |= (u64)(*p++ & 0xff) << 8;
+    ret |= (u64)(*p++ & 0xff) << 16;
+    ret |= (u64)(*p++ & 0xff) << 24;
+    ret |= (u64)(*p++ & 0xff) << 32;
+    ret |= (u64)(*p++ & 0xff) << 40;
+    ret |= (u64)(*p++ & 0xff) << 48;
+    ret |= (u64)(*p++ & 0xff) << 56;
     return ret;
 }
 
@@ -75,12 +75,12 @@ int Constant::Util::header_to_int(char *p)
     return ret;
 }
 
-int64 Constant::Util::double_to_int64(double x)
+u64 Constant::Util::double_to_u64(double x)
 {
-    return static_cast<int64>((long)(x * IE));
+    return static_cast<u64>((long)(x * IE));
 }
 
-double Constant::Util::int64_to_double(int64 u)
+double Constant::Util::u64_to_double(u64 u)
 {
     return (long)u / (double)IE;
 }
@@ -103,12 +103,12 @@ int Constant::Util::getint(char *&p)
     return ret;
 }
 
-int64 Constant::Util::getint64(char *&p)
+u64 Constant::Util::getu64(char *&p)
 {
     bool negative = false;
     while (!isdigit(*p) && (*p != '-'))
         p++;
-    int64 ret = 0;
+    u64 ret = 0;
     while (isdigit(*p) || (*p == '-'))
     {
         if (isdigit(*p)){
@@ -122,17 +122,16 @@ int64 Constant::Util::getint64(char *&p)
     else
         return ret;
 }
-// int64 Constant::Util::randomlong() {
+// u64 Constant::Util::randomlong() {
 //     return rand() % MOD;
 // }
 
-int64 Constant::Util::random_int64()
+u64 Constant::Util::random_u64()
 {
-    int64 ra = (int64)((rand()));
-    int64 rb = (int64)((rand()));
+    u64 ra = (u64)((rand()));
+    u64 rb = (u64)((rand()));
     ra <<= (sizeof(int) * 8);
-    return (int64)((ra | rb) % ((int64)pow(2, 60)));
-    // return (int64)((ra | rb));
+    return (u64)((ra | rb));
 }
 
 u8 Constant::Util::random_u8()
@@ -141,25 +140,25 @@ u8 Constant::Util::random_u8()
 }
 
 
-int64 Constant::Util::multiply(int64 a, int64 b)
+u64 Constant::Util::multiply(u64 a, u64 b)
 {
     auto la = (long)a;
     auto lb = (long)b;
     long product = (la * lb) / IE;
-    return static_cast<int64>(product);
+    return static_cast<u64>(product);
 }
 
-int64 Constant::Util::truncate(int64 x)
+u64 Constant::Util::truncate(u64 x)
 {
-    return static_cast<int64>((long)x / IE);
+    return static_cast<u64>((long)x / IE);
 }
 
-int64 Constant::Util::divide(int64 a, int b)
+u64 Constant::Util::divide(u64 a, int b)
 {
-    return static_cast<int64>((long)a / (double)b);
+    return static_cast<u64>((long)a / (double)b);
 }
 
-// int64 Constant::Util::get_residual(int64 a) {
+// u64 Constant::Util::get_residual(u64 a) {
 //     return (a % MOD + MOD) % MOD;
 // }
 
@@ -175,12 +174,12 @@ int64 Constant::Util::divide(int64 a, int b)
 //     return power(a, MOD + 1 >> 2);
 // }
 
-// int64 Constant::Util::inverse(int64 a, int64 b) {
+// u64 Constant::Util::inverse(u64 a, u64 b) {
 //      return power(a, b-2);
 //  }
 
-// int64 Constant::Util::power(int64 a, int64 b) {
-//      int64 ret = 1;
+// u64 Constant::Util::power(u64 a, u64 b) {
+//      u64 ret = 1;
 //      a = (a%MOD+MOD)%MOD;
 //      b = (b%MOD+MOD)%MOD;
 //     if (b == 0)
@@ -209,7 +208,7 @@ int64 Constant::Util::divide(int64 a, int b)
 //     return a[l];
 // }
 // std::ostream&
-// operator<<( std::ostream& dest, int64 value )
+// operator<<( std::ostream& dest, u64 value )
 // {
 //     std::ostream::sentry s( dest );
 //     if ( s ) {
@@ -233,15 +232,15 @@ int64 Constant::Util::divide(int64 a, int b)
 //     }
 //     return dest;
 // }
-// const int64 Constant::inv2 = Constant::Util::inverse(2, MOD);
+// const u64 Constant::inv2 = Constant::Util::inverse(2, MOD);
 
-// const int64 Constant::inv2_m = Constant::Util::inverse(1 << DECIMAL_LENGTH, MOD);
+// const u64 Constant::inv2_m = Constant::Util::inverse(1 << DECIMAL_LENGTH, MOD);
 
-vector<int64> Constant::Util::edabits()
+vector<u64> Constant::Util::edabits()
 {
-    vector<int64> res(110); // 1+64+1+44
+    vector<u64> res(110); // 1+64+1+44
     srand((unsigned)time(NULL));
-    int64 r = Constant::Util::random_int64(), _r;
+    u64 r = Constant::Util::random_u64(), _r;
     res[0] = r;
     for (int i = 1; i < 65; i++)
     {
@@ -265,10 +264,10 @@ vector<int64> Constant::Util::edabits()
     return res;
 }
 
-vector<int64> Constant::Util::edabits(int64 r)
+vector<u64> Constant::Util::edabits(u64 r)
 {
-    vector<int64> res(110); // 1+64+1+44
-    int64 _r;
+    vector<u64> res(110); // 1+64+1+44
+    u64 _r;
     res[0] = r;
     for (int i = 1; i < 65; i++)
     {

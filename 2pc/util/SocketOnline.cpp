@@ -133,7 +133,7 @@ int SocketOnline::recv_message_n(SOCK sock, char *p, int l)
     return tot;
 }
 
-void SocketOnline::send_message(Matrixint64 &a)
+void SocketOnline::send_message(MatrixXu &a)
 {
     int len_buffer;
     int r = a.rows();
@@ -164,7 +164,7 @@ void SocketOnline::send_message(Matrixint128 &a)
     send_message_n(sock, (char *)a.data(), r * c * 16);
 }
 
-void SocketOnline::send_message(Matrixint64 *a)
+void SocketOnline::send_message(MatrixXu *a)
 {
     int len_buffer;
     int r = a->rows();
@@ -201,7 +201,7 @@ void SocketOnline::send_message(int b)
     send_message_n(sock, buffer, 4);
 }
 
-void SocketOnline::recv_message(Matrixint64 &a)
+void SocketOnline::recv_message(MatrixXu &a)
 {
     int r, c;
     recv_message_n(sock, (char *)&r, 4);
@@ -237,7 +237,7 @@ int SocketOnline::recv_message_int()
     return ret;
 }
 
-void SocketOnline::push(const Matrixint64 &a) {}
+void SocketOnline::push(const MatrixXu &a) {}
 
 void SocketOnline::print()
 {
@@ -245,7 +245,7 @@ void SocketOnline::print()
 }
 
 // void SocketOnline::test() {
-//     Matrixint64 x;
+//     MatrixXu x;
 //     cout << "test" <<endl;
 // }
 
