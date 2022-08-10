@@ -75,10 +75,10 @@ void Linear::train_model()
     MatrixXu wx(B, numClass), wx_y(B, numClass);
     Constant::Clock *clock_train;
     clock_train = new Constant::Clock(2);
-    ofstream F;
-    for (int j = 0; j < Ep; j++)
-    {
-        for (int i = 0; i < N / B; i++)
+    // ofstream F;
+    // for (int j = 0; j < Ep; j++)
+    // {
+        for (int i = 0; i < 100; i++)
         {
             // cout << "第" << i << "个batch" << endl;
             next_batch(x_batch, start, perm, train_data);
@@ -97,18 +97,19 @@ void Linear::train_model()
             MatrixXu delta;
             delta = Secret_Mul::Multiply(x_batch_trans, wx_y, r1, q1, t1);
             w = w - Secret_Mul::constant_Mul(delta, 0.04 / B);
-            F.open("Result/Linear" + to_string(party) + ".txt", ios::out);
-            F << w << endl;
-            F.close();
+            // F.open("Result/Linear" + to_string(party) + ".txt", ios::out);
+            // F << w << endl;
+            // F.close();
         }
-    }
+    // }
     cout << "online time:" << clock_train->get() << endl;
-    test_model();
-    // inference();
-    F.open("Result/Linear" + to_string(party) + ".txt", ios::out);
-    F << "Finish" << endl
-      << w << endl;
-    F.close();
+    cout << "it/s:" << 100 / clock_train->get() << endl;
+    // test_model();
+    // // inference();
+    // F.open("Result/Linear" + to_string(party) + ".txt", ios::out);
+    // F << "Finish" << endl
+    //   << w << endl;
+    // F.close();
 }
 
 void Linear::test_model()

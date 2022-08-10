@@ -4,6 +4,8 @@ MatrixXu IOManager::train_data = MatrixXu(N, D);
 MatrixXu IOManager::train_label = MatrixXu(N, numClass);
 MatrixXu IOManager::test_data = MatrixXu(testN, D);
 MatrixXu IOManager::test_label = MatrixXu(testN, numClass);
+MatrixXu IOManager::infer_data = MatrixXu(testN, D);
+MatrixXu IOManager::infer_label = MatrixXu(testN, numClass);
 
 void IOManager::load_data(ifstream &in, MatrixXu &data, MatrixXu &label, int size)
 {
@@ -24,7 +26,7 @@ void IOManager::load_data(ifstream &in, MatrixXu &data, MatrixXu &label, int siz
             temp = 1;
         else
             temp = 0;
-        
+
         // two class for svhn
         // if (temp == 10)
         //     temp = 0;
@@ -178,10 +180,10 @@ void IOManager::init()
     // secret_share(test_data, test_label, "test");
     intest.close();
 
-    // ifstream intest("data/mnist/mnist_test_" + to_string(party) + ".csv");
-    // ifstream intest("data/fashion_mnist/fashion_mnist_test_" + to_string(party) + ".csv");
-    // load_ss(intest, test_data, test_label, testN);
-    // intest.close();
+    // ifstream intest1("data/mnist/mnist_test_" + to_string(party) + ".csv");
+    // ifstream intest1("data/fashion_mnist/fashion_mnist_test_" + to_string(party) + ".csv");
+    // load_ss(intest1,infer_data, infer_label, testN);
+    // intest1.close();
 
     // TODO: secret sharing save file
 

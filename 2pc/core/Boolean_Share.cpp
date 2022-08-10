@@ -8,6 +8,64 @@
 // Matrix8 Boolean_Share::r_add_share = Matrix8(B, 1);
 // Matrix8 Boolean_Share::r_bool_share = Matrix8(B, 1);
 
+MatrixXu Boolean_Share::r0_0 = MatrixXu(B + B, numClass);
+MatrixXu Boolean_Share::r0_1 = MatrixXu(B + B, numClass);
+MatrixXu Boolean_Share::r0_2 = MatrixXu(B + B, numClass);
+MatrixXu Boolean_Share::r_00 = MatrixXu(B + B, numClass);
+MatrixXu Boolean_Share::r_01 = MatrixXu(B + B, numClass);
+MatrixXu Boolean_Share::r_02 = MatrixXu(B + B, numClass);
+
+MatrixXu Boolean_Share::r1_0 = MatrixXu(B, hiddenDim);
+MatrixXu Boolean_Share::r1_1 = MatrixXu(B, hiddenDim);
+MatrixXu Boolean_Share::r1_2 = MatrixXu(B, hiddenDim);
+MatrixXu Boolean_Share::r_10 = MatrixXu(B, hiddenDim);
+MatrixXu Boolean_Share::r_11 = MatrixXu(B, hiddenDim);
+MatrixXu Boolean_Share::r_12 = MatrixXu(B, hiddenDim);
+
+void Boolean_Share::init()
+{
+    MatrixXu sec_share0[3], sec_share1[3];
+    MatrixXu r0 = Mat::randomMatrixXu(B + B, numClass);
+    MatrixXu r1 = Mat::randomMatrixXu(B, hiddenDim);
+    MatrixXu temp_r0 = r0, temp_r1 = r1;
+    for (int i = 0; i < M - 1; i++)
+    {
+        MatrixXu noise0 = Mat::randomMatrixXu(B + B, numClass);
+        sec_share0[i] = noise0;
+        r0 = Mat::op_Xor(r0, noise0);
+        MatrixXu noise1 = Mat::randomMatrixXu(B, hiddenDim);
+        sec_share1[i] = noise1;
+        r1 = Mat::op_Xor(r1, noise1);
+    }
+    sec_share0[2] = r0;
+    sec_share1[2] = r1;
+    r0_0 = sec_share0[0];
+    r0_1 = sec_share0[1];
+    r0_2 = sec_share0[2];
+    r1_0 = sec_share1[0];
+    r1_1 = sec_share1[1];
+    r1_2 = sec_share1[2];
+
+    MatrixXu sec_share_0[3], sec_share_1[3];
+    for (int i = 0; i < M - 1; i++)
+    {
+        MatrixXu noise0 = Mat::randomMatrixXu(B + B, numClass);
+        sec_share_0[i] = noise0;
+        temp_r0 = temp_r0 - noise0;
+        MatrixXu noise1 = Mat::randomMatrixXu(B, hiddenDim);
+        sec_share_1[i] = noise1;
+        temp_r1 = temp_r1 - noise1;
+    }
+    sec_share_0[2] = temp_r0;
+    sec_share_1[2] = temp_r1;
+    r_00 = sec_share_0[0];
+    r_01 = sec_share_0[1];
+    r_02 = sec_share_0[2];
+    r_10 = sec_share_1[0];
+    r_11 = sec_share_1[1];
+    r_12 = sec_share_1[2];
+}
+
 MatrixXu Boolean_Share::secret_share(MatrixXu &share)
 {
     vector<MatrixXu> sec_share;
@@ -49,20 +107,20 @@ Matrix8 Boolean_Share::secret_share(Matrix8 &share)
 MatrixXu Boolean_Share::reveal(MatrixXu &share)
 {
     MatrixXu result;
-    if(party == 0)
+    if (party == 0)
     {
-        MatrixXu share1,share2;
-        tel.receive(&share1,1);
-        tel.receive(&share2,2);
-        MatrixXu temp = Mat::op_Xor(share,share1);
-        result = Mat::op_Xor(temp,share2);
-        tel.send(&result,1);
-        tel.send(&result,2);
+        MatrixXu share1, share2;
+        tel.receive(&share1, 1);
+        tel.receive(&share2, 2);
+        MatrixXu temp = Mat::op_Xor(share, share1);
+        result = Mat::op_Xor(temp, share2);
+        tel.send(&result, 1);
+        tel.send(&result, 2);
     }
     else
     {
-        tel.send(&share,0);
-        tel.receive(&result,0);
+        tel.send(&share, 0);
+        tel.receive(&result, 0);
     }
     return result;
 }
@@ -70,37 +128,40 @@ MatrixXu Boolean_Share::reveal(MatrixXu &share)
 Matrix8 Boolean_Share::reveal(Matrix8 &share)
 {
     Matrix8 result;
-    if(party == 0)
+    if (party == 0)
     {
-        Matrix8 share1,share2;
-        tel.receive(&share1,1);
-        tel.receive(&share2,2);
-        Matrix8 temp = Mat::op_Xor(share,share1);
-        result = Mat::op_Xor(temp,share2);
-        tel.send(&result,1);
-        tel.send(&result,2);
+        Matrix8 share1, share2;
+        tel.receive(&share1, 1);
+        tel.receive(&share2, 2);
+        Matrix8 temp = Mat::op_Xor(share, share1);
+        result = Mat::op_Xor(temp, share2);
+        tel.send(&result, 1);
+        tel.send(&result, 2);
     }
     else
     {
-        tel.send(&share,0);
-        tel.receive(&result,0);
+        tel.send(&share, 0);
+        tel.receive(&result, 0);
     }
     return result;
 }
 
 MatrixXu Boolean_Share::add_reveal(MatrixXu &share)
 {
-    MatrixXu result = share;
-    // cout <<"share:"<< share << endl;
-    for (int i = 0; i < M; i++)
+    MatrixXu result;
+    if (party == 0)
     {
-        if (i != party)
-        {
-            MatrixXu recv;
-            tel.send(&share, i);
-            tel.receive(&recv, i);
-            result += recv;
-        }
+        MatrixXu share1, share2;
+        tel.receive(&share1, 1);
+        tel.receive(&share2, 2);
+        result = share + share1 + share2;
+        tel.send(&result, 1);
+        tel.send(&result, 2);
+    }
+    else
+    {
+        tel.send(&share, 0);
+        tel.receive(&result, 0);
     }
     return result;
 }

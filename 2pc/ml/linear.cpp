@@ -53,7 +53,7 @@ MatrixXu Linear::argmax(MatrixXu &x)
                 index = j;
             }
         }
-        res(i, 0) = index;
+        res(i, 0) = index % 10;
     }
     return res;
 }
@@ -84,14 +84,14 @@ void Linear::train_model()
     //         w(i, 0) = Constant::Util::getu64(ch);
     //     }
     // }
-    static default_random_engine e(time(0));
-    static normal_distribution<double> n(0, 0.05);
-    MatrixXd m = MatrixXd::Zero(D, 1).unaryExpr([](double dummy)
-                                                { return n(e); });
-    for (int i = 0; i < D; i++)
-    {
-        w(i, 0) = Constant::Util::double_to_u64(m(i, 0));
-    }
+    // static default_random_engine e(time(0));
+    // static normal_distribution<double> n(0, 0.05);
+    // MatrixXd m = MatrixXd::Zero(D, 1).unaryExpr([](double dummy)
+    //                                             { return n(e); });
+    // for (int i = 0; i < D; i++)
+    // {
+    //     w(i, 0) = Constant::Util::double_to_u64(m(i, 0));
+    // }
     cout << "weights initialized" << endl;
     vector<int> perm = random_perm();
 
@@ -104,43 +104,43 @@ void Linear::train_model()
 
     // for (int j = 0; j < Ep; j++)
     // {
-    // double error = 0;
-    // cout << "第" << j << "个epoch" << endl;
-    for (int i = 0; i < 1000; i++)
-    {
+    //     double error = 0;
+    //     cout << "第" << j << "个epoch" << endl;
+        for (int i = 0; i < 100; i++)
+        {
 
-        next_batch(x_batch, start, perm, train_data);
-        next_batch(y_batch, start, perm, train_label); //选出mini batch
+            next_batch(x_batch, start, perm, train_data);
+            next_batch(y_batch, start, perm, train_label); //选出mini batch
 
-        start += B;
-        r0 = Secret_Mul::r0;
-        r1 = Secret_Mul::r1;
-        q0 = Secret_Mul::q0;
-        q1 = Secret_Mul::q1;
-        t0 = Secret_Mul::t0;
-        t1 = Secret_Mul::t1;
+            start += B;
+            r0 = Secret_Mul::r0;
+            r1 = Secret_Mul::r1;
+            q0 = Secret_Mul::q0;
+            q1 = Secret_Mul::q1;
+            t0 = Secret_Mul::t0;
+            t1 = Secret_Mul::t1;
 
-        wx = Secret_Mul::Multiply(x_batch, w, r0, q0, t0);
+            wx = Secret_Mul::Multiply(x_batch, w, r0, q0, t0);
 
-        wx_y = wx - y_batch;
+            wx_y = wx - y_batch;
 
-        // MatrixXd temp = Mat::u642Double(Secret_Mul::Mul_reveal(wx_y));
-        // error = error + (temp.array() * temp.array()).sum();
+            // MatrixXd temp = Mat::u642Double(Secret_Mul::Mul_reveal(wx_y));
+            // error = error + (temp.array() * temp.array()).sum();
 
-        MatrixXu x_batch_trans = x_batch.transpose();
+            MatrixXu x_batch_trans = x_batch.transpose();
 
-        MatrixXu delta;
-        delta = Secret_Mul::Multiply(x_batch_trans, wx_y, r1, q1, t1);
-        w = w - Secret_Mul::constant_Mul(delta, 0.01 / B);
-        // w = w - Mat::constant_multiply(delta, 0.01 / B);
-    }
-    // cout << "square error" << endl;
-    // cout << error / N << endl;
-    // test_model();
+            MatrixXu delta;
+            delta = Secret_Mul::Multiply(x_batch_trans, wx_y, r1, q1, t1);
+            w = w - Secret_Mul::constant_Mul(delta, 0.01 / B);
+            // w = w - Mat::constant_multiply(delta, 0.01 / B);
+        }
+        // cout << "square error" << endl;
+        // cout << error / N << endl;
+        // test_model();    
+        // inference();
     // }
     cout << "online time:" << clock_train->get() << endl;
-    cout << "it/s:" << 1000 / clock_train->get() << endl;
-    // inference();
+    cout << "it/s:" << 100 / clock_train->get() << endl;
     // test_model();
 }
 
@@ -150,6 +150,7 @@ void Linear::test_model()
     MatrixXu w_(D, numClass);
     MatrixXu test_data = IOManager::test_data;
     MatrixXu test_label = IOManager::test_label;
+    vector<int> perm = random_perm();
     if (party == 0)
     {
         w_ = Secret_Mul::Mul_reveal(w);
@@ -183,39 +184,42 @@ void Linear::test_model()
 
 void Linear::inference()
 {
-    MatrixXu test_data = IOManager::test_data;
-    MatrixXu test_label = IOManager::test_label;
+    MatrixXu test_data = IOManager::infer_data;
+    MatrixXu test_label = IOManager::infer_label;
     double count = 0;
-    int it = ceil(testN / B);
+    // int it = ceil(testN / B);
     MatrixXu x_batch, y_batch, y_infer;
+
 
     MatrixXu r0(B, D), q0(D, numClass), t0(B, numClass);
     r0 = Secret_Mul::r0;
     q0 = Secret_Mul::q0;
     t0 = Secret_Mul::t0;
+    int it = testN / B;
+    int num = it * B;
     for (int i = 0; i < it; i++)
     {
-        int temp = min(B, testN - i * B);
-        x_batch = test_data.middleRows(i * B, temp);
-        y_batch = test_label.middleRows(i * B, temp);
+        x_batch = test_data.middleRows(i * B, B);
+        y_batch = test_label.middleRows(i * B, B);
+
         y_infer = Secret_Mul::Multiply(x_batch, w, r0, q0, t0);
         MatrixXu y_predict = Secret_Mul::Mul_reveal(y_infer);
         MatrixXu y_plaintext = Secret_Mul::Mul_reveal(y_batch);
-        // MatrixXu res = argmax(y_predict);
-        // MatrixXu label = argmax(y_plaintext);
-        for (int j = 0; j < temp; j++)
+        MatrixXu res = argmax(y_predict);
+        MatrixXu label = argmax(y_plaintext);
+        for (int j = 0; j < B; j++)
         {
-            double yyy = Constant::Util::u64_to_double(y_predict(j));
-            if (yyy > 0.5)
-                y_predict(j) = IE;
-            else
-                y_predict(j) = 0;
-            count = count + (y_predict(j) == y_plaintext(j));
-            // if (res(i, 0) == label(i, 0))
-            // {
-            //     count++;
-            // }
+            // double yyy = Constant::Util::u64_to_double(y_predict(j));
+            // if (yyy > 0.5)
+            //     y_predict(j) = IE;
+            // else
+            //     y_predict(j) = 0;
+            // count = count + (y_predict(j) == y_plaintext(j));
+            if (res(i, 0) == label(i, 0))
+            {
+                count++;
+            }
         }
     }
-    cout << "accuracy of inference:" << count * 1.0 / testN << endl;
+    cout << "accuracy of inference:" << count * 1.0 / num << endl;
 }

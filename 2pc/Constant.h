@@ -33,7 +33,7 @@
 #define HEADER_LEN_OPT 2
 #define HEADER_LEN 4
 #define M 3               // the number of shares
-#define ML 0              // 0 for linear regression; 1 for logistic; 2 for nn
+#define ML 1              // 0 for linear regression; 1 for logistic; 2 for nn
 #define BIT_LENGTH 64     // the length of bit
 #define DECIMAL_LENGTH 20 // the length of decimal part
 
@@ -42,10 +42,10 @@
 // #define N 73257
 #define testN 10000  // the number of test data
 // #define testN 26032
-#define Ep 17
-#define B 1024
+#define Ep 5
+#define B 128
 // #define D 3072 // the size of total features
-#define D 1000
+#define D 784
 #define IT N * Ep / B
 // #define R 0.04 // linear regression learning rate 
 #define R 0.01 // logistic regression learning rate

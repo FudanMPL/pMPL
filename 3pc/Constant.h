@@ -50,7 +50,7 @@
 
 #define nLayer 3     // the number of layers
 #define hiddenDim 128 
-#define numClass 10 
+#define numClass 1 
 
 #define DEBUG
 #ifdef DEBUG

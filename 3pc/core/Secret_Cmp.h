@@ -11,6 +11,7 @@ class Secret_Cmp
 {
 public:
     static MatrixXu to_Boolean_Share(MatrixXu &x);
+    static MatrixXu get_bool_share_bit(MatrixXu &x);
     static MatrixXu get_sign(MatrixXu &x);
     static MatrixXu get_sign_xor_1(MatrixXu &x);
     static MatrixXu Relu(MatrixXu x);
