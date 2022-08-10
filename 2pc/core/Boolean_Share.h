@@ -12,6 +12,10 @@ class Boolean_Share
 public:
     // static Matrix8 a, b, c;
     // static Matrix8 r_add_share, r_bool_share;
+    static MatrixXu r0_0, r0_1, r0_2, r_00, r_01, r_02; // random for B * numClass
+    static MatrixXu r1_0, r1_1, r1_2, r_10, r_11, r_12; // random for B * hiddendim
+
+    static void init();
     static MatrixXu secret_share(MatrixXu &share);
     static Matrix8 secret_share(Matrix8 &share);
     static MatrixXu reveal(MatrixXu &share);

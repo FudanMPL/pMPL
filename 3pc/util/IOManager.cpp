@@ -21,8 +21,8 @@ void IOManager::load_data(ifstream &in, MatrixXu &data, MatrixXu &label, int siz
         // char c;
         temp = Constant::Util::getint(ch);
         // two class for mnist and fashion_mnist
-        // if (temp > 1)
-        //     temp = 1;
+        if (temp > 1)
+            temp = 1;
 
         // two class for svhn
         // if (temp == 10)
@@ -30,7 +30,7 @@ void IOManager::load_data(ifstream &in, MatrixXu &data, MatrixXu &label, int siz
         // else
         //     temp = 1;
 
-        // label(i, 0) = temp * IE;
+        label(i, 0) = temp * IE;
 
         // one_hot for svhn
         // if (temp == 10)
@@ -39,7 +39,7 @@ void IOManager::load_data(ifstream &in, MatrixXu &data, MatrixXu &label, int siz
         //     label(i, temp) = IE;
 
         // one_hot for mnist and fashion_mnist
-        label(i, temp) = IE;
+        // label(i, temp) = IE;
         for (int j = 0; j < D; j++)
         {
             temp = Constant::Util::getint(ch);

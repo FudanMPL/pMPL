@@ -244,11 +244,11 @@ void NN::train_model()
 
     Constant::Clock *clock_train;
     clock_train = new Constant::Clock(2);
-    for (int i = 0; i < Ep; i++)
-    {
-        cout << "epoch:" << i << endl;
-        double error2 = 0;
-        for (int j = 0; j < N / B; j++)
+    // for (int i = 0; i < Ep; i++)
+    // {
+    //     cout << "epoch:" << i << endl;
+    //     double error2 = 0;
+        for (int j = 0; j < 10; j++)
         {
             // cout << "第" << i << "个batch" << endl;
 
@@ -284,8 +284,8 @@ void NN::train_model()
             MatrixXu w_trans, a_trans, z_drelu, error;
             // cout << Secret_Mul::reveal(A[nLayer]) << endl;
             error = (A[nLayer] - y_batch);
-            MatrixXd temp = Mat::u642Double(Secret_Mul::Mul_reveal(error));
-            error2 = error2 + (temp.array() * temp.array()).sum();
+            // MatrixXd temp = Mat::u642Double(Secret_Mul::Mul_reveal(error));
+            // error2 = error2 + (temp.array() * temp.array()).sum();
             // relu
             // z_drelu = Secret_Cmp::get_sign_xor_1(Z[3]);                  // B*numclass
             // E[3] = Secret_Mul::CwiseProduct(error, z_drelu, r7, q7, t7); //  B*numclass
@@ -315,11 +315,12 @@ void NN::train_model()
             U[1] = Secret_Mul::Multiply(a_trans, E[1], r5, q5, t5); //  D*B B*H-> D*H
             W[1] = W[1] - Secret_Mul::constant_Mul(U[1], 0.005 / B);
         }
-        cout << "square error" << endl;
-        cout << error2 / N << endl;
-        test_model();
-    }
+    //     cout << "square error" << endl;
+    //     cout << error2 / N << endl;
+    //     test_model();
+    // }
     cout << "online time:" << clock_train->get() << endl;
+    cout << "it/s:" << 10 / clock_train->get() << endl;
     // inference();
 }
 

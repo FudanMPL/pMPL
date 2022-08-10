@@ -236,10 +236,10 @@ void NN::train_model()
 
     Constant::Clock *clock_train;
     clock_train = new Constant::Clock(2);
-    for (int i = 0; i < Ep; i++)
-    {
-        double error2 = 0;
-        for (int j = 0; j < N / B; j++)
+    // for (int i = 0; i < Ep; i++)
+    // {
+        // double error2 = 0;
+        for (int j = 0; j < 10; j++)
         {
             // cout << "第" << i << "个batch" << endl;
             // cout << __LINE__ <<endl;
@@ -266,23 +266,24 @@ void NN::train_model()
             A[2] = Secret_Cmp::Relu(Z[2]);
 
             Z[3] = Secret_Mul::Multiply(A[2], W[3], r1, q1, t1); /// 128*128  128*numClass B*H H*numClass-> B*numClass
-            A[3] = Secret_Cmp::Relu(Z[3]);
+            // A[3] = Secret_Cmp::Relu(Z[3]);
+            A[3] = Z[3];
 
             // ------------backward phase---------------
             // cout << "backward" <<endl;
             MatrixXu w_trans, a_trans, z_drelu, error;
             error = (A[nLayer] - y_batch);
-            MatrixXd temp = Mat::u642Double(Secret_Mul::Mul_reveal(error));
-            error2 = error2 + (temp.array() * temp.array()).sum();
+            // MatrixXd temp = Mat::u642Double(Secret_Mul::Mul_reveal(error));
+            // error2 = error2 + (temp.array() * temp.array()).sum();
             // relu
-            z_drelu = Secret_Cmp::get_sign_xor_1(Z[3]);                  // 128*numClass
-            E[3] = Secret_Mul::CwiseProduct(error, z_drelu, r7, q7, t7); // 128*numClass  128*numClass ->128*numClass  B*numClass
+            // z_drelu = Secret_Cmp::get_sign_xor_1(Z[3]);                  // 128*numClass
+            // E[3] = Secret_Mul::CwiseProduct(error, z_drelu, r7, q7, t7); // 128*numClass  128*numClass ->128*numClass  B*numClass
 
             // linear
             w_trans = W[3].transpose();                             // numClass*128   numClass*H
-            E[2] = Secret_Mul::Multiply(E[3], w_trans, r2, q2, t2); // 128*numClass numClass*128  -> 128*128 B*numClass numClass*H ->B*H
+            E[2] = Secret_Mul::Multiply(error, w_trans, r2, q2, t2); // 128*numClass numClass*128  -> 128*128 B*numClass numClass*H ->B*H
             a_trans = A[2].transpose();                             // 128*128 H*B
-            U[3] = Secret_Mul::Multiply(a_trans, E[3], r4, q4, t4); // 128*128 128*numClass -> 128*numClass H*B B*numClass->H*numClass
+            U[3] = Secret_Mul::Multiply(a_trans, error, r4, q4, t4); // 128*128 128*numClass -> 128*numClass H*B B*numClass->H*numClass
             W[3] = W[3] - Secret_Mul::constant_Mul(U[3], 0.005 / B); // 128*numClass
 
             // relu
@@ -304,14 +305,15 @@ void NN::train_model()
             U[1] = Secret_Mul::Multiply(a_trans, E[1], r5, q5, t5); // 784*128 128*128 ->784*128 D*B B*H-> D*H
             W[1] = W[1] - Secret_Mul::constant_Mul(U[1], 0.005 / B);
         }
-        if (party == 0 || party == 2 || party == 3)
-        {
-            cout << "square error" << endl;
-            cout << error2 / N << endl;
-        }
-        test_model();
-    }
+        // if (party == 0 || party == 2 || party == 3)
+        // {
+        //     cout << "square error" << endl;
+        //     cout << error2 / N << endl;
+        // }
+        // test_model();
+    // }
     cout << "online time:" << clock_train->get() << endl;
+    cout << "it/s:" << 10 / clock_train->get() << endl;
     // inference();
     // test_model();
 }

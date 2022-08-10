@@ -8,7 +8,6 @@ MatrixXu Logistic::y_inf = MatrixXu(testN, numClass);
 
 // }
 
-
 int Logistic::myrandom(int i) { return rand() % i; }
 
 vector<int> Logistic::random_perm()
@@ -100,13 +99,13 @@ void Logistic::train_model()
     int start = 0;
     MatrixXu r0(B, D), q0(D, numClass), t0(B, numClass), r1(D, B), q1(B, numClass), t1(D, numClass);
     MatrixXu wx(B, numClass), wx_y(B, numClass);
+    ofstream F;
     Constant::Clock *clock_train;
     clock_train = new Constant::Clock(2);
-    ofstream F;
     for (int j = 0; j < Ep; j++)
     {
         double error2 = 0;
-        for (int i = 0; i < N / B; i++)
+        for (int i = 0; i < N/B; i++)
         {
             // cout << "第" << i << "个batch" << endl;
 
@@ -124,14 +123,14 @@ void Logistic::train_model()
             wx = Secret_Cmp::Sigmoid(wx); // 加入一层sigmoid函数即可
             wx_y = wx - y_batch;
 
-            MatrixXd temp = Mat::u642Double(Secret_Mul::Mul_reveal(wx_y));
-            error2 = error2 + (temp.array() * temp.array()).sum();
+            // MatrixXd temp = Mat::u642Double(Secret_Mul::Mul_reveal(wx_y));
+            // error2 = error2 + (temp.array() * temp.array()).sum();
             MatrixXu x_batch_trans = x_batch.transpose();
             MatrixXu delta = Secret_Mul::Multiply(x_batch_trans, wx_y, r1, q1, t1);
 
             w = w - Secret_Mul::constant_Mul(delta, R / B);
-            F.open("Result/Logistic" + to_string(party) + ".txt", ios::out);
-            F << w << endl;
+                F.open("Result/Logistic" + to_string(party) + ".txt", ios::out);
+                F << w << endl;
             F.close();
         }
         if (party == 0 || party == 2 || party == 3)
@@ -139,9 +138,9 @@ void Logistic::train_model()
             cout << "square error" << endl;
             cout << error2 / N << endl;
         }
-        test_model();
     }
     cout << "online time:" << clock_train->get() << endl;
+    // cout << "it/s:" << 10 / clock_train->get() << endl;
     // inference();
     F.open("Result/Logistic" + to_string(party) + ".txt", ios::out);
     F << "Finish" << endl
@@ -168,19 +167,19 @@ void Logistic::test_model()
         MatrixXu label = argmax(test_label);
         for (int i = 0; i < testN; i++)
         {
-            // double yyy = Constant::Util::u64_to_double(y_(i, 0));
-            // if (yyy > 0.5 && test_label(i, 0) == 1048576)
-            // {
-            //     count++;
-            // }
-            // else if (yyy < 0.5 && test_label(i, 0) == 0)
-            // {
-            //     count++;
-            // }
-            if (res(i, 0) == label(i, 0))
+            double yyy = Constant::Util::u64_to_double(y_(i, 0));
+            if (yyy > 0.5 && test_label(i, 0) == 1048576)
             {
                 count++;
             }
+            else if (yyy < 0.5 && test_label(i, 0) == 0)
+            {
+                count++;
+            }
+            // if (res(i, 0) == label(i, 0))
+            // {
+            //     count++;
+            // }
         }
         cout << "acurracy:" << count / testN << endl;
     }

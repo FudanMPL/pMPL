@@ -13,6 +13,7 @@ int main(int argc, char **argv)
 {
     Mat::init_public_vector();
     Secret_Mul::init();
+    Boolean_Share::init();
     if (argc < 2)
     {
         DBGprint("Please enter party index:\n");
