@@ -46,7 +46,12 @@ MatrixXu Secret_Cmp::get_bool_share_bit(MatrixXu &x)
 {
     int row = x.rows();
     int col = x.cols();
-    MatrixXu r_bool, r_add;
+    MatrixXu r_bool(row,col), r_add(row,col);
+    if(party == 1)
+    {
+        MatrixXu bool_share_bit(row,col);
+        return bool_share_bit;
+    }
     if (col == numClass)
     {
         if (party == 0)
@@ -128,7 +133,7 @@ MatrixXu Secret_Cmp::get_sign(MatrixXu &x)
     return sign;
 }
 
-MatrixXu Secret_Cmp::get_sign_xor_1(MatrixXu &x)
+MatrixXu Secret_Cmp::get_sign_xor_1(MatrixXu x)
 {
     MatrixXu bool_share_bit_xor_1 = Mat::op_Xor(1, x);
 

@@ -128,7 +128,7 @@ MatrixXu Secret_Cmp::get_sign(MatrixXu &x)
     return sign;
 }
 
-MatrixXu Secret_Cmp::get_sign_xor_1(MatrixXu &x)
+MatrixXu Secret_Cmp::get_sign_xor_1(MatrixXu x)
 {
     MatrixXu bool_share_bit_xor_1 = Mat::op_Xor(1, x);
     MatrixXu add_share_bit = Boolean_Share::to_additive_share(bool_share_bit_xor_1);

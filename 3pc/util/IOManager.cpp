@@ -21,8 +21,8 @@ void IOManager::load_data(ifstream &in, MatrixXu &data, MatrixXu &label, int siz
         // char c;
         temp = Constant::Util::getint(ch);
         // two class for mnist and fashion_mnist
-        if (temp > 1)
-            temp = 1;
+        // if (temp > 1)
+        //     temp = 1;
 
         // two class for svhn
         // if (temp == 10)
@@ -30,7 +30,7 @@ void IOManager::load_data(ifstream &in, MatrixXu &data, MatrixXu &label, int siz
         // else
         //     temp = 1;
 
-        label(i, 0) = temp * IE;
+        // label(i, 0) = temp * IE;
 
         // one_hot for svhn
         // if (temp == 10)
@@ -39,34 +39,39 @@ void IOManager::load_data(ifstream &in, MatrixXu &data, MatrixXu &label, int siz
         //     label(i, temp) = IE;
 
         // one_hot for mnist and fashion_mnist
-        // label(i, temp) = IE;
+        label(i, temp) = IE;
+
         for (int j = 0; j < D; j++)
         {
             temp = Constant::Util::getint(ch);
-            data(i, j) = temp * IE / 256;
+            data(i, j) = temp * IE / 255;
         }
 
         i++;
         if (i >= size)
             break;
     }
-    cout << label(0, 0) << endl;
-    //    cout<<"n= "<<i<<endl;
-    // for (i; i < size + B - 1; i++)
-    // {
-    //     int tmp_r;
-    //     tmp_r = data.cols();
-    //     for (int j = 0; j < tmp_r; j++)
-    //     {
-    //         data(i, j) = data(i - size, j);
-    //     }
-    //     tmp_r = label.cols();
-    //     for (int j = 0; j < tmp_r; j++)
-    //     {
-    //         label(i, j) = label(i - size, j);
-    //     }
-    // }
-    DBGprint("n=%d\n", i);
+
+}
+
+
+MatrixXu IOManager::secret_share(MatrixXu &truth)
+{
+    int row = truth.rows(), col = truth.cols();
+    MatrixXu A_plus_mat = Mat::toMatrix(Mat::A_plus);
+    MatrixXu share(row, col), temp(row, col);
+    for (int i = 0; i < row; i++)
+    {
+        for (int j = 0; j < col; j++)
+        {
+            MatrixXu temp_vector(3, 1);
+            temp_vector << truth(i, j), Constant::Util::random_u64(), Constant::Util::random_u64();
+            MatrixXu temp1 = A_plus_mat.row(party) * temp_vector;
+            temp(i, j) = temp1(0, 0);
+        }
+    }
+    share = temp;
+    return share;
 }
 
 void IOManager::secret_share(MatrixXu &data, MatrixXu &label, string category)

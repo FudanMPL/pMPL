@@ -4,8 +4,6 @@ MatrixXu IOManager::train_data = MatrixXu(N, D);
 MatrixXu IOManager::train_label = MatrixXu(N, numClass);
 MatrixXu IOManager::test_data = MatrixXu(testN, D);
 MatrixXu IOManager::test_label = MatrixXu(testN, numClass);
-MatrixXu IOManager::infer_data = MatrixXu(testN, D);
-MatrixXu IOManager::infer_label = MatrixXu(testN, numClass);
 
 void IOManager::load_data(ifstream &in, MatrixXu &data, MatrixXu &label, int size)
 {
@@ -22,10 +20,10 @@ void IOManager::load_data(ifstream &in, MatrixXu &data, MatrixXu &label, int siz
         temp = Constant::Util::getu64(ch);
 
         // two class for mnist and fashion_mnist
-        if (temp > 4)
-            temp = 1;
-        else
-            temp = 0;
+        // if (temp > 1)
+        //     temp = 1;
+        // else
+        //     temp = 0;
 
         // two class for svhn
         // if (temp == 10)
@@ -33,7 +31,7 @@ void IOManager::load_data(ifstream &in, MatrixXu &data, MatrixXu &label, int siz
         // else
         //     temp = 1;
 
-        label(i, 0) = temp * IE;
+        // label(i, 0) = temp * IE;
 
         // one_hot for svhn
         // if (temp == 10)
@@ -42,7 +40,7 @@ void IOManager::load_data(ifstream &in, MatrixXu &data, MatrixXu &label, int siz
         //     label(i, temp) = IE;
 
         // one_hot for mnist and fashion_mnist
-        // label(i, temp) = IE;
+        label(i, temp) = IE;
 
         for (int j = 0; j < D; j++)
         {
@@ -55,6 +53,25 @@ void IOManager::load_data(ifstream &in, MatrixXu &data, MatrixXu &label, int siz
     }
     // cout << label << endl;
     // DBGprint("n=%d\n", i);
+}
+
+MatrixXu IOManager::secret_share(MatrixXu &truth)
+{
+    int row = truth.rows(), col = truth.cols();
+    MatrixXu A_plus_mat = Mat::toMatrix(Mat::A_plus);
+    MatrixXu share(row, col), temp(row, col);
+    for (int i = 0; i < row; i++)
+    {
+        for (int j = 0; j < col; j++)
+        {
+            MatrixXu temp_vector(3, 1);
+            temp_vector << truth(i, j), Constant::Util::random_u64(), Constant::Util::random_u64();
+            MatrixXu temp1 = A_plus_mat.row(party) * temp_vector;
+            temp(i, j) = temp1(0, 0);
+        }
+    }
+    share = temp;
+    return share;
 }
 
 void IOManager::secret_share(MatrixXu &data, MatrixXu &label, string category)
@@ -180,10 +197,10 @@ void IOManager::init()
     // secret_share(test_data, test_label, "test");
     intest.close();
 
-    // ifstream intest1("data/mnist/mnist_test_" + to_string(party) + ".csv");
-    // ifstream intest1("data/fashion_mnist/fashion_mnist_test_" + to_string(party) + ".csv");
-    // load_ss(intest1,infer_data, infer_label, testN);
-    // intest1.close();
+    // ifstream intest("data/mnist/mnist_test_" + to_string(party) + ".csv");
+    // ifstream intest("data/fashion_mnist/fashion_mnist_test_" + to_string(party) + ".csv");
+    // load_ss(intest, test_data, test_label, testN);
+    // intest.close();
 
     // TODO: secret sharing save file
 

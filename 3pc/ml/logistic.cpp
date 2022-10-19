@@ -102,10 +102,10 @@ void Logistic::train_model()
     ofstream F;
     Constant::Clock *clock_train;
     clock_train = new Constant::Clock(2);
-    for (int j = 0; j < Ep; j++)
-    {
-        double error2 = 0;
-        for (int i = 0; i < N/B; i++)
+    // for (int j = 0; j < Ep; j++)
+    // {
+        // double error2 = 0;
+        for (int i = 0; i < 10; i++)
         {
             // cout << "第" << i << "个batch" << endl;
 
@@ -129,23 +129,26 @@ void Logistic::train_model()
             MatrixXu delta = Secret_Mul::Multiply(x_batch_trans, wx_y, r1, q1, t1);
 
             w = w - Secret_Mul::constant_Mul(delta, R / B);
-                F.open("Result/Logistic" + to_string(party) + ".txt", ios::out);
-                F << w << endl;
-            F.close();
+            //     F.open("Result/Logistic" + to_string(party) + ".txt", ios::out);
+            //     F << w << endl;
+            // F.close();
         }
-        if (party == 0 || party == 2 || party == 3)
-        {
-            cout << "square error" << endl;
-            cout << error2 / N << endl;
-        }
-    }
+        // if (party == 0 || party == 2 || party == 3)
+        // {
+        //     cout << "square error" << endl;
+        //     cout << error2 / N << endl;
+        // }
+        // test_model();
+    // }
     cout << "online time:" << clock_train->get() << endl;
+    cout << "it/s:" << 10 / clock_train->get() << endl;
+    // test_model();
     // cout << "it/s:" << 10 / clock_train->get() << endl;
     // inference();
-    F.open("Result/Logistic" + to_string(party) + ".txt", ios::out);
-    F << "Finish" << endl
-      << w << endl;
-    F.close();
+    // F.open("Result/Logistic" + to_string(party) + ".txt", ios::out);
+    // F << "Finish" << endl
+    //   << w << endl;
+    // F.close();
 }
 
 void Logistic::test_model()

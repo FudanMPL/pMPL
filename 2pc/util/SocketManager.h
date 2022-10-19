@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2022-08-02 01:46:43
+ * @LastEditTime: 2022-09-22 10:44:51
+ * @LastEditors: daslab-mpc01
+ * @Description: In User Settings Edit
+ * @FilePath: /sls/pmpl/2pc/util/SocketManager.h
+ */
 #ifndef SOCKETMANAGER_H
 #define SOCKETMANAGER_H
 
@@ -11,8 +19,8 @@ class SocketManager
 public:
     static void init_windows_socket();
     static void exit_windows_socket();
-    static void server_init(SOCK &sock, string ip, int port);
-    static void client_init(SOCK &sock, string ip, int port);
+    static void server_init(SOCK &sock, string ip, u64 port);
+    static void client_init(SOCK &sock, string ip, u64 port, u64 myport);
     static void socket_close(SOCK sock);
     static SOCK accept_sock(SOCK sock);
     static void print_socket();
@@ -20,7 +28,7 @@ public:
     class pMPL
     {
         string *ip;
-        int *port;
+        MatrixXu port;
         SOCK serv_sock;
         SOCK clnt_sock[M];
         SOCK sock;
@@ -29,7 +37,7 @@ public:
     public:
         pMPL();
         void init();
-        void init(string *ip, int *port);
+        void init(string *ip, MatrixXu port);
         void server();
         void client();
         void server_exit();

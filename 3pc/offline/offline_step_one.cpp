@@ -26,18 +26,18 @@ int main(int argc, char **argv)
     // Initialization
     Mat::init_public_vector();
     tel.init();
-    Tensor<int64, 3> ui(3, B, D), vi(3, D, 1), hi(3, B, 1);
-    Tensor<int64, 3> ui_share(4, B, D), vi_share(4, D, 1), hi_share(4, B, 1);
+    Tensor<u64, 3> ui(3, B, D), vi(3, D, 1), hi(3, B, 1);
+    Tensor<u64, 3> ui_share(4, B, D), vi_share(4, D, 1), hi_share(4, B, 1);
 
-    Matrixint64 ui_0(B, D), vi_0(D, 1), hi_0(B, 1), hi_1(B, 1), hi_2(B, 1), message_send(3, 1), message_recv(3, 1);
-    message_send = Mat::randomMatrixint64(3, 1);
-    message_recv = Mat::randomMatrixint64(3, 1);
+    MatrixXu ui_0(B, D), vi_0(D, 1), hi_0(B, 1), hi_1(B, 1), hi_2(B, 1), message_send(3, 1), message_recv(3, 1);
+    message_send = Mat::randomMatrixXu(3, 1);
+    message_recv = Mat::randomMatrixXu(3, 1);
     // where random_block is used to save pairs of random numbers to meet the need of algorithm, and random_block_temp to get the summarization of two random numbers from other party
-    //  Matrixint64 random_block(D,2), random_block_sum(D,1), random_block_temp(D,1);
+    //  MatrixXu random_block(D,2), random_block_sum(D,1), random_block_temp(D,1);
 
     /*where ui_rec_pr and vi_rec_pr are designed for privileged party
       These variables are designed to save the share values*/
-    Matrixint64 temp_ui_0(B, D), temp_ui_1(B, D), temp_ui_2(B, D), temp_ui_3(B, D),
+    MatrixXu temp_ui_0(B, D), temp_ui_1(B, D), temp_ui_2(B, D), temp_ui_3(B, D),
         temp_vi_0(D, 1), temp_vi_1(D, 1), temp_vi_2(D, 1), temp_vi_3(D, 1),
         temp_hi_0(B, 1), temp_hi_1(B, 1), temp_hi_2(B, 1), temp_hi_3(B, 1),
         ui_rec(B, D), vi_rec(D, 1), ui_rec_pr(B, D), vi_rec_pr(D, 1), hi_rec(B, 1), hi_rec_pr(B, 1);
@@ -54,7 +54,7 @@ int main(int argc, char **argv)
         // ui.setConstant(1);
         // vi.setConstant(1);
         // hi.setConstant(1);
-        
+
         for (int i = 0; i < B; i++)
         {
             for (int j = 0; j < D; j++)
@@ -67,7 +67,7 @@ int main(int argc, char **argv)
             vi_0(j, 0) = vi(0, j, 0);
         }
 
-        // genrate random number, make sure that randomMatrixint64(i, 0) + randomMatrixint64(i, 1) != 0
+        // genrate random number, make sure that randomMatrixXu(i, 0) + randomMatrixXu(i, 1) != 0
         hi_0 = ui_0 * vi_0;
 
         // calculate their share
@@ -365,7 +365,7 @@ int main(int argc, char **argv)
             F0 << std::endl;
             F0.close();
         }
-        else if (party==3)
+        else if (party == 3)
         {
             // send part
             // for ui
