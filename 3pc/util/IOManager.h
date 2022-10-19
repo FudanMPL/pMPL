@@ -14,6 +14,7 @@ public:
     // static int getsize(ifstream &in);               //获取文件的列数
     static void init();
     static void load_data(ifstream &in, MatrixXu &data, MatrixXu &label, int size);
+    static MatrixXu secret_share(MatrixXu &truth);
     static void secret_share(MatrixXu& data, MatrixXu& label, string category);
     static void load_ss(ifstream& in, MatrixXu& data, MatrixXu& label, int size);
 };

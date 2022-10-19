@@ -117,11 +117,11 @@ void Logistic::train_model()
     MatrixXu wx(B, numClass), wx_y(B, numClass);
     Constant::Clock *clock_train;
     clock_train = new Constant::Clock(2);
-    for (int j = 0; j < Ep; j++)
-    {
-        cout << "epoch:" << j << endl;
-        double error = 0;
-        for (int i = 0; i < N / B; i++)
+    // for (int j = 0; j < Ep; j++)
+    // {
+        // cout << "epoch:" << j << endl;
+        // double error = 0;
+        for (int i = 0; i < 10; i++)
         {
             // cout << "第" << i << "个batch" << endl;
 
@@ -149,97 +149,98 @@ void Logistic::train_model()
             delta = Secret_Mul::Multiply(x_batch_trans, wx_y, r1, q1, t1);
 
             // w = w - Mat::constant_multiply(delta, 0.01 / B);
-            w = w - Secret_Mul::constant_Mul(delta, 0.01 / B);
+            w = w - Secret_Mul::constant_Mul(delta, R / B);
         }
-        cout << "square error" << endl;
-        cout << error / N << endl;
+        // cout << "square error" << endl;
+        // cout << error / N << endl;
         // test_model();
         // inference();
-        }
-        cout << "online time:" << clock_train->get() << endl;
-        // test_model();
-        // cout << "it/s:" << 10 / clock_train->get() << endl;
-    }
+    // }
+    cout << "online time:" << clock_train->get() << endl;
+    // test_model();
+    cout << "it/s:" << 10 / clock_train->get() << endl;
+    // cout << Secret_Mul::reveal(w) << endl;
+}
 
-    void Logistic::test_model()
+void Logistic::test_model()
+{
+    double count = 0;
+    MatrixXu w_(D, numClass);
+    MatrixXu test_data = IOManager::test_data;
+    MatrixXu test_label = IOManager::test_label;
+
+    if (party == 0)
     {
-        double count = 0;
-        MatrixXu w_(D, numClass);
-        MatrixXu test_data = IOManager::test_data;
-        MatrixXu test_label = IOManager::test_label;
+        w_ = Secret_Mul::Mul_reveal(w);
+        // cout << w_ << endl;
+        MatrixXu y_ = test_data * w_;
 
-        if (party == 0)
+        Mat::truncateMatrixXu(y_);
+        Logistic::sigmoid(y_);
+        // MatrixXu res = argmax(y_);
+        // MatrixXu label = argmax(test_label);
+        // cout << label << endl;
+        for (int i = 0; i < testN; i++)
         {
-            w_ = Secret_Mul::Mul_reveal(w);
-            // cout << w_ << endl;
-            MatrixXu y_ = test_data * w_;
-
-            Mat::truncateMatrixXu(y_);
-            Logistic::sigmoid(y_);
-            // MatrixXu res = argmax(y_);
-            // MatrixXu label = argmax(test_label);
-            // cout << label << endl;
-            for (int i = 0; i < testN; i++)
+            double yyy = Constant::Util::u64_to_double(y_(i, 0));
+            if (yyy > 0.5 && test_label(i, 0) == 1048576)
             {
-                double yyy = Constant::Util::u64_to_double(y_(i, 0));
-                if (yyy > 0.5 && test_label(i, 0) == 1048576)
-                {
-                    count++;
-                }
-                else if (yyy < 0.5 && test_label(i, 0) == 0)
-                {
-                    count++;
-                }
-                // if (res(i, 0) == label(i, 0))
-                // {
-                //     count++;
-                // }
+                count++;
             }
-            cout << "accuracy:" << count / testN << endl;
+            else if (yyy < 0.5 && test_label(i, 0) == 0)
+            {
+                count++;
+            }
+            // if (res(i, 0) == label(i, 0))
+            // {
+            //     count++;
+            // }
         }
-        else if (party == 1 || party == 2)
-        {
-            Secret_Mul::Mul_reveal(w);
-        }
+        cout << "accuracy:" << count / testN << endl;
     }
-
-    void Logistic::inference()
+    else if (party == 1 || party == 2)
     {
-        MatrixXu test_data = IOManager::infer_data;
-        MatrixXu test_label = IOManager::infer_label;
-        MatrixXu wx;
-        double count = 0;
-        int it = ceil(testN / B);
-        MatrixXu x_batch, y_batch, y_infer;
-
-        MatrixXu r0(B, D), q0(D, numClass), t0(B, numClass);
-        r0 = Secret_Mul::r0;
-        q0 = Secret_Mul::q0;
-        t0 = Secret_Mul::t0;
-        for (int i = 0; i < it; i++)
-        {
-            int temp = min(B, testN - i * B);
-            x_batch = test_data.middleRows(i * B, temp);
-            y_batch = test_label.middleRows(i * B, temp);
-            wx = Secret_Mul::Multiply(x_batch, w, r0, q0, t0);
-            y_infer = Secret_Cmp::Sigmoid(wx);
-            MatrixXu y_predict = Secret_Mul::Mul_reveal(y_infer);
-            MatrixXu y_plaintext = Secret_Mul::Mul_reveal(y_batch);
-            MatrixXu res = argmax(y_predict);
-            MatrixXu label = argmax(y_plaintext);
-            for (int j = 0; j < temp; j++)
-            {
-                double yyy = Constant::Util::u64_to_double(y_predict(j));
-                if (yyy > 0.5)
-                    y_predict(j) = IE;
-                else
-                    y_predict(j) = 0;
-                count = count + (y_predict(j) == y_plaintext(j));
-                // if (res(i, 0) == label(i, 0))
-                // {
-                //     count++;
-                // }
-            }
-        }
-        cout << "accuracy of inference:" << count * 1.0 / testN << endl;
+        Secret_Mul::Mul_reveal(w);
     }
+}
+
+void Logistic::inference()
+{
+    MatrixXu test_data = IOManager::test_data;
+    MatrixXu test_label = IOManager::test_label;
+    MatrixXu wx;
+    double count = 0;
+    int it = ceil(testN / B);
+    MatrixXu x_batch, y_batch, y_infer;
+
+    MatrixXu r0(B, D), q0(D, numClass), t0(B, numClass);
+    r0 = Secret_Mul::r0;
+    q0 = Secret_Mul::q0;
+    t0 = Secret_Mul::t0;
+    for (int i = 0; i < it; i++)
+    {
+        int temp = min(B, testN - i * B);
+        x_batch = test_data.middleRows(i * B, temp);
+        y_batch = test_label.middleRows(i * B, temp);
+        wx = Secret_Mul::Multiply(x_batch, w, r0, q0, t0);
+        y_infer = Secret_Cmp::Sigmoid(wx);
+        MatrixXu y_predict = Secret_Mul::Mul_reveal(y_infer);
+        MatrixXu y_plaintext = Secret_Mul::Mul_reveal(y_batch);
+        MatrixXu res = argmax(y_predict);
+        MatrixXu label = argmax(y_plaintext);
+        for (int j = 0; j < temp; j++)
+        {
+            double yyy = Constant::Util::u64_to_double(y_predict(j));
+            if (yyy > 0.5)
+                y_predict(j) = IE;
+            else
+                y_predict(j) = 0;
+            count = count + (y_predict(j) == y_plaintext(j));
+            // if (res(i, 0) == label(i, 0))
+            // {
+            //     count++;
+            // }
+        }
+    }
+    cout << "accuracy of inference:" << count * 1.0 / testN << endl;
+}

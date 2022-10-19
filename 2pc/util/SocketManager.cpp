@@ -1,6 +1,7 @@
 #include "SocketManager.h"
 
 SocketOnline *socket_io[M][M];
+const int socket_buffer_size = 4194304;
 
 void SocketManager::init_windows_socket()
 {
@@ -19,7 +20,7 @@ void SocketManager::exit_windows_socket()
 #endif
 }
 
-void SocketManager::server_init(SOCK &serv_sock, string ip, int port)
+void SocketManager::server_init(SOCK &serv_sock, string ip, u64 port)
 {
 #ifdef UNIX_PLATFORM
     serv_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -31,6 +32,9 @@ void SocketManager::server_init(SOCK &serv_sock, string ip, int port)
     serv_addr.sin_port = htons(port);                  //端口
     int opt = 1;
     setsockopt(serv_sock, SOL_SOCKET, SO_REUSEADDR, (const void *)&opt, sizeof(opt));
+    setsockopt(serv_sock, SOL_SOCKET, SO_RCVBUF, (const char *)&socket_buffer_size, sizeof(int));
+    setsockopt(serv_sock, SOL_SOCKET, SO_SNDBUF, (const char *)&socket_buffer_size, sizeof(int));
+
 #ifdef MAC_OS
     ::bind(serv_sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
 #else
@@ -53,10 +57,16 @@ void SocketManager::server_init(SOCK &serv_sock, string ip, int port)
 #endif
 }
 
-void SocketManager::client_init(SOCK &sock, string ip, int port)
+void SocketManager::client_init(SOCK &sock, string ip, u64 port, u64 myport)
 {
 #ifdef UNIX_PLATFORM
     sock = socket(AF_INET, SOCK_STREAM, 0);
+    struct sockaddr_in my_addr;
+    my_addr.sin_family = AF_INET;
+    my_addr.sin_addr.s_addr = inet_addr("0.0.0.0");
+    my_addr.sin_port = htons(myport);
+    bind(sock, (struct sockaddr *)&my_addr, sizeof(my_addr));
+
     struct sockaddr_in serv_addr;
 
     memset(&serv_addr, 0, sizeof(serv_addr));          //每个字节都用0填充
@@ -137,12 +147,17 @@ SocketManager::pMPL::pMPL() {}
 void SocketManager::pMPL::init()
 {
     // init("127.0.0.1", 1234);
-    string ip[M] = {"127.0.0.1", "127.0.0.1", "127.0.0.1"};
-    int port[M] = {12011, 12012, 12013};
+    string ip[M] = {"10.176.34.173", "10.176.34.173", "10.176.34.173"};
+    MatrixXu port(M, M);
+    port << 10001, 0, 0,
+        20001, 20002, 0,
+        30001, 30002, 0;
+    //  port[M] = {10001,10002,10003};
+
     init(ip, port);
 }
 
-void SocketManager::pMPL::init(string *ip, int *port)
+void SocketManager::pMPL::init(string *ip, MatrixXu port)
 {
     this->ip = ip;
     this->port = port;
@@ -153,8 +168,9 @@ void SocketManager::pMPL::init(string *ip, int *port)
 
 void SocketManager::pMPL::server()
 {
-    server_init(serv_sock, *(ip + party), *(port + party));
+
     char buffer[101];
+    server_init(serv_sock, *(ip + party), port(party, party));
     for (int i = party + 1; i < M; i++)
     {
         sock = accept_sock(serv_sock);
@@ -174,13 +190,12 @@ void SocketManager::pMPL::client()
     //    printf(" asdasd %d\n", port);
     for (int i = 0; i < party; i++)
     {
-        client_init(sock, *(ip + i), *(port + i));
-        //        printf("client %d connect to server %d\n", party, i);
-        //        printf(" port %d\n", port);
+        client_init(sock, *(ip + i), port(i, i), port(party, i));
+        // printf("client %d connect to server %d\n", party, i);
+        // printf(" port %d\n", *(port + i));
 
         char str[] = "0";
         str[0] += party;
-//        printf("str: %s %d\n", str, strlen(str));
 #ifdef UNIX_PLATFORM
         write(sock, str, strlen(str));
 #else

@@ -34,7 +34,7 @@
 #define HEADER_LEN_OPT 2
 #define HEADER_LEN 4
 #define M 4               // the number of shares
-#define ML 1              // 0 for linear; 1 for logistic; 2 for nn
+#define ML 2              // 0 for linear; 1 for logistic; 2 for nn
 #define BIT_LENGTH 64     // the length of bit
 #define DECIMAL_LENGTH 20 // the length of decimal part
 
@@ -50,7 +50,7 @@
 
 #define nLayer 3     // the number of layers
 #define hiddenDim 128 
-#define numClass 1 
+#define numClass 10 
 
 #define DEBUG
 #ifdef DEBUG

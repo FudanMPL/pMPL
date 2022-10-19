@@ -8,9 +8,9 @@
 #include <vector>
 
 //test
-void transform(int64 n){
+void transform(u64 n){
     int i,j = 0;
-    int64 a[1000];
+    u64 a[1000];
     while(n > 0)
     {
         a[j]=n%2;
@@ -40,9 +40,9 @@ int main(int argc, char** argv){
     //Initialization
     Mat::init_public_vector();    
     tel.init();
-    vector<int64> res;
-    Matrixint64 x(1,1), pre_shared_k(1,1);
-    pre_shared_k = Mat::randomMatrixint64(1,1);
+    vector<u64> res;
+    MatrixXu x(1,1), pre_shared_k(1,1);
+    pre_shared_k = Mat::randomMatrixXu(1,1);
     res = Constant::Util::edabits(); //generate edabits
     std::cout<<res[0]<<std::endl<<(res[0]>>20)<<std::endl<<res[65]<<std::endl;
     // transform(res[0]);
@@ -63,8 +63,8 @@ int main(int argc, char** argv){
     F0.close();
     x(0,0) = res[0]/Mat::A_inv_123(0,party);
     if(party == 0){
-        Matrixint64 pre_shared_k_1(1,1), pre_shared_k_2(1,1), pre_shared_k_3(1,1), share_val_1(1,1), share_val_2(1,1);
-        pre_shared_k_3 = Mat::randomMatrixint64(1,1);
+        MatrixXu pre_shared_k_1(1,1), pre_shared_k_2(1,1), pre_shared_k_3(1,1), share_val_1(1,1), share_val_2(1,1);
+        pre_shared_k_3 = Mat::randomMatrixXu(1,1);
         tel.receive(&pre_shared_k_1, 1);
         tel.receive(&pre_shared_k_2, 2);
         tel.receive(&share_val_1, 1);

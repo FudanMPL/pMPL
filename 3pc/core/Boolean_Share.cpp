@@ -246,7 +246,6 @@ MatrixXu Boolean_Share::bool_and(MatrixXu &x, MatrixXu &y)
     }
 }
 
-
 MatrixXu Boolean_Share::add(MatrixXu &x, MatrixXu &y)
 {
     int row = x.rows();
@@ -312,7 +311,7 @@ MatrixXu Boolean_Share::to_additive_share(MatrixXu &x)
         Matrix8 temp = ci + r_add_share - 2 * ci.cwiseProduct(r_add_share);
         add_val_byte = add_val_byte + temp;
     }
-    else
+    else if (party == 2 || party == 3)
     {
         Matrix8 temp = r_add_share - 2 * ci.cwiseProduct(r_add_share);
         add_val_byte = add_val_byte + temp;
