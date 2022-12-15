@@ -78,35 +78,25 @@ Start four processes and input the party index, respectively:
 ```
 
 Note that, the raw dataset need to be secreted share before training.
-(pMPL/3pc/util/IOManager.cpp line 180)
+(pMPL/3pc/util/IOManager.cpp line 177)
 ```c++
-ifstream infile("data/mnist/mnist_train.csv");
-// ifstream infile("data/fashion_mnist/fashion_mnist_train.csv");
-// ifstream infile("data/svhn/svhn_train.csv");
+ifstream infile("data/mnist_train.csv");
 load_data(infile, train_data, train_label, N);
 secret_share(train_data, train_label, "train");
-infile.close();
 
-// infile("data/mnist/mnist_train_" + to_string(party) + ".csv");
-// ifstream infile("data/fashion_mnist/fashion_mnist_train_" + to_string(party) + ".csv");
-// ifstream infile("data/svhn/svhn_train_" + to_string(party) + ".csv");
+// ifstream infile("data/mnist_train_" + to_string(party) + ".csv");
 // load_ss(infile, train_data, train_label, N);
-// infile.clos
+infile.close();
 ```
 
 After secret sharing the raw data, load the secreted share data and then preform training.
-(pMPL/3pc/util/IOManager.cpp line 180)
+(pMPL/3pc/util/IOManager.cpp line 177)
 ```c++
-// ifstream infile("data/mnist/mnist_train.csv");
-// ifstream infile("data/fashion_mnist/fashion_mnist_train.csv");
-// ifstream infile("data/svhn/svhn_train.csv");
+// ifstream infile("data/mnist_train.csv");
 // load_data(infile, train_data, train_label, N);
 // secret_share(train_data, train_label, "train");
-// infile.close();
 
-ifstream infile("data/mnist/mnist_train_" + to_string(party) + ".csv");
-// ifstream infile("data/fashion_mnist/fashion_mnist_train_" + to_string(party) + ".csv");
-// ifstream infile("data/svhn/svhn_train_" + to_string(party) + ".csv");
+ifstream infile("data/mnist_train_" + to_string(party) + ".csv");
 load_ss(infile, train_data, train_label, N);
 infile.close();
 ```
