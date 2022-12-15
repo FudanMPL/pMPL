@@ -22,6 +22,7 @@ pMPL is a three-party learning framework based on vector space secret sharing wi
 sudo tc qdisc add dev lo root netem delay 20ms rate 40Mbps
 # cancle the simulation
 sudo tc qdisc del dev lo root netem delay 20ms rate 40Mbps
+```
 
 pMPL/3pc/util/SocketManager.cpp line 138
 
@@ -76,6 +77,8 @@ Start four processes and input the party index, respectively:
 ./pmpl_3pc 3
 ```
 
+Note that, the raw dataset need to be secreted share before training.
+(pMPL/3pc/util/IOManager.cpp line 180)
 ```c++
 ifstream infile("data/mnist/mnist_train.csv");
 // ifstream infile("data/fashion_mnist/fashion_mnist_train.csv");
@@ -83,6 +86,30 @@ ifstream infile("data/mnist/mnist_train.csv");
 load_data(infile, train_data, train_label, N);
 secret_share(train_data, train_label, "train");
 infile.close();
+
+// infile("data/mnist/mnist_train_" + to_string(party) + ".csv");
+// ifstream infile("data/fashion_mnist/fashion_mnist_train_" + to_string(party) + ".csv");
+// ifstream infile("data/svhn/svhn_train_" + to_string(party) + ".csv");
+// load_ss(infile, train_data, train_label, N);
+// infile.clos
+```
+
+After secret sharing the raw data, load the secreted share data and then preform training.
+(pMPL/3pc/util/IOManager.cpp line 180)
+```c++
+// ifstream infile("data/mnist/mnist_train.csv");
+// ifstream infile("data/fashion_mnist/fashion_mnist_train.csv");
+// ifstream infile("data/svhn/svhn_train.csv");
+// load_data(infile, train_data, train_label, N);
+// secret_share(train_data, train_label, "train");
+// infile.close();
+
+ifstream infile("data/mnist/mnist_train_" + to_string(party) + ".csv");
+// ifstream infile("data/fashion_mnist/fashion_mnist_train_" + to_string(party) + ".csv");
+// ifstream infile("data/svhn/svhn_train_" + to_string(party) + ".csv");
+load_ss(infile, train_data, train_label, N);
+infile.close();
+```
 
 If one assist party drops out during the training phase, the intermediate results hold by each party will be stored in "pMPL/3pc/Result", which can be used as initialization coefficients for 2PC training.
 
