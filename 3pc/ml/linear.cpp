@@ -37,7 +37,7 @@ MatrixXu Linear::argmax(MatrixXu &x)
                 index = j;
             }
         }
-        res(i, 0) = index;
+        res(i, 0) = index % 10;
     }
     return res;
 }
@@ -53,7 +53,7 @@ void Linear::next_batch(MatrixXu &batch, int start, vector<int> &perm, MatrixXu 
 void Linear::train_model()
 {
 
-    MatrixXu x_batch(B, D), y_batch(B, 1);
+    MatrixXu x_batch(B, D), y_batch(B, numClass);
     MatrixXu train_data = IOManager::train_data;
     MatrixXu train_label = IOManager::train_label;
 
@@ -76,9 +76,9 @@ void Linear::train_model()
     Constant::Clock *clock_train;
     clock_train = new Constant::Clock(2);
     // ofstream F;
-    // for (int j = 0; j < Ep; j++)
-    // {
-        for (int i = 0; i < 100; i++)
+    for (int j = 0; j < Ep; j++)
+    {
+        for (int i = 0; i < N/B; i++)
         {
             // cout << "第" << i << "个batch" << endl;
             next_batch(x_batch, start, perm, train_data);
@@ -96,15 +96,14 @@ void Linear::train_model()
             MatrixXu x_batch_trans = x_batch.transpose();
             MatrixXu delta;
             delta = Secret_Mul::Multiply(x_batch_trans, wx_y, r1, q1, t1);
-            w = w - Secret_Mul::constant_Mul(delta, 0.04 / B);
+            w = w - Secret_Mul::constant_Mul(delta, R / B);
             // F.open("Result/Linear" + to_string(party) + ".txt", ios::out);
             // F << w << endl;
             // F.close();
         }
-    // }
+    }
     cout << "online time:" << clock_train->get() << endl;
-    cout << "it/s:" << 100 / clock_train->get() << endl;
-    // test_model();
+    test_model();
     // // inference();
     // F.open("Result/Linear" + to_string(party) + ".txt", ios::out);
     // F << "Finish" << endl
