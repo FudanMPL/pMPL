@@ -76,6 +76,14 @@ Start four processes and input the party index, respectively:
 ./pmpl_3pc 3
 ```
 
+```c++
+ifstream infile("data/mnist/mnist_train.csv");
+// ifstream infile("data/fashion_mnist/fashion_mnist_train.csv");
+// ifstream infile("data/svhn/svhn_train.csv");
+load_data(infile, train_data, train_label, N);
+secret_share(train_data, train_label, "train");
+infile.close();
+
 If one assist party drops out during the training phase, the intermediate results hold by each party will be stored in "pMPL/3pc/Result", which can be used as initialization coefficients for 2PC training.
 
 ## Running for 2pc
