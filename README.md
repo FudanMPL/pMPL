@@ -159,6 +159,15 @@ Start three processes and input the party index, respectively:
 ## Citation
 You can cite the paper using the following bibtex entry:
 
+```shell
+@inproceedings{song2022pmpl,
+  title={pMPL: A Robust Multi-Party Learning Framework with a Privileged Party},
+  author={Song, Lushan and Wang, Jiaxuan and Wang, Zhexuan and Tu, Xinyu and Lin, Guopeng and Ruan, Wenqiang and Wu, Haoqi and Han, Weili},
+  booktitle={Proceedings of the 2022 ACM SIGSAC Conference on Computer and Communications Security},
+  pages={2689--2703},
+  year={2022}
+}
+```
 
 
 ## Help
