@@ -156,6 +156,8 @@ Start three processes and input the party index, respectively:
 ```
 
 
+## Citation
+You can cite the paper using the following bibtex entry:
 
 
 
