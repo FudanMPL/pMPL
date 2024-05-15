@@ -204,21 +204,18 @@ MatrixXu LinearLayer::backward(MatrixXu &delta)
         t = Secret_Mul::t1; // D * hiddenDim
     }
     MatrixXu input_trans = this->input.transpose();
-
     MatrixXu w_gradients = Secret_Mul::Multiply(input_trans, delta, r, q, t);
+    MatrixXu weight_trans = this->weight.transpose();
+    MatrixXu next_delta = Secret_Mul::Multiply(delta, weight_trans, rr, qq, tt);
     w_gradients = Secret_Mul::constant_Mul(w_gradients, R / B);
     this->weight = this->weight - w_gradients;
-    MatrixXu weight_trans = this->weight.transpose();
     if (!first_layer)
-    {
-        MatrixXu next_delta = Secret_Mul::Multiply(delta, weight_trans, rr, qq, tt);
         return next_delta;
-    }
     else
     {
         MatrixXu temp;
         return temp;
-    }
+    }    
 }
 
 MatrixXu ReluLayer::forward(MatrixXu &x)
