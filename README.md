@@ -2,12 +2,12 @@
 
 
 ## Introduction
-pMPL is a three-party learning framework based on vector space secret sharing with the privileged setting where a party can be set as the privileged party before machine learning. Without the participation of it, assist parties have no chance to reveal the secret value even if they collude. Meanwhile, pMPL can tolerate either of assist parties dropping out during training.  pMPL supports linear regression, logistic regression and neural networks.
+pMPL is a three-party learning framework based on vector space secret sharing with the privileged setting where a party can be set as the privileged party before machine learning. Without the participation of it, assistant parties have no chance to reveal the secret value even if they collude. Meanwhile, pMPL can tolerate either of the assistant parties dropping out during training.  pMPL supports linear regression, logistic regression and neural networks.
 
 ## Repository Structure
 * '3PC/': The training process if no party drops out.
 
-* '2PC/': The training process if one assist party drops out.
+* '2PC/': The training process if one assistant party drops out.
 
 
 ## Running for 3pc
@@ -77,7 +77,7 @@ Start four processes and input the party index, respectively:
 ./pmpl_3pc 3
 ```
 
-Note that, the raw dataset need to be secreted share before training.
+Note that, the raw dataset needs to be secret shared before training.
 (pMPL/3pc/util/IOManager.cpp line 177)
 ```c++
 ifstream infile("data/mnist_train.csv");
@@ -89,7 +89,7 @@ secret_share(train_data, train_label, "train");
 infile.close();
 ```
 
-After secret sharing the raw data, load the secreted share data and then perform training.
+After secret sharing the raw data, load the secret shared data and then perform training.
 (pMPL/3pc/util/IOManager.cpp line 177)
 ```c++
 // ifstream infile("data/mnist_train.csv");
@@ -101,7 +101,7 @@ load_ss(infile, train_data, train_label, N);
 infile.close();
 ```
 
-If one assist party drops out during the training phase, the intermediate results hold by each party will be stored in "pMPL/3pc/Result", which can be used as initialization coefficients for 2PC training.
+If one assistant party drops out during the training phase, the intermediate results hold by each party will be stored in "pMPL/3pc/Result", which can be used as initialization coefficients for 2PC training.
 
 ## Running for 2pc
 ### Network Configuration
