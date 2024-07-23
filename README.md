@@ -89,7 +89,7 @@ secret_share(train_data, train_label, "train");
 infile.close();
 ```
 
-After secret sharing the raw data, load the secreted share data and then preform training.
+After secret sharing the raw data, load the secreted share data and then perform training.
 (pMPL/3pc/util/IOManager.cpp line 177)
 ```c++
 // ifstream infile("data/mnist_train.csv");
